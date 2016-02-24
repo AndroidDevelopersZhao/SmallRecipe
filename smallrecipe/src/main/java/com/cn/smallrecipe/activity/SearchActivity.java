@@ -57,7 +57,8 @@ public class SearchActivity extends MyActivity implements View.OnClickListener{
         listview_searched.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "AAAAAAAAAAAAAAA");
+                //跳入详情页面，带过去用户名
+
             }
         });
         adapter = new XXListViewAdapter<Item>(this, R.layout.item_listview_searched) {
