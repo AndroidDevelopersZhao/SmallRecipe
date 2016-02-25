@@ -15,6 +15,7 @@
         android:orientation="horizontal">
 
         <cn.com.xxutils.view.XXRoundImageView
+            android:id="@+id/userLogo_main"
             android:layout_width="40sp"
             android:layout_height="40sp"
             android:layout_marginLeft="10sp"
@@ -22,6 +23,7 @@
             android:src="@drawable/uerlogo" />
 
         <TextView
+            android:id="@+id/userName_main"
             android:layout_width="0sp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10sp"
