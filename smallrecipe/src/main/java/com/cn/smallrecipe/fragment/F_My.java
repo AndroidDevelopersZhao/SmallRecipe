@@ -11,14 +11,16 @@ import com.cn.smallrecipe.ParentFragment;
 import com.cn.smallrecipe.R;
 
 /**
+ * //TODO 个人中心
  * Created by Administrator on 2016/2/24.
  */
 public class F_My extends ParentFragment {
     private View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.f_my,null);
+        view = inflater.inflate(R.layout.f_my, null);
         //
         return view;
     }

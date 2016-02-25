@@ -24,11 +24,12 @@ public class MainActivity extends MyActivity {
     private ViewPager vp;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
     }
+
     private void initView() {
         tabs = (TabLayout) findViewById(R.id.tabs);
         vp = (ViewPager) findViewById(R.id.vp);

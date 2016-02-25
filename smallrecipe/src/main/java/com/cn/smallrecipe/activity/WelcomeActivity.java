@@ -45,9 +45,8 @@ public class WelcomeActivity extends MyActivity implements ViewPager.OnPageChang
 
         }
     };
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         XXSharedPreferences sharedPreferences = new XXSharedPreferences("isFirstStart");
         String isFirstStart = String.valueOf(sharedPreferences.get(this, "isTrue", ""));
@@ -67,7 +66,7 @@ public class WelcomeActivity extends MyActivity implements ViewPager.OnPageChang
 
                         } else {
                             isLoop = false;
-                            Log.d(XXApplication.TAG, "准备切换到主页");
+                            Log.d(XXApplication.TAG, "will go home");
                             startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
                             WelcomeActivity.this.finish();
                         }
@@ -152,14 +151,12 @@ public class WelcomeActivity extends MyActivity implements ViewPager.OnPageChang
     @Override
     public void onPageScrollStateChanged(int arg0) {
         // TODO Auto-generated method stub
-        Log.d(XXApplication.TAG, "onPageScrollStateChanged，" + arg0);
 
     }
 
     @Override
     public void onPageScrolled(int arg0, float arg1, int arg2) {
         // TODO Auto-generated method stub
-//        Log.d(XXApplication.TAG,"移动");
 
     }
 
@@ -175,7 +172,7 @@ public class WelcomeActivity extends MyActivity implements ViewPager.OnPageChang
 
     @Override
     protected void onDestroy() {
-
+        Log.d(TAG, "WelcomeActivity was destroyed");
         super.onDestroy();
 
     }

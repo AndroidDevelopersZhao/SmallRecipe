@@ -92,7 +92,6 @@ public class F_Home extends ParentFragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, null);
-        Log.d(TAG, "onCreateView");
         initView();
         return view;
 
@@ -100,7 +99,6 @@ public class F_Home extends ParentFragment implements View.OnClickListener {
 
 
     private void initView() {
-        Log.d(TAG, "初始化view");
         et_search = (AutoCompleteTextView) view.findViewById(R.id.et_search);
         initAutoComplete(et_search);//为EditText设置输入提示
         bt_search = (ImageView) view.findViewById(R.id.bt_search);
@@ -110,7 +108,7 @@ public class F_Home extends ParentFragment implements View.OnClickListener {
     }
 
     synchronized private void resetTextWithOut() {
-        Log.e(TAG, "更换显示文字");
+        Log.d(TAG, "Reset text at home view");
         view_home.rubKeywords();
         // keywordsFlow.rubAllViews();
         view_home.setDuration(5000);
@@ -174,7 +172,6 @@ public class F_Home extends ParentFragment implements View.OnClickListener {
 
         if (v instanceof TextView && !((TextView) v).getText().toString().trim().equals("搜索")) {
             String keyword = ((TextView) v).getText().toString();
-            Log.d(TAG, keyword);
             StringBuffer sb = new StringBuffer();
             keyword = et_search.getText().toString().trim().equals("")
                     ? keyword : sb.append(et_search.getText().toString().trim()).append(keyword).toString();
@@ -203,14 +200,11 @@ public class F_Home extends ParentFragment implements View.OnClickListener {
                         }
                         sharedPreferences.put(getActivity(), KEY_SAVE_TEST, sb.toString());
                         initAutoComplete(et_search);
-                        Log.d(TAG, "put成功");
-
                     }
                     Intent intent = new Intent(getActivity(), SearchActivity.class);
                     intent.putExtra(SearchActivity.SEARCH_KEY, text);
                     et_search.setText("");
                     startActivity(intent);
-//
                 }
 
                 break;
@@ -219,4 +213,9 @@ public class F_Home extends ParentFragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "F_Home destroyed");
+        super.onDestroy();
+    }
 }

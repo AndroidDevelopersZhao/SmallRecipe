@@ -33,7 +33,7 @@ import cn.com.xxutils.view.XXCustomListView;
 /**
  * Created by Administrator on 2016/2/24.
  */
-public class SearchActivity extends MyActivity implements View.OnClickListener{
+public class SearchActivity extends MyActivity implements View.OnClickListener {
     public static final String SEARCH_KEY = "key_search";//传值的key
     private LinearLayout layout_icon_back;
     private XXSVProgressHUD xxsvProgressHUD = null;
@@ -42,7 +42,7 @@ public class SearchActivity extends MyActivity implements View.OnClickListener{
     private XXListViewAdapter<Item> adapter = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_main);
         initView();
@@ -58,7 +58,7 @@ public class SearchActivity extends MyActivity implements View.OnClickListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //跳入详情页面，带过去用户名
-
+                Log.d(TAG, "OnItemClickListener-ListView-Search");
             }
         });
         adapter = new XXListViewAdapter<Item>(this, R.layout.item_listview_searched) {
@@ -107,8 +107,8 @@ public class SearchActivity extends MyActivity implements View.OnClickListener{
             Toast.makeText(this, "搜索被异常终止", Toast.LENGTH_SHORT).show();
             return;
         }
-        Log.d(TAG, "将进行搜索，关键字：" + str_search);
-        xxsvProgressHUD.showWithStatus(this, "正在搜索……");
+        Log.d(TAG, "will start search menu" + str_search);
+        xxsvProgressHUD.showWithStatus(this, "start searching……");
         startSearch(str_search);
 
     }
@@ -130,14 +130,14 @@ public class SearchActivity extends MyActivity implements View.OnClickListener{
                 switch (msg.what) {
                     case 1:
                         AllInfo allInfo = (AllInfo) msg.getData().getSerializable("data");
-                        Log.d(TAG, "数据请求成功,Code:" + allInfo.getError_code());
+                        Log.d(TAG, "search was successful,ErrorCode:" + allInfo.getError_code());
                         setAdapterData(allInfo);
 
                         break;
 
                     case -1:
-                        Toast.makeText(SearchActivity.this, msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "请求失败，" + msg.getData().getString("data"));
+                        Toast.makeText(SearchActivity.this, "请求失败，" + msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "search error，" + msg.getData().getString("data"));
                         break;
                 }
             }
@@ -146,7 +146,6 @@ public class SearchActivity extends MyActivity implements View.OnClickListener{
         XXHttpClient client = new XXHttpClient(Util.URL_SEARCH, true, new XXHttpClient.XXHttpResponseListener() {
             @Override
             public void onSuccess(int i, byte[] bytes) {
-//                Log.d(TAG, "请求返回数据：" + new String(bytes));
                 AllInfo allInfo = null;
                 try {
                     allInfo = new Gson().fromJson(new String(bytes), AllInfo.class);
@@ -203,7 +202,6 @@ public class SearchActivity extends MyActivity implements View.OnClickListener{
             case R.id.layout_icon_back:
                 startActivity(new Intent(SearchActivity.this, MainActivity.class));
                 this.finish();
-
                 break;
         }
     }
@@ -216,4 +214,9 @@ public class SearchActivity extends MyActivity implements View.OnClickListener{
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "SearchActivity was destroyed");
+    }
 }
