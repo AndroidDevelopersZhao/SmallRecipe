@@ -1,4 +1,4 @@
-package com.cn.smallrecipe.datainfo;
+package com.cn.smallrecipe.datainfo.search;
 
 import java.io.Serializable;
 

@@ -16,9 +16,9 @@ import android.widget.Toast;
 import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
-import com.cn.smallrecipe.datainfo.AllInfo;
-import com.cn.smallrecipe.datainfo.Data;
-import com.cn.smallrecipe.datainfo.Item;
+import com.cn.smallrecipe.datainfo.search.AllInfo;
+import com.cn.smallrecipe.datainfo.search.Data;
+import com.cn.smallrecipe.datainfo.search.Item;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;

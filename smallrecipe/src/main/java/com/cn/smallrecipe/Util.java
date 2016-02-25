@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.cn.smallrecipe.datainfo.AllInfo;
+import com.cn.smallrecipe.datainfo.search.AllInfo;
 
 import java.util.ArrayList;
 

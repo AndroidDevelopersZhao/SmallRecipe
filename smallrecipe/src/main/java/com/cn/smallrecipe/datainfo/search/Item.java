@@ -1,4 +1,4 @@
-package com.cn.smallrecipe.datainfo;
+package com.cn.smallrecipe.datainfo.search;
 
 /**
  * Created by Administrator on 2016/2/24.
