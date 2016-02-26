@@ -158,11 +158,13 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/et_register_phoneNumber"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.8"
                     android:background="@null"
                     android:hint="手机号码"
+                    android:text="15221340931"
                     android:inputType="number" />
 
                 <LinearLayout
@@ -242,11 +244,13 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/et_register_password"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.8"
                     android:background="@null"
                     android:hint="密码"
+                    android:text="123456"
                     android:inputType="textPassword" />
 
                 <View
@@ -260,6 +264,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/bt_register_register"
             android:layout_width="match_parent"
             android:layout_height="55sp"
             android:layout_marginLeft="15sp"

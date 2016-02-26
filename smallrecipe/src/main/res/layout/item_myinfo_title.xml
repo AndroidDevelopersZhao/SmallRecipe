@@ -23,7 +23,7 @@
                 android:layout_width="70sp"
                 android:layout_height="70sp"
                 android:scaleType="fitXY"
-                android:src="@drawable/uerlogo" />
+                android:src="@drawable/userlogodefult" />
         </LinearLayout>
 
         <LinearLayout

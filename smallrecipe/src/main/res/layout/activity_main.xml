@@ -19,8 +19,8 @@
             android:layout_width="40sp"
             android:layout_height="40sp"
             android:layout_marginLeft="10sp"
-            android:scaleType="fitXY"
-            android:src="@drawable/uerlogo" />
+            android:scaleType="centerInside"
+            android:src="@drawable/userlogodefult" />
 
         <TextView
             android:id="@+id/userName_main"
@@ -29,7 +29,7 @@
             android:layout_marginLeft="10sp"
             android:layout_weight="1"
             android:gravity="center|left"
-            android:text="飞翔的企鹅"
+            android:text="未登录"
             android:textColor="#f8faf8"
             android:textSize="18sp" />
 

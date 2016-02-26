@@ -1,21 +1,37 @@
 package com.cn.smallrecipe.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.ParentFragment;
 import com.cn.smallrecipe.R;
+import com.cn.smallrecipe.Util;
+import com.cn.smallrecipe.activity.LoginActivity;
+import com.cn.smallrecipe.activity.MainActivity;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfos;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfosTitle;
+import com.cn.smallrecipe.datainfo.register.ResultToApp;
+import com.google.gson.Gson;
 
 import cn.com.xxutils.adapter.XXListViewAdapter;
+import cn.com.xxutils.alerterview.OnItemClickListener;
+import cn.com.xxutils.alerterview.XXAlertView;
+import cn.com.xxutils.util.XXHttpClient;
+import cn.com.xxutils.util.XXSharedPreferences;
 import cn.com.xxutils.view.XXListView;
 
 /**
@@ -39,6 +55,7 @@ public class F_My extends ParentFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.f_my, null);
         initView();
+
         return view;
     }
 
@@ -61,6 +78,23 @@ public class F_My extends ParentFragment {
         addDataToAdpter3();
 
 
+        setData();
+    }
+
+    private void setData() {
+        XXSharedPreferences sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+        String usernumber = String.valueOf(sharedPreferences.get(getActivity(), "usernumber", ""));
+        String userid = String.valueOf(sharedPreferences.get(getActivity(), "userid", ""));
+        String username = String.valueOf(sharedPreferences.get(getActivity(), "username", ""));
+        String sessionid = String.valueOf(sharedPreferences.get(getActivity(), "sessionid", ""));
+        if (MyActivity.LOGIN_STATE){
+
+            adapter1.removeAll();
+            adapter1.addItem(new MyInfosTitle(R.drawable.userlogodefult,username,
+                    R.drawable.icon_my_title, userid));
+            adapter1.notifyDataSetChanged();
+        }
+//        AuthUserInfo(usernumber, sessionid);
     }
 
     private void addDataToAdpter3() {
@@ -110,7 +144,7 @@ public class F_My extends ParentFragment {
     }
 
     private void addDataToAdpter1() {
-        adapter1.addItem(new MyInfosTitle(R.drawable.uerlogo, "飞翔的企鹅", R.drawable.icon_my_title, "235894856"));
+        adapter1.addItem(new MyInfosTitle(R.drawable.userlogodefult, "飞翔的企鹅", R.drawable.icon_my_title, "235894856"));
         adapter1.notifyDataSetChanged();
 
     }
@@ -131,5 +165,78 @@ public class F_My extends ParentFragment {
 
             }
         };
+    }
+
+    /**
+     * 验证用户身份是否可用
+     *
+     * @param usernumber
+     * @param sessionid
+     */
+    private Handler handler_authSessionId = null;
+
+    private void AuthUserInfo(final String usernumber, final String sessionid) {
+        handler_authSessionId = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case -1:
+                        new XXAlertView("提示", "登陆状态失效，请重新登陆，" + msg.getData().getString("data"), "重新登陆", new String[]{"稍后再试"}, null, getActivity(),
+                                XXAlertView.Style.Alert, new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Object o, int position) {
+                                Log.d(TAG, "position:" + position);
+                                if (position == -1) {
+                                    //重新登陆
+                                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), 0x01);
+                                } else {
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            SystemClock.sleep(5000);
+                                            AuthUserInfo(usernumber, sessionid);
+                                        }
+                                    }).start();
+                                }
+                            }
+                        }).show();
+                        break;
+
+                    case 1:
+                        Toast.makeText(getActivity(), "系统已为您自动登陆成功", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        };
+
+
+        XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_AUTH_SESSIONID, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+                Log.d(TAG, "验证Auth的返回，" + new String(bytes));
+                ResultToApp resultToApp = new Gson().fromJson(new String(bytes), ResultToApp.class);
+                if (resultToApp.getErrorCode() == 9000) {
+                    Util.sendMsgToHandler(handler_authSessionId, "验证成功，状态有效", true);
+                } else {
+                    Util.sendMsgToHandler(handler_authSessionId, resultToApp.getResultMsg(), false);
+                }
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Log.e(TAG, "验证Auth网络异常");
+                Util.sendMsgToHandler(handler_authSessionId, "验证Auth失败，网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+
+        client.put("usernumber", usernumber);
+        client.put("sessionid", sessionid);
+        client.doPost(15000);
+        Log.d(TAG, "上送的验证sessionif数据,usernumber=" + usernumber + ",sessionid=" + sessionid);
     }
 }
