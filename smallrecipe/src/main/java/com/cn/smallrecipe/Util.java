@@ -16,7 +16,9 @@ public class Util {
     public static final String TAG = "SmallRecipe";
     public static final String APPKEY = "2fcb58bbc897587691627b81093c63d0";
     public static final String URL_SEARCH = "http://apis.juhe.cn/cook/query.php";
-    private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
+//    private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
+    private static String url = "http://192.168.51.109:8080/SmallRecipeService/";
+
     public static final String URL_SERVICE_REGISTER = url + "register";//注册URL
     public static final String URL_SERVICE_LOGIN = url + "login";//登陆URL
     public static final String URL_SERVICE_RELOGIN = url + "relogin";//重新登陆URL

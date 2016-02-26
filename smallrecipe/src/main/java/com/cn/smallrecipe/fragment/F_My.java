@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -77,9 +78,19 @@ public class F_My extends ParentFragment {
         addDataToAdpter2();
         addDataToAdpter3();
 
-
+        listView1.setOnItemClickListener(listview_1_listener);
         setData();
     }
+
+    AdapterView.OnItemClickListener listview_1_listener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.d(TAG, "position:" + position);
+            if(position==0){
+
+            }
+        }
+    };
 
     private void setData() {
         XXSharedPreferences sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
@@ -87,10 +98,10 @@ public class F_My extends ParentFragment {
         String userid = String.valueOf(sharedPreferences.get(getActivity(), "userid", ""));
         String username = String.valueOf(sharedPreferences.get(getActivity(), "username", ""));
         String sessionid = String.valueOf(sharedPreferences.get(getActivity(), "sessionid", ""));
-        if (MyActivity.LOGIN_STATE){
+        if (MyActivity.LOGIN_STATE) {
 
             adapter1.removeAll();
-            adapter1.addItem(new MyInfosTitle(R.drawable.userlogodefult,username,
+            adapter1.addItem(new MyInfosTitle(R.drawable.userlogodefult, username,
                     R.drawable.icon_my_title, userid));
             adapter1.notifyDataSetChanged();
         }
@@ -144,7 +155,7 @@ public class F_My extends ParentFragment {
     }
 
     private void addDataToAdpter1() {
-        adapter1.addItem(new MyInfosTitle(R.drawable.userlogodefult, "飞翔的企鹅", R.drawable.icon_my_title, "235894856"));
+        adapter1.addItem(new MyInfosTitle(R.drawable.userlogodefult, "未登录", R.drawable.icon_my_title, ""));
         adapter1.notifyDataSetChanged();
 
     }
