@@ -120,6 +120,9 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                         Toast.makeText(LoginActivity.this, Msg, Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("userid", uid);
+                        setResult(RESULT_CODE, intent);
                         finish();
                         break;
                 }
@@ -225,9 +228,9 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                         break;
 
                     case 1:
-                        Toast.makeText(LoginActivity.this, Msg, Toast.LENGTH_SHORT).show();
-                        auto_text_usernumber.setText("");
-                        et_text_password.setText("");
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("userid", uid);
+                        setResult(RESULT_CODE, intent);
                         finish();
                         break;
                 }
@@ -250,7 +253,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                     sharedPreferences.put(LoginActivity.this, "userid", app.getRespData().getUserid());
                     sharedPreferences.put(LoginActivity.this, "userlogo", app.getRespData().getUserlogo());
                     Log.d(TAG, "强制登陆成功，已写入共享参数，读取测试sessionid：" + sharedPreferences.get(LoginActivity.this, "sessionid", "") + "\nusernumber=" +
-                            usernumber);
+                            usernumber + "\nuid=" + sharedPreferences.get(LoginActivity.this, "userid", app.getRespData().getUserid().toString()));
                     uid = sharedPreferences.get(LoginActivity.this, "userid", "").toString();
                     Util.sendMsgToHandler(handler_reLogin, app.getResultMsg(), true);
 
@@ -288,6 +291,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
             }
         }
     }
+
 
 
 }

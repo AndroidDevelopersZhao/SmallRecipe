@@ -260,7 +260,8 @@ public class MainActivity extends MyActivity implements View.OnClickListener {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case -1:
-                        Toast.makeText(MainActivity.this, "用户头像获取异常，" + msg.getData().getString("data"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "用户头像为默认头像，该消息将在您设置完自定义头像后不再提示", Toast.LENGTH_LONG).show();
+                        userLogo_main.setImageResource(R.drawable.userlogodefult);
                         break;
                     case 1:
                         byte[] bytes = msg.getData().getByteArray("data");
@@ -299,7 +300,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener {
                 Log.d(TAG, "user logo clicked,isLogin=" + MyActivity.LOGIN_STATE);
                 if (MyActivity.LOGIN_STATE) {
                     //已经登陆
-                    startActivity(new Intent(MainActivity.this,PersonalActivity.class));
+                    startActivity(new Intent(MainActivity.this, PersonalActivity.class));
                 } else {
                     //未登陆,打开登陆页面
                     startLogin();
@@ -312,7 +313,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener {
                     startLogin();
                 }else {
                     //已经登陆
-                    startActivity(new Intent(MainActivity.this,PersonalActivity.class));
+                    startActivity(new Intent(MainActivity.this, PersonalActivity.class));
                 }
                 break;
         }
@@ -349,9 +350,10 @@ public class MainActivity extends MyActivity implements View.OnClickListener {
         Log.d(TAG, "OnActivityResult-MainActivity,requestCode:" + requestCode + ",resultCode:" + resultCode + ",data:" + data);
 
         if (requestCode == ACTIVITY_REQUEST_CODE_LOGIN) {
-            if (data != null) {
-                Toast.makeText(MainActivity.this, "恭喜您获得靓号" + data.getStringExtra("data"), Toast.LENGTH_LONG).show();
-            }
+//            Toast.makeText(MainActivity.this, "恭喜您登陆成功", Toast.LENGTH_LONG).show();
+//            if (data != null) {
+//                Toast.makeText(MainActivity.this, "恭喜您获得靓号" + data.getStringExtra("data"), Toast.LENGTH_LONG).show();
+//            }
             Log.d(TAG, "back from login activity");
         }
     }

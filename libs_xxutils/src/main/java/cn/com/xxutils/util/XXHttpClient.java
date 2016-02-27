@@ -81,7 +81,9 @@ public class XXHttpClient {
         client.post(url, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, org.apache.http.Header[] headers, byte[] bytes) {
-                xxHttpResponseListener.onSuccess(i, bytes);
+                if (xxHttpResponseListener!=null){
+                    xxHttpResponseListener.onSuccess(i, bytes);
+                }
             }
 
             @Override

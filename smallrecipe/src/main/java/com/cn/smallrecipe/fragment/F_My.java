@@ -37,6 +37,7 @@ import cn.com.xxutils.alerterview.XXAlertView;
 import cn.com.xxutils.util.XXHttpClient;
 import cn.com.xxutils.util.XXSharedPreferences;
 import cn.com.xxutils.view.XXListView;
+import cn.com.xxutils.view.XXRoundImageView;
 
 /**
  * //TODO 个人中心
@@ -85,7 +86,8 @@ public class F_My extends ParentFragment {
         addDataToAdpter3();
 
         listView1.setOnItemClickListener(listview_1_listener);
-
+        listView2.setOnItemClickListener(listview_2_listener);
+        listView3.setOnItemClickListener(listview_3_listener);
         setData();
     }
 
@@ -111,12 +113,51 @@ public class F_My extends ParentFragment {
         }
     };
 
+
+    //listView2的点击事件
+    AdapterView.OnItemClickListener listview_2_listener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.d(TAG, "position:" + position);
+            switch (position) {
+                case 0:
+                    //TODO 我的动态
+                    break;
+                case 1:
+                    //TODO 我的收藏
+                    break;
+                case 2:
+                    //TODO 扫一扫
+                    break;
+                case 3:
+                    //TODO 晒厨艺
+                    break;
+            }
+        }
+    };
+    //listView3的点击事件
+    AdapterView.OnItemClickListener listview_3_listener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.d(TAG, "position:" + position);
+            if (position == 0) {
+                //TODO 反馈信息
+            } else {
+                //TODO 设置
+            }
+        }
+    };
+
+    private XXSharedPreferences sharedPreferences;
+    private String sessionid = null;
+    private String usernumber = null;
+
     private void setData() {
-        XXSharedPreferences sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
-        String usernumber = String.valueOf(sharedPreferences.get(getActivity(), "usernumber", ""));
+        sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+        usernumber = String.valueOf(sharedPreferences.get(getActivity(), "usernumber", ""));
         String userid = String.valueOf(sharedPreferences.get(getActivity(), "userid", ""));
         String username = String.valueOf(sharedPreferences.get(getActivity(), "username", ""));
-        String sessionid = String.valueOf(sharedPreferences.get(getActivity(), "sessionid", ""));
+        sessionid = String.valueOf(sharedPreferences.get(getActivity(), "sessionid", ""));
         String userlogourl = String.valueOf(sharedPreferences.get(getActivity(), "userlogo", ""));
         if (MyActivity.LOGIN_STATE) {
 
@@ -193,10 +234,10 @@ public class F_My extends ParentFragment {
                 ImageView imageView_right = (ImageView) convertView.findViewById(R.id.item_iv_right_title_1);
                 TextView text = (TextView) convertView.findViewById(R.id.item_tv_title_1);
                 TextView id = (TextView) convertView.findViewById(R.id.item_tv_id_title_1);
-                if (getItem(position).getImage_left().equals("")){
+                if (getItem(position).getImage_left().equals("")) {
                     imageView_left.setImageResource(R.drawable.userlogodefult);
-                }else {
-                    setUserLogo(getItem(position).getImage_left(),imageView_left);
+                } else {
+                    setUserLogo(getItem(position).getImage_left(), imageView_left);
                 }
 
                 imageView_right.setImageResource(getItem(position).getImage_right());
@@ -206,14 +247,17 @@ public class F_My extends ParentFragment {
             }
         };
     }
-    private Handler handler_getUserLogo=null;
+
+    private Handler handler_getUserLogo = null;
+
     private void setUserLogo(String image_left, final ImageView imageView) {
         handler_getUserLogo = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case -1:
-                        Toast.makeText(getActivity(), "用户头像获取异常，" + msg.getData().getString("data"), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "请设置用户头像", Toast.LENGTH_LONG).show();
+                        imageView.setImageResource(R.drawable.userlogodefult);
                         break;
                     case 1:
                         byte[] bytes = msg.getData().getByteArray("data");
@@ -259,31 +303,22 @@ public class F_My extends ParentFragment {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case -1:
-//                        new XXAlertView("提示", "登陆状态失效，请重新登陆，" + msg.getData().getString("data"), "重新登陆", new String[]{"稍后再试"}, null, getActivity(),
-//                                XXAlertView.Style.Alert, new OnItemClickListener() {
-//                            @Override
-//                            public void onItemClick(Object o, int position) {
-//                                Log.d(TAG, "position:" + position);
-//                                if (position == -1) {
-//                                    //重新登陆
-//                                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), 0x01);
-//                                } else {
-//                                    new Thread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            SystemClock.sleep(5000);
-//                                            AuthUserInfo(usernumber, sessionid);
-//                                        }
-//                                    }).start();
-//                                }
-//                            }
-//                        }).show();
+                        MainActivity.LOGIN_STATE = false;
+                        setData();
+                        if (F_My.this.isVisible()) {
+                            XXRoundImageView xxRoundImageView = (XXRoundImageView) getActivity().findViewById(R.id.userLogo_main);
+                            xxRoundImageView.setImageResource(R.drawable.userlogodefult);
+                            TextView textView = (TextView) getActivity().findViewById(R.id.userName_main);
+                            textView.setText("点我登陆");
+                        }
                         break;
 
                     case 1:
-                        Toast.makeText(getActivity(), "系统已为您自动登陆成功", Toast.LENGTH_SHORT).show();
+                        MainActivity.LOGIN_STATE = true;
+                        setData();
                         break;
                 }
+
             }
         };
 
@@ -291,7 +326,7 @@ public class F_My extends ParentFragment {
         XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_AUTH_SESSIONID, true, new XXHttpClient.XXHttpResponseListener() {
             @Override
             public void onSuccess(int i, byte[] bytes) {
-                Log.d(TAG, "验证Auth的返回，" + new String(bytes));
+                Log.d(TAG, "F_My页面验证Auth的返回，" + new String(bytes));
                 ResultToApp resultToApp = new Gson().fromJson(new String(bytes), ResultToApp.class);
                 if (resultToApp.getErrorCode() == 9000) {
                     Util.sendMsgToHandler(handler_authSessionId, "验证成功，状态有效", true);
@@ -321,11 +356,10 @@ public class F_My extends ParentFragment {
     @Override
     public void onResume() {
         Log.d(TAG, "进入个人中心onResume");
-        if (MainActivity.LOGIN_STATE){
-
-        }else {
-
-        }
+        sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+        usernumber = String.valueOf(sharedPreferences.get(getActivity(), "usernumber", ""));
+        sessionid = String.valueOf(sharedPreferences.get(getActivity(), "sessionid", ""));
+        AuthUserInfo(usernumber, sessionid);
         super.onResume();
 
     }

@@ -16,12 +16,16 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
+import com.cn.smallrecipe.datainfo.register.ResultToApp;
+import com.google.gson.Gson;
 
 
 import java.io.File;
@@ -42,11 +46,16 @@ import cn.com.xxutils.view.XXRoundImageView;
 public class PersonalActivity extends MyActivity implements View.OnClickListener {
     private Toolbar toolbar;
     private CollapsingToolbarLayout toolbarLayout;
-    private RelativeLayout rlayout_myself_name;
     private XXRoundImageView login;
     private int REQUSETCODE_CAM = 0x01;
     private int REQUSETCODE_PIC = 0x02;
-
+    private TextView tv_username, tv_uid, tv_usernumber, tv_username_2;
+    private String userLogoUrl = null;
+    private String username = null;
+    private String userid = null;
+    private String usernumber = null;
+    private Handler handler_getUserLogo = null;
+    private Button bt_reLogin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,10 +68,70 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
     private void initVIew() {
         findId();
         setListener();
+        setData();
+    }
+
+    private void setData() {
+        if (MainActivity.LOGIN_STATE) {
+            XXSharedPreferences file = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+            userLogoUrl = file.get(this, "userlogo", "").toString();
+            username = file.get(this, "username", "").toString();
+            userid = file.get(this, "userid", "").toString();
+            usernumber = file.get(this, "usernumber", "").toString();
+            tv_username.setText(username);
+            tv_username_2.setText(username);
+            tv_uid.setText(userid);
+            tv_usernumber.setText(usernumber);
+            getUserLogo(userLogoUrl);
+        }
+    }
+
+    /**
+     * 获取用户头像并设置到view
+     *
+     * @param url_userlogo
+     */
+    private void getUserLogo(String url_userlogo) {
+        handler_getUserLogo = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case -1:
+                        Toast.makeText(PersonalActivity.this, "用户头像为默认头像，该消息将在您设置完自定义头像后不再提示", Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        byte[] bytes = msg.getData().getByteArray("data");
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        login.setImageBitmap(bitmap);
+                        break;
+                }
+            }
+        };
+        Log.d(TAG, "请求的用户头像url=" + url_userlogo);
+        XXHttpClient client = new XXHttpClient(url_userlogo, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, final byte[] bytes) {
+                Log.d(TAG, "用户头像获取成功");
+                Util.sendMsgToHandler(handler_getUserLogo, bytes, true);
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Log.e(TAG, "网络异常");
+                Util.sendMsgToHandler(handler_getUserLogo, "网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.doPost(15000);
     }
 
     private void setListener() {
         login.setOnClickListener(this);
+        bt_reLogin.setOnClickListener(this);
     }
 
     private void findId() {
@@ -77,7 +146,11 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
         login = (XXRoundImageView) findViewById(R.id.login);
-        rlayout_myself_name=(RelativeLayout)findViewById(R.id.rlayout_myself_name);
+        tv_username = (TextView) findViewById(R.id.tv_username);
+        tv_uid = (TextView) findViewById(R.id.tv_uid);
+        tv_usernumber = (TextView) findViewById(R.id.tv_uernumber);
+        tv_username_2 = (TextView) findViewById(R.id.tv_username_2);
+        bt_reLogin = (Button) findViewById(R.id.bt_reLogin);
     }
 
 
@@ -97,29 +170,7 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
             //获取相机返回的数据，并转换为图片格式
             Bitmap bitmap = (Bitmap) bundle.get("data");
             login.setImageBitmap(bitmap);
-//            //对图片进行编码-上送服务器
-//            FileOutputStream b = null;
-//            //???????????????????????????????为什么不能直接保存在系统相册位置呢？？？？？？？？？？？？
-//            File file = new File(Environment.getDataDirectory().getPath()+"123.jpg");
-//            file.mkdirs();// 创建文件夹
-//            try {
-//                b = new FileOutputStream(file.getPath());
-//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);// 把数据写入文件
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            } finally {
-//                try {
-//                    b.flush();
-//                    b.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            userlogo= Base64.encodeToString(XXUtils.bitmapToBytes(bitmap),0,XXUtils.bitmapToBytes(bitmap).length,0x01);
             userlogo = XXUtils.bitmapToBase64(bitmap);
-
-//                    login.setImageBitmap(XXUtils.base64ToBitmap(userlogo));
         } else if (requestCode == REQUSETCODE_PIC) {
             Uri selectedImage = data.getData();
             String[] filePathColumns = {MediaStore.Images.Media.DATA};
@@ -131,7 +182,9 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
             login.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             userlogo = XXUtils.bitmapToBase64(BitmapFactory.decodeFile(picturePath));
         }
-        sendUserLogoToService(userlogo);
+        if (userlogo != null) {
+            sendUserLogoToService(userlogo);
+        }
     }
 
     private Handler handler_senUserlogo = null;
@@ -143,16 +196,11 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
      */
     private void sendUserLogoToService(String userlogo) {
         handler_senUserlogo = new Handler() {
+
             @Override
             public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case -1:
-
-                        break;
-                    case 1:
-
-                        break;
-                }
+                String Msg = msg.getData().getString("data");
+                Toast.makeText(PersonalActivity.this, Msg, Toast.LENGTH_LONG).show();
             }
         };
 
@@ -160,11 +208,19 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
             @Override
             public void onSuccess(int i, byte[] bytes) {
                 Log.d(TAG, "用户头像上送成功，返回：" + new String(bytes));
+                ResultToApp resultToApp = new Gson().fromJson(new String(bytes), ResultToApp.class);
+                if (resultToApp.getErrorCode() == 9000) {
+                    Util.sendMsgToHandler(handler_senUserlogo, resultToApp.getResultMsg(), true);
+                } else {
+                    Util.sendMsgToHandler(handler_senUserlogo, resultToApp.getResultMsg(), false);
+                }
+
             }
 
             @Override
             public void onError(int i, Throwable throwable) {
                 Log.d(TAG, "用户头像上送失败，网络异常");
+                Util.sendMsgToHandler(handler_senUserlogo, "网络异常", false);
             }
 
             @Override
@@ -172,16 +228,16 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
 
             }
         });
-        String userNumber =String.valueOf(new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME)
+        String userNumber = String.valueOf(new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME)
                 .get(this, "usernumber", "").toString());
-        String sessionid =String.valueOf(new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME)
+        String sessionid = String.valueOf(new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME)
                 .get(this, "sessionid", "").toString());
 
         client.put("userlogo", userlogo);
-        client.put("sessionid",sessionid);
-        client.put("usernumber",userNumber );
+        client.put("sessionid", sessionid);
+        client.put("usernumber", userNumber);
         Log.d(TAG, "上送的参数：usernumber=" + userNumber + ",sessionid=" + sessionid + ",userlogo=" + userlogo);
-        Log.d(TAG,"上传图片大小："+userlogo.length());
+        Log.d(TAG, "上传图片大小：" + userlogo.length());
         client.doPost(15000);
     }
 
@@ -212,14 +268,64 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
                         }).show();
                 break;
 
-            case R.id.rlayout_myself_name:
-
-                Toast.makeText(PersonalActivity.this,"点击了",Toast.LENGTH_SHORT).show();
+            case R.id.bt_reLogin:
+                XXSharedPreferences file = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+                usernumber = file.get(this, "usernumber", "").toString();
+                String sessionid = file.get(this, "sessionid", "").toString();
+                exitAppAndReLogin(usernumber, sessionid);
 
                 break;
 
 
         }
+    }
+
+    private Handler handler_exitApp = null;
+
+    private void exitAppAndReLogin(String usernumber, String sessionid) {
+        handler_exitApp = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                XXSharedPreferences file = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+                switch (msg.what) {
+                    case -1:
+                        Toast.makeText(PersonalActivity.this, msg.getData().getString("data"), Toast.LENGTH_LONG).show();
+                        break;
+
+                    case 1:
+                        break;
+                }
+                MainActivity.LOGIN_STATE = false;
+                file.clear(PersonalActivity.this);
+                startActivity(new Intent(PersonalActivity.this, LoginActivity.class));
+                finish();
+            }
+        };
+
+        XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_UNLOGIN, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+                ResultToApp resultToApp = new Gson().fromJson(new String(bytes), ResultToApp.class);
+                if (resultToApp.getErrorCode() == 9000) {
+                    Util.sendMsgToHandler(handler_exitApp, "退出成功", true);
+                } else {
+                    Util.sendMsgToHandler(handler_exitApp, "您的账户在别的地方登陆，请重新登陆", false);
+                }
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Util.sendMsgToHandler(handler_exitApp, "网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.put("usernumber", usernumber);
+        client.put("sessionid", sessionid);
+        client.doPost(15000);
     }
 
 
