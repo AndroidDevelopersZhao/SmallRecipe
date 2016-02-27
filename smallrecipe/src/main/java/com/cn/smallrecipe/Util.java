@@ -24,6 +24,8 @@ public class Util {
     public static final String URL_SERVICE_RELOGIN = url + "relogin";//重新登陆URL
     public static final String URL_SERVICE_UNLOGIN = url + "unlogin";//退出登陆URL
     public static final String URL_SERVICE_AUTH_SESSIONID = url + "authsessionid";//退出登陆URL
+    public static final String URL_SERVICE_AUTH_UPDATEUSERLOGO = url + "updateuserlogo";//更新用户头像
+    public static final String URL_SERVICE_AUTH_GETUSERLOGO = url + "getuserlogo";//获取用户头像
 
     public static void sendMsgToHandler(Handler handler, Object object, boolean isSucc) {
         if (handler == null || object == null) {

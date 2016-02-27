@@ -23,6 +23,7 @@ import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
 import com.cn.smallrecipe.activity.LoginActivity;
 import com.cn.smallrecipe.activity.MainActivity;
+import com.cn.smallrecipe.activity.PersonalActivity;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfos;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfosTitle;
 import com.cn.smallrecipe.datainfo.register.ResultToApp;
@@ -39,7 +40,7 @@ import cn.com.xxutils.view.XXListView;
  * //TODO 个人中心
  * Created by Administrator on 2016/2/24.
  */
-public class F_My extends ParentFragment {
+public class F_My extends ParentFragment{
     private View view;
     private XXListView listView1, listView2, listView3;
     private XXListViewAdapter<MyInfosTitle> adapter1 = null;
@@ -50,6 +51,7 @@ public class F_My extends ParentFragment {
             "晒厨艺"};
     private int[] ImageIds = {R.drawable.icon_userprofile, R.drawable.icon_like, R.drawable.icon_search,
             R.drawable.icon_photo};
+
 
     @Nullable
     @Override
@@ -65,6 +67,7 @@ public class F_My extends ParentFragment {
         listView2 = (XXListView) view.findViewById(R.id.listview_myinfo_title);
         listView3 = (XXListView) view.findViewById(R.id.listview_myinfo_title_2);
 
+
         initAdapter1();
         initAdapter2();
         initAdapter3();
@@ -79,6 +82,7 @@ public class F_My extends ParentFragment {
         addDataToAdpter3();
 
         listView1.setOnItemClickListener(listview_1_listener);
+
         setData();
     }
 
@@ -86,8 +90,20 @@ public class F_My extends ParentFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.d(TAG, "position:" + position);
-            if(position==0){
+            if (position == 0) {
+                if (MyActivity.LOGIN_STATE) {
+                    //登陆状态时，打开个人中心页面
+                    startActivity(new Intent(getActivity(), PersonalActivity.class));
+                } else {
+                    new XXAlertView("提示", "您还未登陆，是否登陆", "取消", null, new String[]{"登陆"},
+                            getActivity(), XXAlertView.Style.Alert, new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Object o, int position) {
+                            Log.d(TAG, "position:" + position);
 
+                        }
+                    }).show();
+                }
             }
         }
     };

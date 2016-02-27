@@ -1,6 +1,8 @@
 package com.cn.smallrecipe.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,6 +29,7 @@ import com.cn.smallrecipe.fragment.F_Sniff;
 import com.cn.smallrecipe.fragment.F_Star;
 import com.google.gson.Gson;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +102,8 @@ public class MainActivity extends MyActivity implements View.OnClickListener {
             Log.d(TAG, "系统检测到该用户已经登陆，保存的用户名：" + sharedPreferences_sessionId.get(MainActivity.this, "usernumber", "") + ",sessionId=" + sharedPreferences_sessionId.get(MainActivity.this, "sessionid", ""));
             setUserConfig();
             AuthUserInfo(String.valueOf(sharedPreferences_sessionId.get(MainActivity.this, "usernumber", "")),
+                    String.valueOf(sharedPreferences_sessionId.get(MainActivity.this, "sessionid", "")));
+            getUserLogo(String.valueOf(sharedPreferences_sessionId.get(MainActivity.this, "usernumber", "")),
                     String.valueOf(sharedPreferences_sessionId.get(MainActivity.this, "sessionid", "")));
         } else {
             MyActivity.LOGIN_STATE = false;
@@ -187,14 +193,15 @@ public class MainActivity extends MyActivity implements View.OnClickListener {
     @Override
     protected void onRestart() {
         super.onRestart();
-        sharedPreferences_sessionId=new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+        sharedPreferences_sessionId = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
         String file_session = String.valueOf(sharedPreferences_sessionId.get(this, "sessionid", ""));
         if (file_session != null && !file_session.equals("")) {
             MyActivity.LOGIN_STATE = true;
             //获取该用户对应的头像、昵称等个人信息
             Log.d(TAG, "系统检测到该用户已经登陆，保存的用户名：" + sharedPreferences_sessionId.get(MainActivity.this, "usernumber", "") + ",sessionId=" + sharedPreferences_sessionId.get(MainActivity.this, "sessionid", ""));
             setUserConfig();
-            AuthUserInfo(String.valueOf(sharedPreferences_sessionId.get(MainActivity.this, "usernumber", "")),file_session);
+            AuthUserInfo(String.valueOf(sharedPreferences_sessionId.get(MainActivity.this, "usernumber", "")), file_session);
+//            getUserLogo(String.valueOf(sharedPreferences_sessionId.get(MainActivity.this, "usernumber", "")), file_session);
         } else {
             MyActivity.LOGIN_STATE = false;
         }
@@ -216,6 +223,59 @@ public class MainActivity extends MyActivity implements View.OnClickListener {
             }).show();
         }
         return false;
+    }
+
+    private Handler handler_getUserLogo = null;
+
+    private void getUserLogo(String usernumber, String sessionid) {
+        handler_getUserLogo = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case -1:
+
+                        break;
+                    case 1:
+
+                        break;
+                }
+            }
+        };
+
+        XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_AUTH_GETUSERLOGO, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, final byte[] bytes) {
+                Log.d(TAG, "用户头像获取成功，返回：" + new String(bytes));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String Base64Pic = new String(bytes, Charset.forName("UTF-8"));
+                        Log.d(TAG, "返回大小：" + Base64Pic.length());
+//                        try {
+//                            userLogo_main.setImageBitmap(XXUtils.base64ToBitmap(Base64Pic));
+//                        } catch (Throwable throwable) {
+//                            Log.e(TAG, "图片设置异常");
+//                        }
+//                        Bitmap bitmap=BitmapFactory.decodeByteArray(Base64.decode(bytes, 0x01), 0, Base64.decode(bytes, 0x01).length);
+//                        userLogo_main.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+//                        userLogo_main.setImageBitmap(bitmap);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Log.e(TAG, "网络异常");
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.put("usernumber", usernumber);
+        client.put("sessionid", sessionid);
+        client.doPost(15000);
     }
 
     @Override
