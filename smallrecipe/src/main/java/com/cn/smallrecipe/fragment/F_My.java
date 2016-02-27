@@ -154,11 +154,20 @@ public class F_My extends ParentFragment {
 
     private void setData() {
         sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
-        usernumber = String.valueOf(sharedPreferences.get(getActivity(), "usernumber", ""));
-        String userid = String.valueOf(sharedPreferences.get(getActivity(), "userid", ""));
-        String username = String.valueOf(sharedPreferences.get(getActivity(), "username", ""));
-        sessionid = String.valueOf(sharedPreferences.get(getActivity(), "sessionid", ""));
-        String userlogourl = String.valueOf(sharedPreferences.get(getActivity(), "userlogo", ""));
+        String userid = null;
+        String username = null;
+        String userlogourl = null;
+
+        try {
+            usernumber = String.valueOf(sharedPreferences.get(getActivity(), "usernumber", ""));
+            userid = String.valueOf(sharedPreferences.get(getActivity(), "userid", ""));
+            username = String.valueOf(sharedPreferences.get(getActivity(), "username", ""));
+            sessionid = String.valueOf(sharedPreferences.get(getActivity(), "sessionid", ""));
+            userlogourl = String.valueOf(sharedPreferences.get(getActivity(), "userlogo", ""));
+        } catch (Throwable throwable) {
+            //上下文空时会有异常跑出
+        }
+
         if (MyActivity.LOGIN_STATE) {
 
             adapter1.removeAll();
