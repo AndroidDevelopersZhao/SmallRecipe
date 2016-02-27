@@ -4,12 +4,12 @@ package com.cn.smallrecipe.datainfo.myinfo;
  * Created by Administrator on 2016/2/25.
  */
 public class MyInfosTitle {
-    private int image_left = -1;
+    private String image_left = null;
     private String text = null;
     private int image_right = -1;
     private String id = null;
 
-    public MyInfosTitle(int image_left, String text, int image_right, String id) {
+    public MyInfosTitle(String image_left, String text, int image_right, String id) {
         this.image_left = image_left;
         this.text = text;
         this.image_right = image_right;
@@ -24,11 +24,11 @@ public class MyInfosTitle {
         this.id = id;
     }
 
-    public int getImage_left() {
+    public String getImage_left() {
         return image_left;
     }
 
-    public void setImage_left(int image_left) {
+    public void setImage_left(String image_left) {
         this.image_left = image_left;
     }
 

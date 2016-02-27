@@ -16,6 +16,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.R;
@@ -40,6 +42,7 @@ import cn.com.xxutils.view.XXRoundImageView;
 public class PersonalActivity extends MyActivity implements View.OnClickListener {
     private Toolbar toolbar;
     private CollapsingToolbarLayout toolbarLayout;
+    private RelativeLayout rlayout_myself_name;
     private XXRoundImageView login;
     private int REQUSETCODE_CAM = 0x01;
     private int REQUSETCODE_PIC = 0x02;
@@ -74,6 +77,7 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
         login = (XXRoundImageView) findViewById(R.id.login);
+        rlayout_myself_name=(RelativeLayout)findViewById(R.id.rlayout_myself_name);
     }
 
 
@@ -177,7 +181,7 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
         client.put("sessionid",sessionid);
         client.put("usernumber",userNumber );
         Log.d(TAG, "上送的参数：usernumber=" + userNumber + ",sessionid=" + sessionid + ",userlogo=" + userlogo);
-        Log.d(TAG,"图片大小："+userlogo.length());
+        Log.d(TAG,"上传图片大小："+userlogo.length());
         client.doPost(15000);
     }
 
@@ -207,6 +211,14 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
                             }
                         }).show();
                 break;
+
+            case R.id.rlayout_myself_name:
+
+                Toast.makeText(PersonalActivity.this,"点击了",Toast.LENGTH_SHORT).show();
+
+                break;
+
+
         }
     }
 

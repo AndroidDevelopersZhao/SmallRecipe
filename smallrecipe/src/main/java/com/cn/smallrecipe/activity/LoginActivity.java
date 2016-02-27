@@ -62,9 +62,14 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
 
     @Override
     protected void onDestroy() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra("userid", uid);
+        setResult(RESULT_CODE, intent);
         super.onDestroy();
         Log.d(TAG, "LoginActivity was destroyed");
     }
+
+    private String usernumber = null;
 
     @Override
     public void onClick(View v) {
@@ -79,7 +84,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                 break;
             case R.id.bt_login_login:
 
-                String usernumber = auto_text_usernumber.getText().toString().trim();
+                usernumber = auto_text_usernumber.getText().toString().trim();
                 String password = et_text_password.getText().toString().trim();
                 if (usernumber != null && !usernumber.equals("")
                         && password != null && !password.equals("")) {
@@ -93,6 +98,8 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
     }
 
     private Handler handler_login = null;
+    private String uid = null;
+    private XXSharedPreferences sharedPreferences;
 
     /**
      * 登陆
@@ -113,9 +120,6 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                         Toast.makeText(LoginActivity.this, Msg, Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
-//                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-//                        intent.putExtra()
-//                        setResult(RESULT_CODE,);
                         finish();
                         break;
                 }
@@ -132,14 +136,15 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                 Log.d(TAG, "登陆返回状态信息：" + resultToApp.getResultMsg());
                 if (resultToApp.getErrorCode() == 9000) {
                     Log.d(TAG, "返回sessionID:" + resultToApp.getRespData().getSessionId());
-                    XXSharedPreferences sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+                    sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
                     sharedPreferences.put(LoginActivity.this, "sessionid", resultToApp.getRespData().getSessionId());
                     sharedPreferences.put(LoginActivity.this, "usernumber", usernumber);
 
                     sharedPreferences.put(LoginActivity.this, "username", resultToApp.getRespData().getUsername());
                     sharedPreferences.put(LoginActivity.this, "userid", resultToApp.getRespData().getUserid());
                     sharedPreferences.put(LoginActivity.this, "userlogo", resultToApp.getRespData().getUserlogo());
-
+                    uid = sharedPreferences.get(LoginActivity.this, "userid", resultToApp.getRespData().getUserid()).toString();
+                    Log.d(TAG, "用户数据存入缓存成功");
                     Util.sendMsgToHandler(handler_login, resultToApp.getResultMsg(), true);
                 } else if (resultToApp.getErrorCode() == -3) {
                     final String reLoginId = resultToApp.getRespData().getReLoginId();
@@ -162,6 +167,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                                                     Log.d(TAG, "position:" + position);
                                                     if (position == -1) {
                                                         //重新登陆
+                                                        Log.d(TAG, "开始重新登陆。当前传入的usernumber=" + usernumber);
                                                         reLogin(usernumber, reLoginId);
                                                     } else {
                                                         Util.sendMsgToHandler(handler_login, "当账号被使用时您可以强制登陆迫使对方下线", false);
@@ -235,7 +241,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                 ResultToApp app = new Gson().fromJson(new String(bytes), ResultToApp.class);
                 if (app.getErrorCode() == 9000) {
 
-                    XXSharedPreferences sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+                    sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
 
                     sharedPreferences.put(LoginActivity.this, "sessionid", app.getRespData().getSessionId());
                     sharedPreferences.put(LoginActivity.this, "usernumber", usernumber);
@@ -243,7 +249,9 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                     sharedPreferences.put(LoginActivity.this, "username", app.getRespData().getUsername());
                     sharedPreferences.put(LoginActivity.this, "userid", app.getRespData().getUserid());
                     sharedPreferences.put(LoginActivity.this, "userlogo", app.getRespData().getUserlogo());
-                    Log.d(TAG,"强制登陆成功，已写入共享参数，读取测试sessionid："+sharedPreferences.get(LoginActivity.this,"sessionid",""));
+                    Log.d(TAG, "强制登陆成功，已写入共享参数，读取测试sessionid：" + sharedPreferences.get(LoginActivity.this, "sessionid", "") + "\nusernumber=" +
+                            usernumber);
+                    uid = sharedPreferences.get(LoginActivity.this, "userid", "").toString();
                     Util.sendMsgToHandler(handler_reLogin, app.getResultMsg(), true);
 
                 } else {
@@ -280,4 +288,6 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
             }
         }
     }
+
+
 }

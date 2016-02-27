@@ -1,6 +1,8 @@
 package com.cn.smallrecipe.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,10 +42,10 @@ import cn.com.xxutils.view.XXListView;
  * //TODO 个人中心
  * Created by Administrator on 2016/2/24.
  */
-public class F_My extends ParentFragment{
+public class F_My extends ParentFragment {
     private View view;
     private XXListView listView1, listView2, listView3;
-    private XXListViewAdapter<MyInfosTitle> adapter1 = null;
+    private static XXListViewAdapter<MyInfosTitle> adapter1 = null;
     private XXListViewAdapter<MyInfos> adapter2 = null;
     private XXListViewAdapter<MyInfos> adapter3 = null;
 
@@ -57,6 +59,7 @@ public class F_My extends ParentFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.f_my, null);
+        Log.d(TAG, "进入个人中心首页--onCreateView");
         initView();
 
         return view;
@@ -77,7 +80,7 @@ public class F_My extends ParentFragment{
         listView3.setAdapter(adapter3);
 
 
-        addDataToAdpter1();
+//        addDataToAdpter1();
         addDataToAdpter2();
         addDataToAdpter3();
 
@@ -114,12 +117,17 @@ public class F_My extends ParentFragment{
         String userid = String.valueOf(sharedPreferences.get(getActivity(), "userid", ""));
         String username = String.valueOf(sharedPreferences.get(getActivity(), "username", ""));
         String sessionid = String.valueOf(sharedPreferences.get(getActivity(), "sessionid", ""));
+        String userlogourl = String.valueOf(sharedPreferences.get(getActivity(), "userlogo", ""));
         if (MyActivity.LOGIN_STATE) {
 
             adapter1.removeAll();
-            adapter1.addItem(new MyInfosTitle(R.drawable.userlogodefult, username,
+
+            adapter1.addItem(new MyInfosTitle(userlogourl, username,
                     R.drawable.icon_my_title, userid));
             adapter1.notifyDataSetChanged();
+        } else {
+            //设置默认
+            addDataToAdpter1();
         }
 //        AuthUserInfo(usernumber, sessionid);
     }
@@ -170,8 +178,9 @@ public class F_My extends ParentFragment{
 
     }
 
-    private void addDataToAdpter1() {
-        adapter1.addItem(new MyInfosTitle(R.drawable.userlogodefult, "未登录", R.drawable.icon_my_title, ""));
+    private static void addDataToAdpter1() {
+        adapter1.removeAll();
+        adapter1.addItem(new MyInfosTitle("", "未登录", R.drawable.icon_my_title, ""));
         adapter1.notifyDataSetChanged();
 
     }
@@ -184,14 +193,56 @@ public class F_My extends ParentFragment{
                 ImageView imageView_right = (ImageView) convertView.findViewById(R.id.item_iv_right_title_1);
                 TextView text = (TextView) convertView.findViewById(R.id.item_tv_title_1);
                 TextView id = (TextView) convertView.findViewById(R.id.item_tv_id_title_1);
+                if (getItem(position).getImage_left().equals("")){
+                    imageView_left.setImageResource(R.drawable.userlogodefult);
+                }else {
+                    setUserLogo(getItem(position).getImage_left(),imageView_left);
+                }
 
-                imageView_left.setImageResource(getItem(position).getImage_left());
                 imageView_right.setImageResource(getItem(position).getImage_right());
                 text.setText(getItem(position).getText());
                 id.setText(getItem(position).getId());
 
             }
         };
+    }
+    private Handler handler_getUserLogo=null;
+    private void setUserLogo(String image_left, final ImageView imageView) {
+        handler_getUserLogo = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case -1:
+                        Toast.makeText(getActivity(), "用户头像获取异常，" + msg.getData().getString("data"), Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        byte[] bytes = msg.getData().getByteArray("data");
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        imageView.setImageBitmap(bitmap);
+                        break;
+                }
+            }
+        };
+        Log.d(TAG, "请求的用户头像url=" + image_left);
+        XXHttpClient client = new XXHttpClient(image_left, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, final byte[] bytes) {
+                Log.d(TAG, "用户头像获取成功");
+                Util.sendMsgToHandler(handler_getUserLogo, bytes, true);
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Log.e(TAG, "网络异常");
+                Util.sendMsgToHandler(handler_getUserLogo, "网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.doPost(15000);
     }
 
     /**
@@ -208,25 +259,25 @@ public class F_My extends ParentFragment{
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case -1:
-                        new XXAlertView("提示", "登陆状态失效，请重新登陆，" + msg.getData().getString("data"), "重新登陆", new String[]{"稍后再试"}, null, getActivity(),
-                                XXAlertView.Style.Alert, new OnItemClickListener() {
-                            @Override
-                            public void onItemClick(Object o, int position) {
-                                Log.d(TAG, "position:" + position);
-                                if (position == -1) {
-                                    //重新登陆
-                                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), 0x01);
-                                } else {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            SystemClock.sleep(5000);
-                                            AuthUserInfo(usernumber, sessionid);
-                                        }
-                                    }).start();
-                                }
-                            }
-                        }).show();
+//                        new XXAlertView("提示", "登陆状态失效，请重新登陆，" + msg.getData().getString("data"), "重新登陆", new String[]{"稍后再试"}, null, getActivity(),
+//                                XXAlertView.Style.Alert, new OnItemClickListener() {
+//                            @Override
+//                            public void onItemClick(Object o, int position) {
+//                                Log.d(TAG, "position:" + position);
+//                                if (position == -1) {
+//                                    //重新登陆
+//                                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), 0x01);
+//                                } else {
+//                                    new Thread(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            SystemClock.sleep(5000);
+//                                            AuthUserInfo(usernumber, sessionid);
+//                                        }
+//                                    }).start();
+//                                }
+//                            }
+//                        }).show();
                         break;
 
                     case 1:
@@ -265,5 +316,17 @@ public class F_My extends ParentFragment{
         client.put("sessionid", sessionid);
         client.doPost(15000);
         Log.d(TAG, "上送的验证sessionif数据,usernumber=" + usernumber + ",sessionid=" + sessionid);
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "进入个人中心onResume");
+        if (MainActivity.LOGIN_STATE){
+
+        }else {
+
+        }
+        super.onResume();
+
     }
 }
