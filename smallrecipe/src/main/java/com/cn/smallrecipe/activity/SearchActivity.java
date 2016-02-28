@@ -57,8 +57,11 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
         listview_searched.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //跳入详情页面，带过去用户名
-                Log.d(TAG, "OnItemClickListener-ListView-Search");
+                //跳入详情页面，带过去菜谱ID
+                Log.d(TAG, "OnItemClickListener-ListView-Search" + adapter.getItem(position).getId());
+                Intent intent = new Intent(SearchActivity.this, RecipeDetail.class);
+                intent.putExtra("id", adapter.getItem(position).getId());
+                startActivity(intent);
             }
         });
         adapter = new XXListViewAdapter<Item>(this, R.layout.item_listview_searched) {
@@ -184,6 +187,7 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
             item.setTitle(datas.get(i).getTitle());
             item.setIngredients(datas.get(i).getIngredients());
             item.setBurden(datas.get(i).getBurden());
+            item.setId(datas.get(i).getId());
             ArrayList<String> urls = datas.get(i).getAlbums();
             if (urls.size() == 0) {
                 item.setUrl("http://www.2cto.com/uploadfile/2012/0207/20120207012945988.jpg");//

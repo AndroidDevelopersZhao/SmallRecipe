@@ -20,18 +20,11 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-
-
-
-
-
     <style name="line_huise_1dp_horizontal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#d2d3d4</item>
     </style>
-
-
 
 
 </resources>

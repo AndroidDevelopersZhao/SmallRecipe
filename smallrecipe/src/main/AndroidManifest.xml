@@ -3,14 +3,17 @@
     package="com.cn.smallrecipe">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <!-- 软件主页-->
+        android:theme="@style/AppTheme"
+        >
+
+        <!-- 软件主页 -->
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
@@ -22,29 +25,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- 欢迎页-->
+        <!-- 欢迎页 -->
         <activity
             android:name=".activity.WelcomeActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <!-- 搜索页-->
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 搜索页 -->
         <activity
             android:name=".activity.SearchActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <!-- 登陆页-->
+        <!-- 登陆页 -->
         <activity
             android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <!-- 注册页-->
+        <!-- 注册页 -->
         <activity
             android:name=".activity.RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- 个人中心 -->
+        <activity
+            android:name=".activity.PersonalActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- 菜单详情页面-->
+        <activity
+            android:name=".activity.RecipeDetail"
+            android:label="@string/title_activity_recipe_detail"
             android:theme="@style/AppTheme.NoActionBar">
+
         </activity>
-        <!-- 个人中心-->
-        <activity android:name=".activity.PersonalActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

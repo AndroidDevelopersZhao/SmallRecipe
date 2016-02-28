@@ -8,8 +8,17 @@ public class Item {
     String url=null;
     String ingredients=null;
     String burden=null;
+    String id = null;
 
-//    public Item(String title, String url, String ingredients, String burden) {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    //    public Item(String title, String url, String ingredients, String burden) {
 //        this.title = title;
 //        this.url = url;
 //        this.ingredients = ingredients;
