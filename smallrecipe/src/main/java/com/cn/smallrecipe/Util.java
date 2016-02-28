@@ -6,6 +6,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.cn.smallrecipe.datainfo.search.AllInfo;
+import com.cn.smallrecipe.datainfo.search.Data;
 
 import java.util.ArrayList;
 
@@ -15,7 +16,9 @@ import java.util.ArrayList;
 public class Util {
     public static final String TAG = "SmallRecipe";
     public static final String APPKEY = "2fcb58bbc897587691627b81093c63d0";
-    public static final String URL_SEARCH = "http://apis.juhe.cn/cook/query.php";
+    public static final String URL_SEARCH = "http://apis.juhe.cn/cook/query.php";//关键字索引菜单
+    public static final String URL_GETRECIPEDETAILS_JUHE = "http://apis.juhe.cn/cook/queryid";//根据ID索引菜谱详细信息
+
     //    private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
     private static String url = "http://192.168.51.109:8080/SmallRecipeService/";
 
@@ -43,6 +46,8 @@ public class Util {
             bundle.putSerializable("data", (AllInfo) object);
         } else if (object instanceof byte[]) {
             bundle.putSerializable("data", (byte[]) object);
+        } else if (object instanceof Data) {
+            bundle.putSerializable("data", (Data) object);
         } else {
             bundle.putString(TAG, "参数类型未定义,请至工具类定义");
         }

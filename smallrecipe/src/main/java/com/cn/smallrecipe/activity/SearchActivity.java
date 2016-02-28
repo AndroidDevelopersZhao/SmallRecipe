@@ -58,9 +58,10 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //跳入详情页面，带过去菜谱ID
-                Log.d(TAG, "OnItemClickListener-ListView-Search" + adapter.getItem(position).getId());
+                Log.d(TAG, "position:" + position);
+                Log.d(TAG, "OnItemClickListener-ListView-Search" + adapter.getItem(position - 1).getId());
                 Intent intent = new Intent(SearchActivity.this, RecipeDetail.class);
-                intent.putExtra("id", adapter.getItem(position).getId());
+                intent.putExtra("id", adapter.getItem(position - 1).getId());
                 startActivity(intent);
             }
         });
@@ -134,6 +135,12 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
                     case 1:
                         AllInfo allInfo = (AllInfo) msg.getData().getSerializable("data");
                         Log.d(TAG, "search was successful,ErrorCode:" + allInfo.getError_code());
+                        for (int i = 0; i < allInfo.getResult().getData().size(); i++) {
+                            if (allInfo.getResult().getData().get(i).getBurden().split(";").length>12)
+                            Log.w(TAG, "-----------" + allInfo.getResult().getData().get(i).getBurden().split(";").length
+                                    + ",----" + allInfo.getResult().getData().get(i).getTitle());
+                        }
+
                         setAdapterData(allInfo);
 
                         break;
@@ -187,7 +194,7 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
             item.setTitle(datas.get(i).getTitle());
             item.setIngredients(datas.get(i).getIngredients());
             item.setBurden(datas.get(i).getBurden());
-            item.setId(datas.get(i).getId());
+            item.setId(datas.get(i).getId().toString());
             ArrayList<String> urls = datas.get(i).getAlbums();
             if (urls.size() == 0) {
                 item.setUrl("http://www.2cto.com/uploadfile/2012/0207/20120207012945988.jpg");//

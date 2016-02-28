@@ -1,0 +1,1440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5sp"
+        android:layout_marginRight="5sp"
+        android:layout_marginTop="15sp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <!-- 左边-->
+            <LinearLayout
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="主料" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_main_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_main_1_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料1"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_1_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_main_1_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_main_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_main_3_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料3"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_3_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_3_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_main_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_main_5_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料5"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_5_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_5_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_main_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_main_7_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料7"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_7_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_7_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_9"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_main_9_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料9"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_9_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_9_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="辅料" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_1_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料1"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_1_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_1_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_3_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料3"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_3_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_3_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_5_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料5"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_5_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_5_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_7_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料7"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_7_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_7_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_9"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_9_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料9"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_9_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_9_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_11"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_11_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料11"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_11_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_11_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_13"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_13_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料11"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_13_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_13_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_15"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_15_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料11"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_15_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_15_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_17"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_17_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料11"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_17_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_17_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_19"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_19_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料19"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_19_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_19_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="25sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5sp"
+                        android:background="#c6c3c3" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <!-- 中间线-->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8sp"
+                android:layout_marginTop="8sp"
+                android:background="#c6c3c3" />
+
+            <LinearLayout
+                android:layout_width="0sp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_main_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_main_2_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料2"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_2_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_2_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_main_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_main_4_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料4"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_4_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_4_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_main_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_main_6_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料6"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_6_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_6_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_main_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_main_8_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料8"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_8_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_8_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="56sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_main_10_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="主料8"
+                        android:textColor="#e2af50"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_main_10_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text=""
+                        android:textColor="#b6b2b2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_main_10_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_2_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料2"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_2_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_2_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_4_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料4"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_4_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_4_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_6_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料6"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_6_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_6_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_8_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料8"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_8_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_8_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_10_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料10"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_10_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_10_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_12"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_12_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料12"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_12_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_12_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_14"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_14_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料14"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_14_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_14_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_16"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_16_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料16"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_16_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_16_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_18"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_18_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料18"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_18_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_18_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_20"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fu_20_title"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="辅料20"
+                        android:textColor="#dac445"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/tv_fu_20_value"
+                        android:layout_width="0sp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lt_fu_20_xian"
+                    android:layout_width="match_parent"
+                    android:layout_height="17sp"
+                    android:layout_marginRight="10sp"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c6c3c3" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
