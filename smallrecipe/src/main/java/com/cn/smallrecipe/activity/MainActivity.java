@@ -29,6 +29,7 @@ import com.cn.smallrecipe.fragment.F_Sniff;
 import com.cn.smallrecipe.fragment.F_Star;
 import com.google.gson.Gson;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ import cn.com.xxutils.util.XXSharedPreferences;
 import cn.com.xxutils.util.XXUtils;
 import cn.com.xxutils.view.XXRoundImageView;
 
-public class MainActivity extends MyActivity implements View.OnClickListener {
+public class MainActivity extends MyActivity implements View.OnClickListener,Serializable {
     private TabLayout tabs;
     private ViewPager vp;
     private XXTableFragmentAdapter adapter;

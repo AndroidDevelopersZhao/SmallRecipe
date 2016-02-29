@@ -1,3 +1,4 @@
+
 package com.cn.smallrecipe.fragment;
 
 import android.content.Intent;
@@ -6,16 +7,13 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +21,6 @@ import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.ParentFragment;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
-import com.cn.smallrecipe.activity.LoginActivity;
 import com.cn.smallrecipe.activity.MainActivity;
 import com.cn.smallrecipe.activity.PersonalActivity;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfos;

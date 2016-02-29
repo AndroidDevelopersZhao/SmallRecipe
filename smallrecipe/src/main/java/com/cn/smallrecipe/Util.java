@@ -20,7 +20,9 @@ public class Util {
     public static final String URL_GETRECIPEDETAILS_JUHE = "http://apis.juhe.cn/cook/queryid";//根据ID索引菜谱详细信息
 
     //    private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
-    private static String url = "http://192.168.51.109:8080/SmallRecipeService/";
+    private static String url = "http://192.168.13.121:8080/SmallRecipeService/";//公司
+//    private static String url = "http://192.168.51.109:8080/SmallRecipeService/";//家
+
 
     public static final String URL_SERVICE_REGISTER = url + "register";//注册URL
     public static final String URL_SERVICE_LOGIN = url + "login";//登陆URL
