@@ -262,6 +262,7 @@ public class F_My extends ParentFragment {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case -1:
+                        if (F_My.this.isVisible())
                         Toast.makeText(getActivity(), "请设置用户头像", Toast.LENGTH_LONG).show();
                         imageView.setImageResource(R.drawable.userlogodefult);
                         break;

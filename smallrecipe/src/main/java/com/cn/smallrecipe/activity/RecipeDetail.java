@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -23,17 +24,23 @@ import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
 import com.cn.smallrecipe.datainfo.recipedetail.RecipeDetailsInfo;
+import com.cn.smallrecipe.datainfo.register.RespData;
+import com.cn.smallrecipe.datainfo.register.ResultToApp;
 import com.cn.smallrecipe.datainfo.search.AllInfo;
 import com.cn.smallrecipe.datainfo.search.Data;
+import com.cn.smallrecipe.datainfo.search.Result;
 import com.cn.smallrecipe.datainfo.search.Steps;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 import cn.com.xxutils.adapter.XXListViewAdapter;
+import cn.com.xxutils.likebutton.OnLikeListener;
+import cn.com.xxutils.likebutton.XXLikeButton;
 import cn.com.xxutils.util.XXHttpClient;
 import cn.com.xxutils.util.XXImagesLoader;
 import cn.com.xxutils.util.XXListViewAnimationMode;
+import cn.com.xxutils.util.XXSharedPreferences;
 import cn.com.xxutils.view.XXListView;
 
 public class RecipeDetail extends MyActivity {
@@ -59,6 +66,11 @@ public class RecipeDetail extends MyActivity {
             tv_fu_7_title, tv_fu_8_title, tv_fu_9_title, tv_fu_10_title, tv_fu_11_title, tv_fu_12_title, tv_fu_13_title, tv_fu_14_title, tv_fu_15_title, tv_fu_16_title, tv_fu_17_title, tv_fu_18_title, tv_fu_19_title, tv_fu_20_title;
     private TextView tv_fu_1_value, tv_fu_2_value, tv_fu_3_value, tv_fu_4_value, tv_fu_5_value, tv_fu_6_value,
             tv_fu_7_value, tv_fu_8_value, tv_fu_9_value, tv_fu_10_value, tv_fu_11_value, tv_fu_12_value, tv_fu_13_value, tv_fu_14_value, tv_fu_15_value, tv_fu_16_value, tv_fu_17_value, tv_fu_18_value, tv_fu_19_value, tv_fu_20_value;
+    private TextView tv_star_number;
+    private TextView tv_like_number;
+    private TextView tv_comment_number;
+    private XXLikeButton star_button;
+    private XXLikeButton like_button;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,8 +79,10 @@ public class RecipeDetail extends MyActivity {
         initView();
     }
 
+    private String id;
+
     private void getData() {
-        String id = getIntent().getStringExtra("id");
+        id = getIntent().getStringExtra("id");
         if (id == null) {
             Toast.makeText(this, "获取菜谱ID失败", Toast.LENGTH_LONG).show();
             return;
@@ -98,6 +112,13 @@ public class RecipeDetail extends MyActivity {
                         Log.d(TAG, "即将拆分数据，并设置到VIew");
                         Data data = (Data) msg.getData().getSerializable("data");
                         setView(data);
+
+                        //后台获取用户状态--是否可以收藏点赞，以及数据
+                        XXSharedPreferences shared_file = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+                        String usernumber = shared_file.get(RecipeDetail.this, "usernumber", "").toString();
+                        String sessionid = shared_file.get(RecipeDetail.this, "sessionid", "").toString();
+
+                        getUserLikeState(usernumber, sessionid, data.getId(), data.getTitle());
                         break;
                 }
             }
@@ -137,6 +158,69 @@ public class RecipeDetail extends MyActivity {
         client.put("key", Util.APPKEY);
         client.put("id", String.valueOf(id));
         client.doGet(15000);
+    }
+
+    private Handler handler_getUserLikeState = null;
+
+    private void getUserLikeState(String usernumber, String sessionid, String id, String title) {
+
+        handler_getUserLikeState = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case -1:
+                        Toast.makeText(RecipeDetail.this, msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 1:
+                        RespData respData = (RespData) msg.getData().getSerializable("data");
+                        tv_star_number.setText(respData.getCom_star_numbers());
+                        tv_like_number.setText(respData.getCom_like_number());
+                        tv_comment_number.setText(respData.getCom_comment_number());
+                        if (!respData.isIsUserStar()) {
+                            //点亮收藏按钮，设置不可点击
+                            star_button.setLiked(true);
+                        }
+
+                        if (!respData.isIsUserLike()) {
+                            like_button.setLiked(true);
+                        }
+                        break;
+                }
+            }
+        };
+
+        XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_GETALLRECIPEDATA
+                , true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+                Log.d(TAG, "获取所有菜单信息成功，" + new String(bytes));
+                ResultToApp resultToApp = new Gson().fromJson(new String(bytes), ResultToApp.class);
+                if (resultToApp.getErrorCode() == 9000) {
+                    Util.sendMsgToHandler(handler_getUserLikeState, resultToApp.getRespData(), true);
+                } else {
+                    Util.sendMsgToHandler(handler_getUserLikeState, resultToApp.getResultMsg(), false);
+                }
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Log.d(TAG, "获取所有菜单信息失败，网络异常");
+                Util.sendMsgToHandler(handler_getUserLikeState, "网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+
+        client.put("usernumber", usernumber);
+        client.put("sessionid", sessionid);
+        client.put("com_id", id);
+        client.put("com_name", title);
+
+        client.doPost(15000);
     }
 
     @Override
@@ -1689,6 +1773,88 @@ public class RecipeDetail extends MyActivity {
         };
         lv_recipe_detail.setAdapter(adapter);
         lv_recipe_detail.setListViewAnimation(adapter, XXListViewAnimationMode.ANIIMATION_ALPHA);
+
+        star_button.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(XXLikeButton XXLikeButton) {
+                //当按钮状态为灰色被点击时触发
+                Log.d(TAG, "用户申请收藏");
+                XXSharedPreferences preferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+
+                XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_STARORUNSTAR, true, new XXHttpClient.XXHttpResponseListener() {
+                    @Override
+                    public void onSuccess(int i, byte[] bytes) {
+                        Log.d(TAG, "" + new String(bytes));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                star_button.setLiked(true);
+                                star_button.setEnabled(false);
+                                int a = Integer.valueOf(tv_star_number.getText().toString());
+                                a++;
+                                tv_star_number.setText(String.valueOf(a));
+                                Toast.makeText(RecipeDetail.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(int i, Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onProgress(long bytesWritten, long totalSize) {
+
+                    }
+                });
+                client.put("usernumber", preferences.get(RecipeDetail.this, "usernumber", "").toString());
+                client.put("sessionid", preferences.get(RecipeDetail.this, "sessionid", "").toString());
+                client.put("com_id", id);
+                client.put("type", "1");
+
+                client.doPost(15000);
+            }
+
+            @Override
+            public void unLiked(XXLikeButton XXLikeButton) {
+                Log.d(TAG, "用户申请取消收藏");
+                XXSharedPreferences preferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+
+                XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_STARORUNSTAR, true, new XXHttpClient.XXHttpResponseListener() {
+                    @Override
+                    public void onSuccess(int i, byte[] bytes) {
+                        Log.d(TAG, "" + new String(bytes));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                star_button.setLiked(false);
+                                int a = Integer.valueOf(tv_star_number.getText().toString());
+                                a--;
+                                tv_star_number.setText(String.valueOf(a));
+                                Toast.makeText(RecipeDetail.this, "取消成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(int i, Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onProgress(long bytesWritten, long totalSize) {
+
+                    }
+                });
+                client.put("usernumber", preferences.get(RecipeDetail.this, "usernumber", "").toString());
+                client.put("sessionid", preferences.get(RecipeDetail.this, "sessionid", "").toString());
+                client.put("com_id", id);
+                client.put("type", "2");
+
+                client.doPost(15000);
+            }
+        });
     }
 
     private void initView() {
@@ -1841,7 +2007,11 @@ public class RecipeDetail extends MyActivity {
         tv_fu_18_value = (TextView) findViewById(R.id.tv_fu_18_value);
         tv_fu_19_value = (TextView) findViewById(R.id.tv_fu_19_value);
         tv_fu_20_value = (TextView) findViewById(R.id.tv_fu_20_value);
-
+        tv_star_number = (TextView) findViewById(R.id.tv_star_number);
+        tv_like_number = (TextView) findViewById(R.id.tv_like_number);
+        tv_comment_number = (TextView) findViewById(R.id.tv_comment_number);
+        star_button = (XXLikeButton) findViewById(R.id.star_button);
+        like_button = (XXLikeButton) findViewById(R.id.like_button);
     }
 
 }

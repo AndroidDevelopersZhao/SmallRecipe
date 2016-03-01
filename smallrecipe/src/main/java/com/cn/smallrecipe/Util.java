@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.cn.smallrecipe.datainfo.register.RespData;
 import com.cn.smallrecipe.datainfo.search.AllInfo;
 import com.cn.smallrecipe.datainfo.search.Data;
 
@@ -20,7 +21,7 @@ public class Util {
     public static final String URL_GETRECIPEDETAILS_JUHE = "http://apis.juhe.cn/cook/queryid";//根据ID索引菜谱详细信息
 
     //    private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
-    private static String url = "http://192.168.13.121:8080/SmallRecipeService/";//公司
+    private static String url = "http://192.168.13.107:8080/SmallRecipeService/";//公司
 //    private static String url = "http://192.168.51.109:8080/SmallRecipeService/";//家
 
 
@@ -31,6 +32,8 @@ public class Util {
     public static final String URL_SERVICE_AUTH_SESSIONID = url + "authsessionid";//退出登陆URL
     public static final String URL_SERVICE_AUTH_UPDATEUSERLOGO = url + "updateuserlogo";//更新用户头像
     public static final String URL_SERVICE_AUTH_GETUSERLOGO = url + "getuserlogo";//获取用户头像
+    public static final String URL_SERVICE_GETALLRECIPEDATA = url + "allrecipe";//获取菜谱所有信息
+    public static final String URL_SERVICE_STARORUNSTAR = url + "starorunstr";//收藏或者取消收藏
 
     public static void sendMsgToHandler(Handler handler, Object object, boolean isSucc) {
         if (handler == null || object == null) {
@@ -50,6 +53,8 @@ public class Util {
             bundle.putSerializable("data", (byte[]) object);
         } else if (object instanceof Data) {
             bundle.putSerializable("data", (Data) object);
+        } else if (object instanceof RespData) {
+            bundle.putSerializable("data", (RespData) object);
         } else {
             bundle.putString(TAG, "参数类型未定义,请至工具类定义");
         }
