@@ -65,6 +65,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener,Ser
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+
     }
 
     private void initView() {

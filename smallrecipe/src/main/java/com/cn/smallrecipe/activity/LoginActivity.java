@@ -42,6 +42,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "inter LoginActivity view");
         setContentView(R.layout.activity_login);
+
         findId();
         setOclick();
     }

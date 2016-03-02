@@ -67,9 +67,10 @@ public class XXSharedPreferences {
             editor.putFloat(key, (Float) object);
         } else if (object instanceof Long) {
             editor.putLong(key, (Long) object);
-        } else {
-            editor.putString(key, object.toString());
         }
+//        else {
+//            editor.putString(key, object.toString());
+//        }
 
         SharedPreferencesCompat.apply(editor);
     }
