@@ -7,13 +7,17 @@ import android.util.Log;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 /**
  * Created by Administrator on 2016/2/22.
  */
 public class XXApplication extends Application {
     public static final String TAG = "libs-xxutils";
-//    private RefWatcher refWatcher;
+    private RefWatcher mRefWatcher;
+
+    //    private RefWatcher refWatcher;
 //    public static RefWatcher getRefWatcher(Context context) {
 //        XXApplication application = (XXApplication) context
 //                .getApplicationContext();
@@ -29,10 +33,7 @@ public class XXApplication extends Application {
         //Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(configuration);
         Log.d(TAG, "Universal-Image-Loader 在Application初始化成功");
-//        enabledStrictMode();
-//        refWatcher = LeakCanary.install(this);
-//        Log.d(XXApplication.TAG, "内存泄露工具初始化成功");
-
+        mRefWatcher = LeakCanary.install(this);
     }
 
 
