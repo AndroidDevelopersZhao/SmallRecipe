@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +19,16 @@ import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
 import com.cn.smallrecipe.datainfo.register.ResultToApp;
+import com.cn.smallrecipe.qqinfo.BaseUiListener;
 import com.google.gson.Gson;
+import com.tencent.connect.UserInfo;
+import com.tencent.connect.common.Constants;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import cn.com.xxutils.alerterview.OnItemClickListener;
 import cn.com.xxutils.alerterview.XXAlertView;
@@ -36,6 +47,9 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
     private AutoCompleteTextView auto_text_usernumber;
     private EditText et_text_password;
     private ImageView bt_login_login;
+    private Button bt_login_with_qq;
+    private final String APP_ID = "1105221610";
+    private Tencent mTencent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +65,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         layout_register.setOnClickListener(this);
         layout_login_back.setOnClickListener(this);
         bt_login_login.setOnClickListener(this);
+        bt_login_with_qq.setOnClickListener(this);
     }
 
     private void findId() {
@@ -59,6 +74,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         auto_text_usernumber = (AutoCompleteTextView) findViewById(R.id.auto_text_usernumber);
         et_text_password = (EditText) findViewById(R.id.et_text_password);
         bt_login_login = (ImageView) findViewById(R.id.bt_login_login);
+        bt_login_with_qq = (Button) findViewById(R.id.bt_login_with_qq);
     }
 
     @Override
@@ -95,8 +111,89 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                     Toast.makeText(this, "用户名密码不能为空", Toast.LENGTH_SHORT).show();
                 }
                 break;
+
+            case R.id.bt_login_with_qq:
+                //QQ登陆
+                loginWithQQ();
+                break;
         }
     }
+
+    /**
+     * ｓｈｉｙｏｎｇＱＱ登陆
+     */
+    private void loginWithQQ() {
+        // Tencent类是SDK的主要实现类，开发者可通过Tencent类访问腾讯开放的OpenAPI。
+        // 其中APP_ID是分配给第三方应用的appid，类型为String。
+        mTencent = Tencent.createInstance(APP_ID, this.getApplicationContext());
+        // 1.4版本:此处需新增参数，传入应用程序的全局context，可通过activity的getApplicationContext方法获取
+        login();
+    }
+
+    public void login() {
+        mTencent = Tencent.createInstance(APP_ID, this.getApplicationContext());
+        if (!mTencent.isSessionValid()) {
+            mTencent.login(this, "all", new IUiListener() {
+                @Override
+                public void onComplete(Object o) {
+                    Log.d(TAG,"授权登陆成功："+o.toString());
+                    Toast.makeText(LoginActivity.this,"授权登陆成功，"+o.toString(),Toast.LENGTH_SHORT).show();
+                    try {
+                        JSONObject jsonObject = new JSONObject(o.toString());
+                        initOpenidAndToken(jsonObject);
+                        UserInfo info = new UserInfo(LoginActivity.this, mTencent.getQQToken());
+                        info.getUserInfo(new IUiListener() {
+                            @Override
+                            public void onComplete(Object o) {
+                                Log.d(TAG, "用户信息获取成功：" + o.toString());
+                            }
+
+                            @Override
+                            public void onError(UiError uiError) {
+                                Log.e(TAG, "用户信息获取失败：" + uiError.errorMessage);
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                Log.e(TAG, "用户取消获取");
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+                @Override
+                public void onError(UiError uiError) {
+
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
+        }
+
+
+    }
+
+
+    public void initOpenidAndToken(JSONObject jsonObject) {
+        try {
+            String token = jsonObject.getString(Constants.PARAM_ACCESS_TOKEN);
+            String expires = jsonObject.getString(Constants.PARAM_EXPIRES_IN);
+            String openId = jsonObject.getString(Constants.PARAM_OPEN_ID);
+            if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(expires)
+                    && !TextUtils.isEmpty(openId)) {
+                mTencent.setAccessToken(token, expires);
+                mTencent.setOpenId(openId);
+            }
+        } catch (Exception e) {
+        }
+    }
+
 
     private Handler handler_login = null;
     private String uid = null;
@@ -280,6 +377,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Tencent.onActivityResultData(requestCode, resultCode, data, new BaseUiListener());
         if (requestCode == REQUEST_CODE) {
             //从注册页面返回
             Log.d(TAG, "onActivityResult-LoginActivity,requestCode:" + requestCode + ",resultCode:" + resultCode + ",data:" + data);
@@ -292,7 +390,6 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
             }
         }
     }
-
 
 
 }

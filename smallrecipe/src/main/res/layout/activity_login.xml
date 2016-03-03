@@ -84,7 +84,7 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="#FFFFFF"
             android:orientation="vertical">
 
@@ -120,12 +120,12 @@
                 <AutoCompleteTextView
                     android:id="@+id/auto_text_usernumber"
                     android:layout_width="0sp"
-                    android:inputType="number"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20sp"
                     android:layout_weight="4"
                     android:background="@null"
-                    android:hint="用户名" />
+                    android:hint="用户名"
+                    android:inputType="number" />
             </LinearLayout>
 
             <LinearLayout
@@ -161,13 +161,13 @@
                     android:id="@+id/et_text_password"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
-                    android:inputType="textPassword"
                     android:layout_marginLeft="20sp"
                     android:layout_weight="4"
                     android:background="@null"
-                    android:hint="密码" />
-            </LinearLayout>
+                    android:hint="密码"
+                    android:inputType="textPassword" />
 
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/bt_login_login"
@@ -177,6 +177,24 @@
                 android:layout_marginRight="30sp"
                 android:layout_marginTop="20sp"
                 android:src="@drawable/bt_login" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15sp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <Button
+                android:id="@+id/bt_login_with_qq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QQ登陆" />
+
         </LinearLayout>
 
     </LinearLayout>
