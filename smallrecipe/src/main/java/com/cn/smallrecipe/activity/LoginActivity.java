@@ -136,8 +136,8 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
             mTencent.login(this, "all", new IUiListener() {
                 @Override
                 public void onComplete(Object o) {
-                    Log.d(TAG,"授权登陆成功："+o.toString());
-                    Toast.makeText(LoginActivity.this,"授权登陆成功，"+o.toString(),Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "授权登陆成功：" + o.toString());
+
                     try {
                         JSONObject jsonObject = new JSONObject(o.toString());
                         initOpenidAndToken(jsonObject);
@@ -146,6 +146,20 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                             @Override
                             public void onComplete(Object o) {
                                 Log.d(TAG, "用户信息获取成功：" + o.toString());
+                                try {
+                                    JSONObject jo=new JSONObject(o.toString());
+
+                                    Toast.makeText(LoginActivity.this,"授权登陆成功：\n是否为年费黄钻："
+                                            +jo.getString("is_yellow_year_vip")+
+                                            "\nQQ头像URL："+jo.getString("figureurl_qq_1")+
+                                            "\n昵称："+jo.getString("nickname")+
+                                            "\n城市："+jo.getString("city")+
+                                            "\n城市："+jo.getString("province")+
+                                            "\n性别："+jo.getString("gender")+
+                                            "\n",Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                             @Override
