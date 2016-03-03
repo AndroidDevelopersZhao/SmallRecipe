@@ -99,14 +99,14 @@ public class MainActivity extends MyActivity implements View.OnClickListener,Ser
 
         List<String> strs = new ArrayList<>();
         strs.add("首页");
-        strs.add("秀色可餐");
-        strs.add("我的收藏");
+//        strs.add("秀色可餐");
+//        strs.add("我的收藏");
         strs.add("朋友圈");
         strs.add("个人中心");
 
         fragments.add(new F_Home());
-        fragments.add(new F_Sniff());
-        fragments.add(new F_Star());
+//        fragments.add(new F_Sniff());
+//        fragments.add(new F_Star());
         fragments.add(new F_Friend());
         fragments.add(new F_My());
         adapter = new XXTableFragmentAdapter(getSupportFragmentManager(), strs, fragments);

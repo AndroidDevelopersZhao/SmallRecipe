@@ -17,7 +17,7 @@
         <AutoCompleteTextView
             android:id="@+id/et_search"
             android:layout_width="match_parent"
-            android:layout_height="30sp"
+            android:layout_height="40sp"
             android:layout_weight="5"
             android:background="@drawable/background_left_search"
             android:hint="大声告诉我你想吃什么"
@@ -25,8 +25,8 @@
 
         <ImageView
             android:id="@+id/bt_search"
-            android:layout_width="25sp"
-            android:layout_height="25sp"
+            android:layout_width="35sp"
+            android:layout_height="35sp"
             android:layout_alignRight="@+id/et_search"
             android:layout_centerInParent="true"
             android:layout_weight="1.5"
