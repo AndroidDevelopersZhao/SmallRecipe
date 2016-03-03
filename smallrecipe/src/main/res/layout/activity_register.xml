@@ -164,7 +164,6 @@
                     android:layout_weight="1.8"
                     android:background="@null"
                     android:hint="手机号码"
-                    android:text="15221340931"
                     android:inputType="number" />
 
                 <LinearLayout
@@ -174,6 +173,7 @@
                     android:gravity="center">
 
                     <Button
+                        android:id="@+id/bt_send_sms"
                         android:layout_width="70sp"
                         android:layout_height="40sp"
                         android:background="@drawable/icon_register_codeview"
@@ -207,6 +207,7 @@
                 </LinearLayout>
 
                 <EditText
+                    android:id="@+id/et_sms_code"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.8"
@@ -250,7 +251,6 @@
                     android:layout_weight="1.8"
                     android:background="@null"
                     android:hint="密码"
-                    android:text="123456"
                     android:inputType="textPassword" />
 
                 <View

@@ -10,6 +10,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+
 /**
  * Created by Administrator on 2016/2/22.
  */
@@ -33,9 +36,10 @@ public class XXApplication extends Application {
         //Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(configuration);
         Log.d(TAG, "Universal-Image-Loader 在Application初始化成功");
-        mRefWatcher = LeakCanary.install(this);
+//        mRefWatcher = LeakCanary.install(this);
+        SMSSDK.initSDK(this, "1003e1393046d", "07a19ef8a4ea4f02c699bc4399d4bda4");
+        Log.d(TAG, "SMSSDK 在Application初始化成功");
     }
-
 
     private void enabledStrictMode() {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()

@@ -8,6 +8,9 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import cn.smssdk.EventHandler;
+import cn.smssdk.SMSSDK;
+
 /**
  * Created by Administrator on 2016/2/23.
  */
@@ -18,6 +21,8 @@ public class MyActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "The parent class is inherited one times," + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         super.onCreate(savedInstanceState);
+
+
     }
 
 }

@@ -9,9 +9,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,12 +23,9 @@ import com.cn.smallrecipe.datainfo.register.ResultToApp;
 import com.cn.smallrecipe.fragment.F_Friend;
 import com.cn.smallrecipe.fragment.F_Home;
 import com.cn.smallrecipe.fragment.F_My;
-import com.cn.smallrecipe.fragment.F_Sniff;
-import com.cn.smallrecipe.fragment.F_Star;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +33,10 @@ import cn.com.xxutils.adapter.XXTableFragmentAdapter;
 import cn.com.xxutils.alerterview.OnItemClickListener;
 import cn.com.xxutils.alerterview.XXAlertView;
 import cn.com.xxutils.util.XXHttpClient;
-import cn.com.xxutils.util.XXImagesLoader;
 import cn.com.xxutils.util.XXSharedPreferences;
-import cn.com.xxutils.util.XXUtils;
 import cn.com.xxutils.view.XXRoundImageView;
 
-public class MainActivity extends MyActivity implements View.OnClickListener,Serializable {
+public class MainActivity extends MyActivity implements View.OnClickListener, Serializable {
     private TabLayout tabs;
     private ViewPager vp;
     private XXTableFragmentAdapter adapter;
@@ -113,7 +106,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener,Ser
         sharedPreferences_sessionId = new XXSharedPreferences(SHAREDSESSIONIDSAVEEDNAME);
         sessionid_file = String.valueOf(sharedPreferences_sessionId.get(this, "sessionid", ""));
         usernumber_file = String.valueOf(sharedPreferences_sessionId.get(this, "usernumber", ""));
-        Log.d(TAG,"读取到本地存储的usernumber="+usernumber_file);
+        Log.d(TAG, "读取到本地存储的usernumber=" + usernumber_file);
         if (sessionid_file != null && !sessionid_file.equals("")) {
             MyActivity.LOGIN_STATE = true;
             //获取该用户对应的头像、昵称等个人信息
@@ -221,7 +214,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener,Ser
     protected void onRestart() {
         sharedPreferences_sessionId = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
         sessionid_file = String.valueOf(sharedPreferences_sessionId.get(this, "sessionid", ""));
-        usernumber_file=String.valueOf(sharedPreferences_sessionId.get(this, "usernumber", ""));
+        usernumber_file = String.valueOf(sharedPreferences_sessionId.get(this, "usernumber", ""));
         if (sessionid_file != null && !sessionid_file.equals("")) {
             MyActivity.LOGIN_STATE = true;
             //获取该用户对应的头像、昵称等个人信息
@@ -313,7 +306,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener,Ser
                 if (!MyActivity.LOGIN_STATE) {
                     //未登录,打开登陆页面
                     startLogin();
-                }else {
+                } else {
                     //已经登陆
                     startActivity(new Intent(MainActivity.this, PersonalActivity.class));
                 }
