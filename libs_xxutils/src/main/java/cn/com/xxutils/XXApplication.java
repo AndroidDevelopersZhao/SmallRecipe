@@ -7,18 +7,15 @@ import android.util.Log;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
-import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+
 
 /**
  * Created by Administrator on 2016/2/22.
  */
 public class XXApplication extends Application {
     public static final String TAG = "libs-xxutils";
-    private RefWatcher mRefWatcher;
 
     //    private RefWatcher refWatcher;
 //    public static RefWatcher getRefWatcher(Context context) {

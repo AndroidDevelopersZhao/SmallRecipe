@@ -178,19 +178,20 @@ public class RegisterActivity extends MyActivity implements View.OnClickListener
             case R.id.bt_register_register:
                 //TODO 上送注册信息部分代码
                 //验证验证码
-                Log.d(TAG, et_sms_code.getText().toString());
-                if (et_register_phoneNumber != null
-                        && !et_register_phoneNumber.getText().toString().equals("")
-                        && et_sms_code != null
-                        && !et_sms_code.getText().toString().equals("")
-                        && et_register_password != null
-                        && !et_register_password.getText().toString().equals("")) {
-
-                    XXSVProgressHUD.showWithStatus(RegisterActivity.this, "正在验证验证码，请稍后...");
-                    SMSSDK.submitVerificationCode("+86", finalNumber, et_sms_code.getText().toString().trim());
-                } else {
-                    Toast.makeText(RegisterActivity.this, "验证码和密码不可为空", Toast.LENGTH_SHORT).show();
-                }
+//                Log.d(TAG, et_sms_code.getText().toString());
+//                if (et_register_phoneNumber != null
+//                        && !et_register_phoneNumber.getText().toString().equals("")
+//                        && et_sms_code != null
+//                        && !et_sms_code.getText().toString().equals("")
+//                        && et_register_password != null
+//                        && !et_register_password.getText().toString().equals("")) {
+//
+//                    XXSVProgressHUD.showWithStatus(RegisterActivity.this, "正在验证验证码，请稍后...");
+//                    SMSSDK.submitVerificationCode("+86", finalNumber, et_sms_code.getText().toString().trim());
+//                } else {
+//                    Toast.makeText(RegisterActivity.this, "验证码和密码不可为空", Toast.LENGTH_SHORT).show();
+//                }
+                register(et_register_phoneNumber.getText().toString(), et_register_password.getText().toString());
 
                 break;
 

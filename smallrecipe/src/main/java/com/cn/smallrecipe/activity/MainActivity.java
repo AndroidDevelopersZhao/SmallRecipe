@@ -135,6 +135,9 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
                         MainActivity.LOGIN_STATE = false;
                         userLogo_main.setImageResource(R.drawable.userlogodefult);
                         userName_main.setText("点我登陆");
+                        if (MyActivity.TENCENT != null)
+                            if (MyActivity.TENCENT != null)
+                                MyActivity.TENCENT.logout(MainActivity.this);
                         new XXAlertView("提示", "登陆状态失效，请重新登陆，" + msg.getData().getString("data"), "重新登陆", new String[]{"稍后再试"}, null, MainActivity.this,
                                 XXAlertView.Style.Alert, new OnItemClickListener() {
                             @Override

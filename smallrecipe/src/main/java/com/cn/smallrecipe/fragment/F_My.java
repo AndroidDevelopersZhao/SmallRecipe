@@ -21,6 +21,7 @@ import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.ParentFragment;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
+import com.cn.smallrecipe.activity.LoginActivity;
 import com.cn.smallrecipe.activity.MainActivity;
 import com.cn.smallrecipe.activity.PersonalActivity;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfos;
@@ -102,7 +103,9 @@ public class F_My extends ParentFragment {
                         @Override
                         public void onItemClick(Object o, int position) {
                             Log.d(TAG, "position:" + position);
-
+                            if (position==0){
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                            }
                         }
                     }).show();
                 }
@@ -311,6 +314,8 @@ public class F_My extends ParentFragment {
                 switch (msg.what) {
                     case -1:
                         MainActivity.LOGIN_STATE = false;
+                        if (MyActivity.TENCENT != null)
+                        MyActivity.TENCENT.logout(getActivity());
                         setData();
                         if (F_My.this.isVisible()) {
                             XXRoundImageView xxRoundImageView = (XXRoundImageView) getActivity().findViewById(R.id.userLogo_main);

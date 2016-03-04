@@ -1,6 +1,10 @@
 package com.cn.smallrecipe.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +41,8 @@ import cn.com.xxutils.alerterview.XXAlertView;
 import cn.com.xxutils.progress.XXSVProgressHUD;
 import cn.com.xxutils.util.XXHttpClient;
 import cn.com.xxutils.util.XXSharedPreferences;
+import cn.com.xxutils.util.XXUtils;
+import cn.com.xxutils.volley.toolbox.Volley;
 
 /**
  * Created by Administrator on 2016/2/25.
@@ -47,9 +55,10 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
     private AutoCompleteTextView auto_text_usernumber;
     private EditText et_text_password;
     private ImageView bt_login_login;
-    private Button bt_login_with_qq;
+    private ImageView bt_login_with_qq;
     private final String APP_ID = "1105221610";
     private Tencent mTencent;
+    private CheckBox cb_checkbox;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +68,13 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
 
         findId();
         setOclick();
+        try {
+            et_text_password.setText(new XXSharedPreferences("UserLoginInfo").get(LoginActivity.this, "password", "").toString());
+            auto_text_usernumber.setText(new XXSharedPreferences("UserLoginInfo").get(LoginActivity.this, "usernumber", "").toString());
+
+        } catch (Throwable throwable) {
+            Log.d(TAG, "本地未保存用户登陆信息");
+        }
     }
 
     private void setOclick() {
@@ -66,6 +82,12 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         layout_login_back.setOnClickListener(this);
         bt_login_login.setOnClickListener(this);
         bt_login_with_qq.setOnClickListener(this);
+        cb_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d(TAG, "isChecked:" + isChecked);
+            }
+        });
     }
 
     private void findId() {
@@ -74,7 +96,8 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         auto_text_usernumber = (AutoCompleteTextView) findViewById(R.id.auto_text_usernumber);
         et_text_password = (EditText) findViewById(R.id.et_text_password);
         bt_login_login = (ImageView) findViewById(R.id.bt_login_login);
-        bt_login_with_qq = (Button) findViewById(R.id.bt_login_with_qq);
+        bt_login_with_qq = (ImageView) findViewById(R.id.bt_login_with_qq);
+        cb_checkbox = (CheckBox) findViewById(R.id.cb_checkbox);
     }
 
     @Override
@@ -100,7 +123,6 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                 this.finish();
                 break;
             case R.id.bt_login_login:
-
                 usernumber = auto_text_usernumber.getText().toString().trim();
                 String password = et_text_password.getText().toString().trim();
                 if (usernumber != null && !usernumber.equals("")
@@ -137,26 +159,28 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                 @Override
                 public void onComplete(Object o) {
                     Log.d(TAG, "授权登陆成功：" + o.toString());
-
+                    MyActivity.TENCENT = mTencent;
                     try {
                         JSONObject jsonObject = new JSONObject(o.toString());
                         initOpenidAndToken(jsonObject);
+                        final String openId = jsonObject.getString("openid");
                         UserInfo info = new UserInfo(LoginActivity.this, mTencent.getQQToken());
                         info.getUserInfo(new IUiListener() {
                             @Override
                             public void onComplete(Object o) {
                                 Log.d(TAG, "用户信息获取成功：" + o.toString());
+                                //发起一条注册请求
                                 try {
-                                    JSONObject jo=new JSONObject(o.toString());
-
-                                    Toast.makeText(LoginActivity.this,"授权登陆成功：\n是否为年费黄钻："
-                                            +jo.getString("is_yellow_year_vip")+
-                                            "\nQQ头像URL："+jo.getString("figureurl_qq_1")+
-                                            "\n昵称："+jo.getString("nickname")+
-                                            "\n城市："+jo.getString("city")+
-                                            "\n城市："+jo.getString("province")+
-                                            "\n性别："+jo.getString("gender")+
-                                            "\n",Toast.LENGTH_SHORT).show();
+                                    JSONObject jo = new JSONObject(o.toString());
+                                    loginForQQ(openId, jo.getString("nickname"), jo.getString("figureurl_qq_1"));
+//                                    Toast.makeText(LoginActivity.this, "授权登陆成功：\n是否为年费黄钻："
+//                                            + jo.getString("is_yellow_year_vip") +
+//                                            "\nQQ头像URL：" + jo.getString("figureurl_qq_1") +
+//                                            "\n昵称：" + jo.getString("nickname") +
+//                                            "\n城市：" + jo.getString("city") +
+//                                            "\n城市：" + jo.getString("province") +
+//                                            "\n性别：" + jo.getString("gender") +
+//                                            "\n", Toast.LENGTH_SHORT).show();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -193,6 +217,271 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
 
     }
 
+    private Handler handler_getuserlogoForQQ = null;
+
+    private void loginForQQ(final String openId, final String nickname, String figureurl_qq_1) {
+        //请求该QQ用户qq头像
+        handler_getuserlogoForQQ = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case -1:
+                        Toast.makeText(LoginActivity.this, msg.getData().getString("data"), Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        Log.d(TAG, "用户QQ头像请求成功");
+                        loginForQQ(openId, nickname, msg.getData().getByteArray("data"));
+                        break;
+                }
+            }
+        };
+        XXHttpClient client = new XXHttpClient(figureurl_qq_1.trim(), true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+                Util.sendMsgToHandler(handler_getuserlogoForQQ, bytes, true);
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Util.sendMsgToHandler(handler_getuserlogoForQQ, "网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.doGet(15000);
+        Log.d(TAG, "请求的qq用户头像URRL：" + figureurl_qq_1);
+    }
+
+    private Handler handler_register_qq = null;
+
+    private void loginForQQ(final String openid, final String username, final byte[] userlogo) {
+
+        //向后台发起注册请求，查看该QQ用户是否需要注册
+        handler_register_qq = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case -1:
+                        Toast.makeText(LoginActivity.this, msg.getData().getString("data"), Toast.LENGTH_LONG).show();
+                        if (MyActivity.TENCENT != null)
+                            MyActivity.TENCENT.logout(LoginActivity.this);
+                        break;
+                    case 1:
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("userid", uid);
+                        setResult(RESULT_CODE, intent);
+                        finish();
+                        break;
+                }
+            }
+        };
+
+        XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_REGISTERFORQQ, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+                Log.d(TAG, "该QQ用户是否需要注册返回：" + new String(bytes));
+                //
+                ResultToApp app = new Gson().fromJson(new String(bytes), ResultToApp.class);
+                if (app.getErrorCode() == -21) {
+                    //弹出对话框提示用户绑定手机号
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final EditText et = new EditText(LoginActivity.this);
+
+                            AlertDialog.Builder alerter = new AlertDialog.Builder(LoginActivity.this).setTitle("请绑定手机号")
+                                    .setIcon(android.R.drawable.ic_dialog_info)
+                                    .setView(et)
+                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            String input = et.getText().toString();
+                                            if (!input.equals("")) {
+                                                //绑定手机号并登陆
+                                                if (XXUtils.checkMobileNumberValid(input)) {
+                                                    boindPhoneNumber(input, openid, username, userlogo);
+                                                } else {
+                                                    mTencent.logout(LoginActivity.this);
+                                                    Toast.makeText(LoginActivity.this, "手机号码格式不正确", Toast.LENGTH_LONG).show();
+                                                }
+                                            } else {
+                                                mTencent.logout(LoginActivity.this);
+                                                Toast.makeText(LoginActivity.this, "手机号码不能为空，请重新绑定", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mTencent.logout(LoginActivity.this);
+                                            Toast.makeText(LoginActivity.this, "已为您退出登陆", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                            alerter.setCancelable(false);
+                            alerter.show();
+                        }
+                    });
+//
+                } else if (app.getErrorCode() == -3) {
+                    final String reLoginId = app.getRespData().getReLoginId();
+                    final String usernumber = app.getRespData().getUsernumber();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (XXSVProgressHUD.isShowing(LoginActivity.this)) {
+                                XXSVProgressHUD.dismiss(LoginActivity.this);
+                            }
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SystemClock.sleep(500);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            new XXAlertView("提示", "该账户已经登陆，是否重新登陆", "强制登陆", null, new String[]{"取消"}, LoginActivity.this, XXAlertView.Style.Alert, new OnItemClickListener() {
+                                                @Override
+                                                public void onItemClick(Object o, int position) {
+                                                    Log.d(TAG, "position:" + position);
+                                                    if (position == -1) {
+                                                        //重新登陆
+                                                        Log.d(TAG, "开始重新登陆。当前传入的usernumber=" + usernumber);
+                                                        reLogin(usernumber, reLoginId);
+                                                    } else {
+                                                        Util.sendMsgToHandler(handler_login, "当账号被使用时您可以强制登陆迫使对方下线", false);
+                                                    }
+                                                }
+                                            }).show();
+                                        }
+                                    });
+
+                                }
+                            }).start();
+
+                        }
+                    });
+                } else {
+
+                    sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+
+                    sharedPreferences.put(LoginActivity.this, "sessionid", app.getRespData().getSessionId());
+                    sharedPreferences.put(LoginActivity.this, "usernumber", app.getRespData().getUsernumber());
+
+                    sharedPreferences.put(LoginActivity.this, "username", app.getRespData().getUsername());
+                    sharedPreferences.put(LoginActivity.this, "userid", app.getRespData().getUserid());
+                    sharedPreferences.put(LoginActivity.this, "userlogo", app.getRespData().getUserlogo());
+                    Log.d(TAG, "强制登陆成功，已写入共享参数，读取测试sessionid：" + sharedPreferences.get(LoginActivity.this, "sessionid", "") + "\nusernumber=" +
+                            usernumber + "\nuid=" + sharedPreferences.get(LoginActivity.this, "userid", app.getRespData().getUserid().toString()));
+                    uid = sharedPreferences.get(LoginActivity.this, "userid", "").toString();
+                    Util.sendMsgToHandler(handler_register_qq, "9000", true);
+                }
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Log.d(TAG, "该QQ用户是否需要注册网络异常");
+                Util.sendMsgToHandler(handler_register_qq, "网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+
+        client.put("openid", openid);
+        client.put("username", username);
+
+        client.put("userlogo", XXUtils.bitmapToBase64(XXUtils.bytesToBimap(userlogo)));
+        Log.d(TAG, "请求使用openid登陆的数据：" + client.getAllParams());
+        client.doPost(15000);
+    }
+
+    //
+    private void boindPhoneNumber(final String usernumber, String openid, String username, byte[] userlogo) {
+        //绑定手机号并登陆
+        XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_BONIDUSERFORQQ, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+
+                Log.d(TAG, "绑定的回调：" + new String(bytes));
+                ResultToApp resultToApp = new Gson().fromJson(new String(bytes), ResultToApp.class);
+
+                Log.d(TAG, "登陆返回状态码：" + resultToApp.getErrorCode());
+                Log.d(TAG, "登陆返回状态信息：" + resultToApp.getResultMsg());
+                if (resultToApp.getErrorCode() == 9000) {
+                    Log.d(TAG, "返回sessionID:" + resultToApp.getRespData().getSessionId());
+                    sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+                    sharedPreferences.put(LoginActivity.this, "sessionid", resultToApp.getRespData().getSessionId());
+                    sharedPreferences.put(LoginActivity.this, "usernumber", usernumber);
+
+                    sharedPreferences.put(LoginActivity.this, "username", resultToApp.getRespData().getUsername());
+                    sharedPreferences.put(LoginActivity.this, "userid", resultToApp.getRespData().getUserid());
+                    sharedPreferences.put(LoginActivity.this, "userlogo", resultToApp.getRespData().getUserlogo());
+                    uid = sharedPreferences.get(LoginActivity.this, "userid", resultToApp.getRespData().getUserid()).toString();
+                    Log.d(TAG, "用户数据存入缓存成功");
+                    Util.sendMsgToHandler(handler_register_qq, resultToApp.getResultMsg(), true);
+                } else if (resultToApp.getErrorCode() == -3) {
+                    final String reLoginId = resultToApp.getRespData().getReLoginId();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (XXSVProgressHUD.isShowing(LoginActivity.this)) {
+                                XXSVProgressHUD.dismiss(LoginActivity.this);
+                            }
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SystemClock.sleep(500);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            new XXAlertView("提示", "该账户已经登陆，是否重新登陆", "强制登陆", null, new String[]{"取消"}, LoginActivity.this, XXAlertView.Style.Alert, new OnItemClickListener() {
+                                                @Override
+                                                public void onItemClick(Object o, int position) {
+                                                    Log.d(TAG, "position:" + position);
+                                                    if (position == -1) {
+                                                        //重新登陆
+                                                        Log.d(TAG, "开始重新登陆。当前传入的usernumber=" + usernumber);
+                                                        Log.d(TAG, "开始重新登陆。当前传入的ReloginID=" + reLoginId);
+                                                        reLogin(usernumber, reLoginId);
+                                                    } else {
+                                                        Util.sendMsgToHandler(handler_login, "当账号被使用时您可以强制登陆迫使对方下线", false);
+                                                    }
+                                                }
+                                            }).show();
+                                        }
+                                    });
+
+                                }
+                            }).start();
+
+                        }
+                    });
+                } else {
+                    Util.sendMsgToHandler(handler_register_qq, resultToApp.getResultMsg(), false);
+                }
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Util.sendMsgToHandler(handler_register_qq, "网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.put("openid", openid);
+//        client.put("username", username);
+        client.put("username", username);
+        client.put("userlogo", XXUtils.bitmapToBase64(XXUtils.bytesToBimap(userlogo)));
+        client.put("usernumber", usernumber);
+        Log.d(TAG, "绑定用户号上送数据：" + client.getAllParams());
+        client.doPost(15000);
+    }
 
     public void initOpenidAndToken(JSONObject jsonObject) {
         try {
@@ -219,7 +508,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
      * @param usernumber
      * @param password
      */
-    private void login(final String usernumber, String password) {
+    private void login(final String usernumber, final String password) {
         handler_login = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -232,6 +521,12 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                         Toast.makeText(LoginActivity.this, Msg, Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
+                        if (cb_checkbox.isChecked()) {
+                            XXSharedPreferences saveUsernumber = new XXSharedPreferences("UserLoginInfo");
+                            saveUsernumber.clear(LoginActivity.this);
+                            saveUsernumber.put(LoginActivity.this, "usernumber", usernumber);
+                            saveUsernumber.put(LoginActivity.this, "password", password);
+                        }
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra("userid", uid);
                         setResult(RESULT_CODE, intent);

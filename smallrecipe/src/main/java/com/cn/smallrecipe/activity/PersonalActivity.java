@@ -293,7 +293,11 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
                         break;
 
                     case 1:
+
                         break;
+                }
+                if (MyActivity.TENCENT!=null){
+                    MyActivity.TENCENT.logout(PersonalActivity.this);
                 }
                 MainActivity.LOGIN_STATE = false;
                 file.clear(PersonalActivity.this);
