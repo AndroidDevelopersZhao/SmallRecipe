@@ -166,6 +166,19 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         req.scope = "snsapi_userinfo";
         req.state = "loginTest";
         api.sendReq(req);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SystemClock.sleep(20000);
+                LoginActivity.this.finish();
+//                if (MyActivity.LOGIN_STATE) {
+//
+//
+//                } else {
+//                    Log.d(TAG, "未登陆，不关闭登陆页面");
+//                }
+            }
+        }).start();
     }
 
     /**

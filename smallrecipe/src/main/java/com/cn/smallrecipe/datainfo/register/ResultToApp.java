@@ -1,6 +1,8 @@
 package com.cn.smallrecipe.datainfo.register;
 
-public class ResultToApp {
+import java.io.Serializable;
+
+public class ResultToApp implements Serializable{
     private int errorCode;
     private String resultMsg = null;
     private RespData respData = null;

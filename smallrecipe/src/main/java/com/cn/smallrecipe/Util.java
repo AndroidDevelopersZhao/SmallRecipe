@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.cn.smallrecipe.datainfo.register.RespData;
+import com.cn.smallrecipe.datainfo.register.ResultToApp;
 import com.cn.smallrecipe.datainfo.search.AllInfo;
 import com.cn.smallrecipe.datainfo.search.Data;
 import com.cn.smallrecipe.datainfo.wechat.WXUserInfo;
@@ -36,7 +37,7 @@ public class Util {
 
     private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
 //    private static String url = "http://192.168.13.107:8080/SmallRecipeService/";//公司
-//    private static String url = "http://192.168.1.120:8080/SmallRecipeService/";//家
+//    private static String url = "http://192.168.12.106:8080/SmallRecipeService/";//家
 
 
     public static final String URL_SERVICE_REGISTER = url + "register";//注册URL
@@ -48,8 +49,11 @@ public class Util {
     public static final String URL_SERVICE_AUTH_GETUSERLOGO = url + "getuserlogo";//获取用户头像
     public static final String URL_SERVICE_GETALLRECIPEDATA = url + "allrecipe";//获取菜谱所有信息
     public static final String URL_SERVICE_STARORUNSTAR = url + "starorunstr";//收藏或者取消收藏
-    public static final String URL_SERVICE_REGISTERFORQQ = url + "registerqq";//qq注册
+    public static final String URL_SERVICE_REGISTERFORQQ = url + "registerqq";//检测该qq用户是否已经注册
     public static final String URL_SERVICE_BONIDUSERFORQQ = url + "boinduserforqq";//qq注册
+
+    public static final String URL_CHECK_USER_WX = url + "registerfrowx";//检测该微信用户是否已经注册
+    public static final String URL_SERVICE_BONIDUSERFORWX= url + "boinduserforwx";//微信注册
 
     public static final String APP_ID = "wx220e16bd4df59c89";
     public static final String SECRET = "b9fda74227172b69a55316e9c0367bfc";
@@ -86,7 +90,9 @@ public class Util {
             bundle.putSerializable("data", (WXUserInfo) object);
         } else if (object instanceof Bitmap) {
             bundle.putParcelable("data", (Bitmap) object);
-        } else {
+        } else if (object instanceof ResultToApp){
+            bundle.putSerializable("data", (ResultToApp) object);
+        }else {
             bundle.putString(TAG, "参数类型未定义,请至工具类定义");
         }
         message.setData(bundle);
