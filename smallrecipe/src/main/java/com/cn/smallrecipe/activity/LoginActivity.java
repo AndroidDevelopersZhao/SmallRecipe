@@ -29,6 +29,9 @@ import com.cn.smallrecipe.qqinfo.BaseUiListener;
 import com.google.gson.Gson;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -36,6 +39,7 @@ import com.tencent.tauth.UiError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import cn.com.xxutils.adapter.XXListViewAdapter;
 import cn.com.xxutils.alerterview.OnItemClickListener;
 import cn.com.xxutils.alerterview.XXAlertView;
 import cn.com.xxutils.progress.XXSVProgressHUD;
@@ -55,10 +59,11 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
     private AutoCompleteTextView auto_text_usernumber;
     private EditText et_text_password;
     private ImageView bt_login_login;
-    private ImageView bt_login_with_qq;
+    private ImageView bt_login_with_qq, bt_login_with_wechat;
     private final String APP_ID = "1105221610";
     private Tencent mTencent;
     private CheckBox cb_checkbox;
+    private IWXAPI api;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,9 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         } catch (Throwable throwable) {
             Log.d(TAG, "本地未保存用户登陆信息");
         }
+        api = WXAPIFactory.createWXAPI(this, Util.APP_ID, true);
+        api.registerApp(Util.APP_ID);
+        Log.w(TAG, "微信api注册成功");
     }
 
     private void setOclick() {
@@ -88,6 +96,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                 Log.d(TAG, "isChecked:" + isChecked);
             }
         });
+        bt_login_with_wechat.setOnClickListener(this);
     }
 
     private void findId() {
@@ -98,6 +107,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         bt_login_login = (ImageView) findViewById(R.id.bt_login_login);
         bt_login_with_qq = (ImageView) findViewById(R.id.bt_login_with_qq);
         cb_checkbox = (CheckBox) findViewById(R.id.cb_checkbox);
+        bt_login_with_wechat = (ImageView) findViewById(R.id.bt_login_with_wechat);
     }
 
     @Override
@@ -138,7 +148,24 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
                 //QQ登陆
                 loginWithQQ();
                 break;
+
+            case R.id.bt_login_with_wechat:
+                loginWithWeChat();
+                break;
         }
+    }
+
+    /**
+     * login with wechat
+     */
+    private void loginWithWeChat() {
+        //TODO 微信操作
+        Log.w(TAG, "启用微信第三方登陆页面");
+        // send oauth request
+        SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "loginTest";
+        api.sendReq(req);
     }
 
     /**
@@ -380,7 +407,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
 
             @Override
             public void onError(int i, Throwable throwable) {
-                Log.d(TAG, "该QQ用户是否需要注册网络异常");
+                Log.d(TAG, "该QQ用户是否需要注册返回网络异常");
                 Util.sendMsgToHandler(handler_register_qq, "网络异常", false);
             }
 

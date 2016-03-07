@@ -214,6 +214,7 @@
                     android:src="@drawable/qq_login_blue" />
 
                 <ImageView
+                    android:id="@+id/bt_login_with_wechat"
                     android:layout_width="95sp"
                     android:layout_height="30sp"
                     android:layout_marginLeft="5sp"
