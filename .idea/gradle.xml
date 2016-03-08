@@ -10,6 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/UmengPushSDK" />
             <option value="$PROJECT_DIR$/libs_xxutils" />
             <option value="$PROJECT_DIR$/smallrecipe" />
           </set>

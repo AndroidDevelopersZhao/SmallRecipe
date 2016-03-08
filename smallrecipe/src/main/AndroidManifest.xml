@@ -31,6 +31,10 @@
         <meta-data
             android:name="small_recipe"
             android:value="Channel ID" />
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="d667009797b489b97f24ad2b6ca7648a" >
+        </meta-data>
         <!-- 软件主页 -->
         <activity
             android:name=".activity.MainActivity"

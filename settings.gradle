@@ -1,1 +1,1 @@
-include ':smallrecipe', ':libs_xxutils'
+include ':smallrecipe', ':libs_xxutils', ':UmengPushSDK'
