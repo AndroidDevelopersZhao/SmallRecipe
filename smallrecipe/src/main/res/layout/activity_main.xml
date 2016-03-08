@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".activity.MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55sp"
+        android:background="#4a5cb7"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <cn.com.xxutils.view.XXRoundImageView
+            android:id="@+id/userLogo_main"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_marginLeft="10sp"
+            android:scaleType="centerInside"
+            android:src="@drawable/userlogodefult" />
+
+        <TextView
+            android:id="@+id/userName_main"
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10sp"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:text="点我登陆"
+            android:textColor="#f8faf8"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <include layout="@layout/aty_content" />
+
+
+</android.support.design.widget.CoordinatorLayout>

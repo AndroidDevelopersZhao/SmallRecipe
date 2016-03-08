@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cn.com.xxutils">
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:name=".XXApplication">
+        <meta-data android:name="TA_APPKEY" android:value="IL55aeCXCBfJVPwJ" />
+        <meta-data android:name="InstallChannel" android:value="life" />
+    </application>
+
+</manifest>

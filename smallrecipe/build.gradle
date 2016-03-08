@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.cn.smallrecipe"
+        minSdkVersion 17
+        targetSdkVersion 23
+        versionCode 3
+        versionName "3.0"
+    }
+
+    signingConfigs {
+        myConfig {
+            storeFile file("signapp.jks")
+            storePassword "ai930225"
+            keyAlias "wenyunZhao"
+            keyPassword "ai930225"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig  signingConfigs.myConfig
+        }
+        debug{
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig  signingConfigs.myConfig
+        }
+    }
+    //libs
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    //aar
+    repositories {
+
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
+    compile project(':libs_xxutils')
+}
