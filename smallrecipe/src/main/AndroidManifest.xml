@@ -122,7 +122,7 @@
             </intent-filter>
         </activity>
 
-        <!-- umeng-->
+        <!-- umeng相关-->
         <service
             android:name="com.umeng.update.net.DownloadingService"
             android:process=":DownloadingService" >
