@@ -59,7 +59,7 @@ public class WelcomeActivity extends MyActivity implements ViewPager.OnPageChang
                 @Override
                 public void run() {
                     while (isLoop) {
-                        SystemClock.sleep(1000);
+                        SystemClock.sleep(1500);
                         if (times < imageViewList.size()) {
                             times++;
                             handler.sendEmptyMessage(0);
@@ -139,11 +139,11 @@ public class WelcomeActivity extends MyActivity implements ViewPager.OnPageChang
 
     private String[] getImageDescription() {
         return new String[]{
-                "第一个引导页面",
-                "第二个引导页面",
-                "第三个引导页面",
-                "第四个引导页面",
-                "第五个引导页面"
+                "app在不断更新中",
+                "期待您的每一份建议",
+                "搜索您喜欢的口味",
+                "查看烹饪步骤",
+                "晒出自己的手艺，让别人为您点赞"
         };
     }
 
