@@ -39,8 +39,8 @@ public class Util {
     public static final String URL_SEARCH = "http://apis.juhe.cn/cook/query.php";//关键字索引菜单
     public static final String URL_GETRECIPEDETAILS_JUHE = "http://apis.juhe.cn/cook/queryid";//根据ID索引菜谱详细信息
 
-    private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
-//    private static String url = "http://192.168.13.107:8080/SmallRecipeService/";//公司
+//    private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
+    private static String url = "http://192.168.13.105:8080/SmallRecipeService/";//公司
 //    private static String url = "http://192.168.12.106:8080/SmallRecipeService/";//家
 
 
