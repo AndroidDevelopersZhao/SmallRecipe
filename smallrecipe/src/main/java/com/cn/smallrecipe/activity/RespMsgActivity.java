@@ -60,6 +60,7 @@ public class RespMsgActivity extends MyActivity implements View.OnClickListener 
      * @param trim
      */
     private void sendRespMsgToService(String trim) {
-
+        et_respmsg.setText("");
+        Toast.makeText(RespMsgActivity.this, "提交成功，感谢您的支持", Toast.LENGTH_SHORT).show();
     }
 }
