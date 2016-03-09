@@ -33,25 +33,21 @@
             android:value="Channel ID" />
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="d667009797b489b97f24ad2b6ca7648a" >
-        </meta-data>
+            android:value="d667009797b489b97f24ad2b6ca7648a"></meta-data>
         <!-- 软件主页 -->
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleInstance"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <!-- 欢迎页 -->
         <activity
             android:name=".activity.WelcomeActivity"
-            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!-- 搜索页 -->
         <activity
@@ -60,7 +56,6 @@
         <!-- 登陆页 -->
         <activity
             android:name=".activity.LoginActivity"
-            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- 注册页 -->
         <activity
@@ -76,7 +71,8 @@
             android:label="@string/title_activity_recipe_detail"
             android:theme="@style/AppTheme.NoActionBar" />
 
-
+        <activity android:name=".activity.RespMsgActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- SMS needs activity-->
 
         <activity
@@ -130,11 +126,9 @@
         <!-- umeng相关-->
         <service
             android:name="com.umeng.update.net.DownloadingService"
-            android:process=":DownloadingService" >
-        </service>
+            android:process=":DownloadingService"></service>
         <activity
             android:name="com.umeng.update.UpdateDialogActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-        </activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
     </application>
 </manifest>

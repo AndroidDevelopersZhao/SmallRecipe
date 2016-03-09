@@ -209,6 +209,7 @@ public class F_Home extends ParentFragment implements View.OnClickListener {
                     intent.putExtra(SearchActivity.SEARCH_KEY, text);
                     et_search.setText("");
                     startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.pp_enter, R.anim.pp_exit);
                 }
 
                 break;

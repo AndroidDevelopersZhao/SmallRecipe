@@ -87,8 +87,8 @@
 
             <ImageView
                 android:id="@+id/item_iv_right_title_1"
-                android:layout_width="20sp"
-                android:layout_height="50sp"
+                android:layout_width="16sp"
+                android:layout_height="20sp"
                 android:src="@drawable/icon_my_title" />
         </LinearLayout>
     </LinearLayout>

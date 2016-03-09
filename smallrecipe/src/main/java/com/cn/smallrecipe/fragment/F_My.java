@@ -24,6 +24,7 @@ import com.cn.smallrecipe.Util;
 import com.cn.smallrecipe.activity.LoginActivity;
 import com.cn.smallrecipe.activity.MainActivity;
 import com.cn.smallrecipe.activity.PersonalActivity;
+import com.cn.smallrecipe.activity.RespMsgActivity;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfos;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfosTitle;
 import com.cn.smallrecipe.datainfo.register.ResultToApp;
@@ -103,7 +104,7 @@ public class F_My extends ParentFragment {
                         @Override
                         public void onItemClick(Object o, int position) {
                             Log.d(TAG, "position:" + position);
-                            if (position==0){
+                            if (position == 0) {
                                 startActivity(new Intent(getActivity(), LoginActivity.class));
                             }
                         }
@@ -142,6 +143,8 @@ public class F_My extends ParentFragment {
             Log.d(TAG, "position:" + position);
             if (position == 0) {
                 //TODO 反馈信息
+                startActivity(new Intent(getActivity(), RespMsgActivity.class));
+                getActivity().overridePendingTransition(R.anim.pp_enter, R.anim.pp_exit);
             } else {
                 //TODO 设置
             }
@@ -266,7 +269,7 @@ public class F_My extends ParentFragment {
                 switch (msg.what) {
                     case -1:
                         if (F_My.this.isVisible())
-                        Toast.makeText(getActivity(), "请设置用户头像", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "请设置用户头像", Toast.LENGTH_LONG).show();
                         imageView.setImageResource(R.drawable.userlogodefult);
                         break;
                     case 1:
@@ -315,7 +318,7 @@ public class F_My extends ParentFragment {
                     case -1:
                         MainActivity.LOGIN_STATE = false;
                         if (MyActivity.TENCENT != null)
-                        MyActivity.TENCENT.logout(getActivity());
+                            MyActivity.TENCENT.logout(getActivity());
                         setData();
                         if (F_My.this.isVisible()) {
                             XXRoundImageView xxRoundImageView = (XXRoundImageView) getActivity().findViewById(R.id.userLogo_main);

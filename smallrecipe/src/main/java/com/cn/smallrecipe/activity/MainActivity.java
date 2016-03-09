@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
     private String username_file = null;//保存在共享参数的username
     private String userid_file = null;//保存在共享参数的userid
     private String userlogourl_file = null;//保存在共享参数的userlogourl
+    private LinearLayout layout_more;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
         tabs.setupWithViewPager(vp);
         tabs.setTabsFromPagerAdapter(adapter);
         adapter.notifyDataSetChanged();
+        layout_more.setOnClickListener(this);
     }
 
     /**
@@ -213,6 +216,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
         vp = (ViewPager) findViewById(R.id.vp);
         userLogo_main = (XXRoundImageView) findViewById(R.id.userLogo_main);
         userName_main = (TextView) findViewById(R.id.userName_main);
+        layout_more.findViewById(R.id.layout_more);
     }
 
     @Override
@@ -315,6 +319,10 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
                     //已经登陆
                     startActivity(new Intent(MainActivity.this, PersonalActivity.class));
                 }
+                break;
+            case R.id.layout_more:
+                //TODO 调用友盟分享
+
                 break;
         }
     }

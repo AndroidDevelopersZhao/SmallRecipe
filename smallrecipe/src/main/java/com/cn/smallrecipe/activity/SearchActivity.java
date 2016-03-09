@@ -54,6 +54,7 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
         layout_icon_back = (LinearLayout) findViewById(R.id.layout_icon_back);
         layout_icon_back.setOnClickListener(this);
         listview_searched = (XXCustomListView) findViewById(R.id.listview_searched);
+
         listview_searched.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -63,6 +64,7 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
                 Intent intent = new Intent(SearchActivity.this, RecipeDetail.class);
                 intent.putExtra("id", adapter.getItem(position - 1).getId());
                 startActivity(intent);
+                overridePendingTransition(R.anim.pp_enter, R.anim.pp_exit);
             }
         });
         adapter = new XXListViewAdapter<Item>(this, R.layout.item_listview_searched) {
@@ -79,8 +81,8 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
                 loder.disPlayImage(getItem(position).getUrl(), imageView);
             }
         };
+        listview_searched.setListViewAnimation(adapter, XXListViewAnimationMode.ANIIMATION_RIGHT);
         listview_searched.setAdapter(adapter);
-        listview_searched.setListViewAnimation(adapter, XXListViewAnimationMode.ANIIMATION_ALPHA);
         //上啦加载暂时不做
 //        final View footer = View.inflate(this, R.layout.footer, null);
 //        listview_searched.setOnAddFootListener(new XXCustomListView.OnAddFootListener() {
@@ -136,9 +138,9 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
                         AllInfo allInfo = (AllInfo) msg.getData().getSerializable("data");
                         Log.d(TAG, "search was successful,ErrorCode:" + allInfo.getError_code());
                         for (int i = 0; i < allInfo.getResult().getData().size(); i++) {
-                            if (allInfo.getResult().getData().get(i).getBurden().split(";").length>12)
-                            Log.w(TAG, "-----------" + allInfo.getResult().getData().get(i).getBurden().split(";").length
-                                    + ",----" + allInfo.getResult().getData().get(i).getTitle());
+                            if (allInfo.getResult().getData().get(i).getBurden().split(";").length > 12)
+                                Log.w(TAG, "-----------" + allInfo.getResult().getData().get(i).getBurden().split(";").length
+                                        + ",----" + allInfo.getResult().getData().get(i).getTitle());
                         }
 
                         setAdapterData(allInfo);
@@ -146,7 +148,8 @@ public class SearchActivity extends MyActivity implements View.OnClickListener {
                         break;
 
                     case -1:
-                        Toast.makeText(SearchActivity.this, "请求失败，" + msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(SearchActivity.this, "请求的食谱数据不存在，请重新搜索", Toast.LENGTH_SHORT).show();
                         Log.e(TAG, "search error，" + msg.getData().getString("data"));
                         break;
                 }
