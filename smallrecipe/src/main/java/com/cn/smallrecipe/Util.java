@@ -30,6 +30,10 @@ import cn.com.xxutils.util.XXHttpClient;
  * Created by Administrator on 2016/2/24.
  */
 public class Util {
+    public static final String TEXT = "我在使用这个软件为亲爱的做晚饭，推荐给你们哦";
+    public static final String SHAREDURL = "http://a.app.qq.com/o/simple.jsp?pkgname=com.cn.smallrecipe";
+    public static final String SHAREDIMAGEURL = "http://221.228.88.249:8080/SmallRecipeService/108.png";
+
     public static final String TAG = "SmallRecipe";
     public static final String APPKEY = "2fcb58bbc897587691627b81093c63d0";
     public static final String URL_SEARCH = "http://apis.juhe.cn/cook/query.php";//关键字索引菜单
@@ -53,7 +57,7 @@ public class Util {
     public static final String URL_SERVICE_BONIDUSERFORQQ = url + "boinduserforqq";//qq注册
 
     public static final String URL_CHECK_USER_WX = url + "registerfrowx";//检测该微信用户是否已经注册
-    public static final String URL_SERVICE_BONIDUSERFORWX= url + "boinduserforwx";//微信注册
+    public static final String URL_SERVICE_BONIDUSERFORWX = url + "boinduserforwx";//微信注册
 
     public static final String APP_ID = "wx220e16bd4df59c89";
     public static final String SECRET = "b9fda74227172b69a55316e9c0367bfc";
@@ -90,9 +94,9 @@ public class Util {
             bundle.putSerializable("data", (WXUserInfo) object);
         } else if (object instanceof Bitmap) {
             bundle.putParcelable("data", (Bitmap) object);
-        } else if (object instanceof ResultToApp){
+        } else if (object instanceof ResultToApp) {
             bundle.putSerializable("data", (ResultToApp) object);
-        }else {
+        } else {
             bundle.putString(TAG, "参数类型未定义,请至工具类定义");
         }
         message.setData(bundle);

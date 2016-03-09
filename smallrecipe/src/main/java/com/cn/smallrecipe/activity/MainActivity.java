@@ -25,6 +25,13 @@ import com.cn.smallrecipe.fragment.F_Friend;
 import com.cn.smallrecipe.fragment.F_Home;
 import com.cn.smallrecipe.fragment.F_My;
 import com.google.gson.Gson;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.shareboard.SnsPlatform;
+import com.umeng.socialize.utils.ShareBoardlistener;
 import com.umeng.update.UmengUpdateAgent;
 
 import java.io.Serializable;
@@ -216,7 +223,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
         vp = (ViewPager) findViewById(R.id.vp);
         userLogo_main = (XXRoundImageView) findViewById(R.id.userLogo_main);
         userName_main = (TextView) findViewById(R.id.userName_main);
-        layout_more.findViewById(R.id.layout_more);
+        layout_more = (LinearLayout) findViewById(R.id.layout_more);
     }
 
     @Override
@@ -322,10 +329,95 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
                 break;
             case R.id.layout_more:
                 //TODO 调用友盟分享
-
+                Log.d(TAG, "友盟分享");
+                sharedToOtherapp();
                 break;
         }
     }
+
+    final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
+            {
+                    SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
+                    SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
+            };
+
+    private void sharedToOtherapp() {
+
+        new ShareAction(this).setDisplayList(displaylist)
+
+//
+                .setShareboardclickCallback(shareBoardlistener)
+                .open();
+    }
+
+    private ShareBoardlistener shareBoardlistener = new ShareBoardlistener() {
+
+        @Override
+        public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
+            switch (share_media.toString()) {
+                case "WEIXIN":
+                    //微信分享
+                    new ShareAction(MainActivity.this)
+                            .setPlatform(SHARE_MEDIA.WEIXIN)
+                            .setCallback(umShareListener)
+                            .withText(Util.TEXT)
+                            .withTargetUrl(Util.SHAREDURL)
+                            .withMedia(new UMImage(MainActivity.this,Util.SHAREDIMAGEURL))
+                            .share();
+                    break;
+                case "WEIXIN_CIRCLE":
+                    //微信朋友圈
+                    new ShareAction(MainActivity.this)
+                            .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
+                            .setCallback(umShareListener)
+                            .withText(Util.TEXT)
+                            .withTargetUrl(Util.SHAREDURL)
+                            .withMedia(new UMImage(MainActivity.this, Util.SHAREDIMAGEURL))
+                            .share();
+                    break;
+                case "QQ":
+                    //QQ
+                    new ShareAction(MainActivity.this)
+                            .setPlatform(SHARE_MEDIA.QQ)
+                            .setCallback(umShareListener)
+                            .withText(Util.TEXT)
+                            .withTargetUrl(Util.SHAREDURL)
+                            .withMedia(new UMImage(MainActivity.this, Util.SHAREDIMAGEURL))
+                            .share();
+                    break;
+                case "QZONE":
+                    //QQ空间
+                    new ShareAction(MainActivity.this)
+                            .setPlatform(SHARE_MEDIA.QZONE)
+                            .setCallback(umShareListener)
+                            .withText(Util.TEXT)
+                            .withTargetUrl(Util.SHAREDURL)
+                            .withMedia(new UMImage(MainActivity.this, Util.SHAREDIMAGEURL))
+                            .share();
+                    break;
+
+            }
+        }
+    };
+    UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA share_media) {
+            Log.w(TAG, "分享成功啦");
+            Toast.makeText(MainActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+            Log.w(TAG, "分享失败啦");
+            Toast.makeText(MainActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media) {
+            Log.w(TAG, "分享取消了");
+            Toast.makeText(MainActivity.this, "分享被取消", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     /**
      * 从缓存文件设置用户数据
@@ -356,7 +448,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "OnActivityResult-MainActivity,requestCode:" + requestCode + ",resultCode:" + resultCode + ",data:" + data);
-
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
         if (requestCode == ACTIVITY_REQUEST_CODE_LOGIN) {
 //            Toast.makeText(MainActivity.this, "恭喜您登陆成功", Toast.LENGTH_LONG).show();
 //            if (data != null) {

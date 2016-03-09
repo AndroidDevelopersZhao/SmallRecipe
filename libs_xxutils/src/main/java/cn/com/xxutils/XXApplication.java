@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.umeng.socialize.PlatformConfig;
 
 import cn.smssdk.SMSSDK;
 
@@ -36,6 +37,14 @@ public class XXApplication extends Application {
 //        mRefWatcher = LeakCanary.install(this);
         SMSSDK.initSDK(this, "1003e1393046d", "07a19ef8a4ea4f02c699bc4399d4bda4");
         Log.d(TAG, "SMSSDK 在Application初始化成功");
+        initSharedInfo();
+    }
+
+    private void initSharedInfo() {
+        //微信APP_ID S
+        PlatformConfig.setWeixin("wx220e16bd4df59c89", "b9fda74227172b69a55316e9c0367bfc");
+        //QQ
+        PlatformConfig.setQQZone("1105221610", "IL55aeCXCBfJVPwJ");
     }
 
     private void enabledStrictMode() {

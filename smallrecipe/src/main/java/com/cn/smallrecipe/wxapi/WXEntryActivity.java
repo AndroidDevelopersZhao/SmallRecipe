@@ -17,12 +17,18 @@ import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.ShowMessageFromWX;
 import com.tencent.mm.sdk.modelmsg.WXAppExtendObject;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.handler.UMWXHandler;
+import com.umeng.socialize.weixin.view.WXCallbackActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -62,7 +68,7 @@ import cn.com.xxutils.volley.toolbox.Volley;
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     private IWXAPI api;
     private XXSharedPreferences sharedPreferences;
-
+    protected UMWXHandler mWxHandler = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +76,11 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         api = WXAPIFactory.createWXAPI(this, Util.APP_ID, true);
 //        getActionBar().setDisplayShowTitleEnabled(false);
         api.handleIntent(getIntent(), this);
+        UMShareAPI api = UMShareAPI.get(this);
+        this.mWxHandler = (UMWXHandler)api.getHandler(SHARE_MEDIA.WEIXIN);
+        com.umeng.socialize.utils.Log.e("xxxx wxhandler=" + this.mWxHandler);
+        this.mWxHandler.onCreate(this, PlatformConfig.getPlatform(SHARE_MEDIA.WEIXIN));
+        this.mWxHandler.getWXApi().handleIntent(this.getIntent(), this);
     }
 //
 //    @Override
@@ -80,32 +91,54 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 //        api.handleIntent(intent, this);
 //    }
 
+    protected final void onNewIntent(Intent paramIntent) {
+        com.umeng.socialize.utils.Log.d(this.TAG, "### WXCallbackActivity   onNewIntent");
+        super.onNewIntent(paramIntent);
+        this.setIntent(paramIntent);
+        UMShareAPI api = UMShareAPI.get(this);
+        this.mWxHandler = (UMWXHandler)api.getHandler(SHARE_MEDIA.WEIXIN);
+        this.mWxHandler.onCreate(this, PlatformConfig.getPlatform(SHARE_MEDIA.WEIXIN));
+        this.mWxHandler.getWXApi().handleIntent(paramIntent, this);
+    }
     @Override
     public void onReq(BaseReq req) {
+        if(this.mWxHandler != null) {
+            this.mWxHandler.getWXEventHandler().onReq(req);
+        }
         Log.w(MyActivity.TAG, "进入onReq：" + req);
     }
 
     @Override
     public void onResp(BaseResp resp) {
+        if(this.mWxHandler != null) {
+            this.mWxHandler.getWXEventHandler().onResp(resp);
+        }
         Log.w(MyActivity.TAG, "进入onResp：" + resp);
         String result = null;
         resp.fromBundle(getIntent().getExtras());
         switch (resp.errCode) {
             case BaseResp.ErrCode.ERR_OK:
-                XXSVProgressHUD.showWithStatus(this, "正在授权登陆...");
-                result = "成功";
 
-                String code = ((SendAuth.Resp) resp).code;
-                String state = ((SendAuth.Resp) resp).state;
-                String lang = ((SendAuth.Resp) resp).lang;
-                String country = ((SendAuth.Resp) resp).country;
-                String openid = ((SendAuth.Resp) resp).openId;
-                getToken(code);
-                Log.w(MyActivity.TAG, "openid:" + openid);
-                Log.w(MyActivity.TAG, "country:" + country);
-                Log.w(MyActivity.TAG, "lang:" + lang);
-                Log.w(MyActivity.TAG, "state:" + state);
-                Log.w(MyActivity.TAG, "code:" + code);
+                result = "成功";
+                try {
+                    String code = ((SendAuth.Resp) resp).code;
+                    String state = ((SendAuth.Resp) resp).state;
+                    String lang = ((SendAuth.Resp) resp).lang;
+                    String country = ((SendAuth.Resp) resp).country;
+                    String openid = ((SendAuth.Resp) resp).openId;
+                    XXSVProgressHUD.showWithStatus(this, "正在授权登陆...");
+                    getToken(code);
+                    Log.w(MyActivity.TAG, "openid:" + openid);
+                    Log.w(MyActivity.TAG, "country:" + country);
+                    Log.w(MyActivity.TAG, "lang:" + lang);
+                    Log.w(MyActivity.TAG, "state:" + state);
+                    Log.w(MyActivity.TAG, "code:" + code);
+                } catch (Throwable throwable) {
+                    Log.d(TAG, "AAAAAAAAAAAAAAAAAAAA" + ((SendMessageToWX.Resp) resp).toString());
+                    finish();
+
+                }
+
 
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
@@ -216,7 +249,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case -1:
-                        Toast.makeText(WXEntryActivity.this, msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(WXEntryActivity.this, msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
                         if (XXSVProgressHUD.isShowing(WXEntryActivity.this)) {
                             XXSVProgressHUD.dismiss(WXEntryActivity.this);
                         }
