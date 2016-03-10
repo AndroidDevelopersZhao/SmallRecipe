@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.cn.smallrecipe.datainfo.mystarinfo.Data_GetUserStarRecipe;
 import com.cn.smallrecipe.datainfo.register.RespData;
 import com.cn.smallrecipe.datainfo.register.ResultToApp;
 import com.cn.smallrecipe.datainfo.search.AllInfo;
@@ -39,7 +40,7 @@ public class Util {
     public static final String URL_SEARCH = "http://apis.juhe.cn/cook/query.php";//关键字索引菜单
     public static final String URL_GETRECIPEDETAILS_JUHE = "http://apis.juhe.cn/cook/queryid";//根据ID索引菜谱详细信息
 
-//    private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
+    //    private static String url = "http://221.228.88.249:8080/SmallRecipeService/";
     private static String url = "http://192.168.13.104:8080/SmallRecipeService/";//公司
 //    private static String url = "http://192.168.12.106:8080/SmallRecipeService/";//家
 
@@ -59,7 +60,9 @@ public class Util {
     public static final String URL_CHECK_USER_WX = url + "registerfrowx";//检测该微信用户是否已经注册
     public static final String URL_SERVICE_BONIDUSERFORWX = url + "boinduserforwx";//微信注册
 
-    public static final String URL_SENDUSERRESPMSG=url+"updateuserrespmsg";//发送用户反馈信息
+    public static final String URL_SENDUSERRESPMSG = url + "updateuserrespmsg";//发送用户反馈信息
+    public static final String URL_GETMYSTAR = url + "getuserstarsrecipe";//获取用户收藏的菜谱
+
     public static final String APP_ID = "wx220e16bd4df59c89";
     public static final String SECRET = "b9fda74227172b69a55316e9c0367bfc";
 
@@ -71,7 +74,7 @@ public class Util {
 
     public static void sendMsgToHandler(Handler handler, Object object, boolean isSucc) {
         if (handler == null || object == null) {
-            Log.e(TAG, "传入参数不能为空");
+            Log.e(TAG, "sendMsgToHandler-传入参数不能为空");
             return;
         }
         Message message = handler.obtainMessage();
@@ -97,6 +100,8 @@ public class Util {
             bundle.putParcelable("data", (Bitmap) object);
         } else if (object instanceof ResultToApp) {
             bundle.putSerializable("data", (ResultToApp) object);
+        } else if (object instanceof Data_GetUserStarRecipe) {
+            bundle.putSerializable("data", (Data_GetUserStarRecipe) object);
         } else {
             bundle.putString(TAG, "参数类型未定义,请至工具类定义");
         }

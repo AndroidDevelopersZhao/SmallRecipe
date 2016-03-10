@@ -23,6 +23,7 @@ import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
 import com.cn.smallrecipe.activity.LoginActivity;
 import com.cn.smallrecipe.activity.MainActivity;
+import com.cn.smallrecipe.activity.MyStarActivity;
 import com.cn.smallrecipe.activity.PersonalActivity;
 import com.cn.smallrecipe.activity.RespMsgActivity;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfos;
@@ -126,6 +127,9 @@ public class F_My extends ParentFragment {
                     break;
                 case 1:
                     //TODO 我的收藏
+                    Log.d(TAG, "我的收藏");
+                    startActivity(new Intent(getActivity(), MyStarActivity.class));
+                    getActivity().overridePendingTransition(R.anim.pp_enter, R.anim.pp_exit);
                     break;
                 case 2:
                     //TODO 扫一扫

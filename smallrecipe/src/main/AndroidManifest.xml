@@ -78,9 +78,13 @@
             android:name=".activity.RecipeDetail"
             android:label="@string/title_activity_recipe_detail"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <!-- 用户反馈信息页面-->
         <activity
             android:name=".activity.RespMsgActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- 用户个人收藏页面-->
+        <activity
+            android:name=".activity.MyStarActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- SMS needs activity-->
 
@@ -120,21 +124,21 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!--<activity-->
-            <!--android:name=".wxapi.WXEntryActivity"-->
-            <!--android:exported="true"-->
-            <!--android:label="@string/app_name"-->
-            <!--android:launchMode="singleTop"-->
-            <!--android:theme="@style/Transparent">-->
-            <!--&lt;!&ndash;<intent-filter>&ndash;&gt;-->
-            <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt;-->
-            <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;-->
-            <!--&lt;!&ndash;</intent-filter>&ndash;&gt;-->
+        <!--android:name=".wxapi.WXEntryActivity"-->
+        <!--android:exported="true"-->
+        <!--android:label="@string/app_name"-->
+        <!--android:launchMode="singleTop"-->
+        <!--android:theme="@style/Transparent">-->
+        <!--&lt;!&ndash;<intent-filter>&ndash;&gt;-->
+        <!--&lt;!&ndash;<action android:name="android.intent.action.MAIN" />&ndash;&gt;-->
+        <!--&lt;!&ndash;<category android:name="android.intent.category.LAUNCHER" />&ndash;&gt;-->
+        <!--&lt;!&ndash;</intent-filter>&ndash;&gt;-->
 
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<data android:scheme="sdksample" />-->
-            <!--</intent-filter>-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.intent.action.VIEW" />-->
+        <!--<category android:name="android.intent.category.DEFAULT" />-->
+        <!--<data android:scheme="sdksample" />-->
+        <!--</intent-filter>-->
         <!--</activity>-->
 
         <!-- umeng相关-->

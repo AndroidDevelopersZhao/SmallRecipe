@@ -24,7 +24,7 @@
             android:drawableLeft="@drawable/delete_icon_normal"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="删除" />
+            android:text="取消收藏" />
     </RelativeLayout>
 
 </merge>

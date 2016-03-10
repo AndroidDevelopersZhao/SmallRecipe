@@ -15,6 +15,7 @@ import java.util.List;
 import cn.com.xxutils.R;
 import cn.com.xxutils.XXApplication;
 import cn.com.xxutils.interfac.ItemDeleteButtonOnTochListener;
+import cn.com.xxutils.util.XXImagesLoader;
 import cn.com.xxutils.view.MessageItem;
 import cn.com.xxutils.view.SlideView;
 
@@ -27,6 +28,7 @@ public class XXSlideAdapter extends BaseAdapter implements SlideView.OnSlideList
     private Context context;
     private ItemDeleteButtonOnTochListener itemDeleteButtonOnTochListener;
     private SlideView mLastSlideViewWithStatusOn;
+
     public XXSlideAdapter(Activity context, List<MessageItem> mMessageItems) {
         super();
         mInflater = context.getLayoutInflater();
@@ -39,7 +41,7 @@ public class XXSlideAdapter extends BaseAdapter implements SlideView.OnSlideList
         this.mMessageItems.add(mMessageItems);
     }
 
-    public void removeItem(int postion){
+    public void removeItem(int postion) {
         mMessageItems.remove(postion);
     }
 
@@ -53,7 +55,7 @@ public class XXSlideAdapter extends BaseAdapter implements SlideView.OnSlideList
     }
 
     @Override
-    public Object getItem(int position) {
+    public MessageItem getItem(int position) {
         return mMessageItems.get(position);
     }
 
@@ -82,7 +84,15 @@ public class XXSlideAdapter extends BaseAdapter implements SlideView.OnSlideList
         item.slideView = slideView;
         item.slideView.shrink();
 
-        holder.icon.setImageResource(item.iconRes);
+//        holder.icon.setImageResource(item.iconRes);
+        try {
+
+            new XXImagesLoader(null, true, R.drawable.delete_default_qq_avatar,
+                    R.drawable.delete_default_qq_avatar, R.drawable.delete_default_qq_avatar)
+                    .disPlayImage(item.img, holder.icon);
+        } catch (Throwable throwable) {
+            holder.icon.setImageResource(item.iconRes);
+        }
         holder.title.setText(item.title);
         holder.msg.setText(item.msg);
         holder.time.setText(item.time);
