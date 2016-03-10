@@ -59,6 +59,7 @@ public class Util {
     public static final String URL_CHECK_USER_WX = url + "registerfrowx";//检测该微信用户是否已经注册
     public static final String URL_SERVICE_BONIDUSERFORWX = url + "boinduserforwx";//微信注册
 
+    public static final String URL_SENDUSERRESPMSG=url+"updateuserrespmsg";//发送用户反馈信息
     public static final String APP_ID = "wx220e16bd4df59c89";
     public static final String SECRET = "b9fda74227172b69a55316e9c0367bfc";
 
