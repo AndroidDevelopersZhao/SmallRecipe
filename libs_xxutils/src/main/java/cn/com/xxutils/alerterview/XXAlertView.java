@@ -67,7 +67,7 @@ public class XXAlertView {
     private Animation outAnim;
     private Animation inAnim;
     private int gravity = Gravity.CENTER;
-
+    private static XXAlertViewAdapter adapter;
     public XXAlertView(String title, String msg, String cancel, String[] destructive, String[] others, Context context, Style style, OnItemClickListener OnItemClickListener){
         this.context = context;
         if(style != null)this.style = style;
@@ -78,7 +78,9 @@ public class XXAlertView {
         init();
         initEvents();
     }
-
+    public static XXAlertViewAdapter getAdapter(){
+        return  adapter;
+    }
     /**
      * 获取数据
      */
@@ -160,7 +162,7 @@ public class XXAlertView {
             tvAlert.setOnClickListener(new OnTextClickListener(CANCELPOSITION));
             alertButtonListView.addFooterView(itemView);
         }
-        XXAlertViewAdapter adapter = new XXAlertViewAdapter(mDatas,mDestructive);
+         adapter = new XXAlertViewAdapter(mDatas,mDestructive);
         alertButtonListView.setAdapter(adapter);
         alertButtonListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

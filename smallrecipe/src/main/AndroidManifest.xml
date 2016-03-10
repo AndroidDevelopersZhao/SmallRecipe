@@ -86,6 +86,9 @@
         <activity
             android:name=".activity.MyStarActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <!-- 晒厨艺界面-->
+        <activity android:name=".activity.SendSayActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- SMS needs activity-->
 
         <activity

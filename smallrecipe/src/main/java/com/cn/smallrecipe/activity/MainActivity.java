@@ -106,7 +106,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
         strs.add("首页");
 //        strs.add("秀色可餐");
 //        strs.add("我的收藏");
-        strs.add("朋友圈");
+        strs.add("厨艺圈");
         strs.add("个人中心");
 
         fragments.add(new F_Home());

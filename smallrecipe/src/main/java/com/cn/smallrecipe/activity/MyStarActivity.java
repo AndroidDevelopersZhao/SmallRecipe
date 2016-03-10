@@ -56,12 +56,14 @@ public class MyStarActivity extends MyActivity implements ItemDeleteButtonOnToch
                     case -1:
                         dissmiss();
                         Toast.makeText(MyStarActivity.this, msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+
                         break;
 
                     case 1:
                         Data_GetUserStarRecipe recipe = (Data_GetUserStarRecipe) msg.getData().getSerializable("data");
                         for (int i = 0; i < recipe.getIds().length; i++) {
                             Log.w(TAG, "获取id成功：" + recipe.getIds()[i].getId());
+                            Log.w(TAG, "com_name:" + recipe.getIds()[i].getCom_name());
                         }
                         getDataFromJUHE(recipe.getIds());
                         break;

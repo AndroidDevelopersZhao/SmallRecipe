@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,14 +27,17 @@ import com.cn.smallrecipe.activity.MainActivity;
 import com.cn.smallrecipe.activity.MyStarActivity;
 import com.cn.smallrecipe.activity.PersonalActivity;
 import com.cn.smallrecipe.activity.RespMsgActivity;
+import com.cn.smallrecipe.activity.SendSayActivity;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfos;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfosTitle;
+import com.cn.smallrecipe.datainfo.mystarinfo.Data_GetUserStarRecipe;
 import com.cn.smallrecipe.datainfo.register.ResultToApp;
 import com.google.gson.Gson;
 
 import cn.com.xxutils.adapter.XXListViewAdapter;
 import cn.com.xxutils.alerterview.OnItemClickListener;
 import cn.com.xxutils.alerterview.XXAlertView;
+import cn.com.xxutils.progress.XXSVProgressHUD;
 import cn.com.xxutils.util.XXHttpClient;
 import cn.com.xxutils.util.XXSharedPreferences;
 import cn.com.xxutils.view.XXListView;
@@ -124,22 +128,135 @@ public class F_My extends ParentFragment {
             switch (position) {
                 case 0:
                     //TODO 我的动态
+                    if (MyActivity.LOGIN_STATE) {
+                        Toast.makeText(getActivity(), "我的动态", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "请先登陆", Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case 1:
                     //TODO 我的收藏
-                    Log.d(TAG, "我的收藏");
-                    startActivity(new Intent(getActivity(), MyStarActivity.class));
-                    getActivity().overridePendingTransition(R.anim.pp_enter, R.anim.pp_exit);
+                    if (MyActivity.LOGIN_STATE) {
+                        Log.d(TAG, "我的收藏");
+                        startActivity(new Intent(getActivity(), MyStarActivity.class));
+                        getActivity().overridePendingTransition(R.anim.pp_enter, R.anim.pp_exit);
+                    } else {
+                        Toast.makeText(getActivity(), "请先登陆", Toast.LENGTH_SHORT).show();
+                    }
                     break;
                 case 2:
                     //TODO 扫一扫
+                    if (MyActivity.LOGIN_STATE) {
+                        Toast.makeText(getActivity(), "扫一扫", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "请先登陆", Toast.LENGTH_SHORT).show();
+                    }
+
                     break;
                 case 3:
                     //TODO 晒厨艺
+                    //获取当前用户收藏的菜谱列表
+                    if (MyActivity.LOGIN_STATE) {
+                        getMyStarRecipe();
+                    } else {
+                        Toast.makeText(getActivity(), "请先登陆", Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
         }
     };
+
+    public void dissmiss() {
+        if (XXSVProgressHUD.isShowing(getActivity())) {
+            XXSVProgressHUD.dismiss(getActivity());
+        }
+    }
+
+    private void getMyStarRecipe() {
+        XXSVProgressHUD.showWithStatus(getActivity(), "请稍后");
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                dissmiss();
+                switch (msg.what) {
+                    case -1:
+                        Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        Data_GetUserStarRecipe recipe = (Data_GetUserStarRecipe) msg.getData().getSerializable("data");
+                        final String[] str = new String[recipe.getIds().length];
+                        for (int i = 0; i < recipe.getIds().length; i++) {
+                            Log.w(TAG, "获取id成功：" + recipe.getIds()[i].getId());
+                            Log.w(TAG, "com_name:" + recipe.getIds()[i].getCom_name());
+                            str[i] = recipe.getIds()[i].getId() + "," + recipe.getIds()[i].getCom_name();
+                        }
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SystemClock.sleep(500);
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        new XXAlertView("提示", "您需要选择一个您收藏的商品方可发表动态",
+                                                "取消", str, null, getActivity(), XXAlertView.Style.ActionSheet,
+                                                new OnItemClickListener() {
+                                                    @Override
+                                                    public void onItemClick(Object o, int position) {
+                                                        Log.d(TAG, "possion:" + position);
+                                                        if (position != -1) {
+                                                            String data = XXAlertView.getAdapter().getItem(position).toString();
+                                                            Log.w(TAG, "o:" + data);
+                                                            String[] datas = data.split(",");
+
+                                                            Intent intent = new Intent(getActivity(), SendSayActivity.class);
+                                                            intent.putExtra("id", datas[0]);
+                                                            intent.putExtra("com_name", datas[1]);
+                                                            startActivity(intent);
+                                                        }
+                                                    }
+                                                }).show();
+                                    }
+                                });
+                            }
+                        }).start();
+                        break;
+                }
+            }
+        };
+
+        XXHttpClient client = new XXHttpClient(Util.URL_GETMYSTAR, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+                Log.d(TAG, "获取成功的返回：" + new String(bytes));
+                if (bytes.length > 0) {
+                    Data_GetUserStarRecipe recipe = new Gson().fromJson(new String(bytes), Data_GetUserStarRecipe.class);
+                    if (recipe.getRespCode() == -23) {
+                        Util.sendMsgToHandler(handler, "您还没有收藏菜谱哦", false);
+                    } else if (recipe.getRespCode() == 9000) {
+                        Util.sendMsgToHandler(handler, recipe, true);
+                    } else {
+                        Util.sendMsgToHandler(handler, "后台数据库异常,请稍后再试", false);
+                    }
+                } else {
+                    Util.sendMsgToHandler(handler, "后台数据库异常,请稍后再试", false);
+                }
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Log.d(TAG, "网络异常");
+                Util.sendMsgToHandler(handler, "网络异常,请稍后再试", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.put("usernumber", usernumber);
+        client.doGet(15000);
+    }
+
     //listView3的点击事件
     AdapterView.OnItemClickListener listview_3_listener = new AdapterView.OnItemClickListener() {
         @Override
@@ -151,6 +268,7 @@ public class F_My extends ParentFragment {
                 getActivity().overridePendingTransition(R.anim.pp_enter, R.anim.pp_exit);
             } else {
                 //TODO 设置
+                Toast.makeText(getActivity(), "设置", Toast.LENGTH_SHORT).show();
             }
         }
     };

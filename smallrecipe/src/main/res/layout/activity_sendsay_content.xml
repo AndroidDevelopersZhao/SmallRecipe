@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5sp"
+    android:layout_marginRight="5sp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="3">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left"
+            android:hint="请输入您此刻的心情"
+            android:textColor="#d78a31"
+            android:textColorHint="#d78a31" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5sp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#cccccc"
+            android:text="上海市"
+            android:textColor="#ec1f0c" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_img"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_marginTop="5sp"
+        android:layout_weight="2">
+
+        <com.cn.smallrecipe.view.HorizontalListView
+            android:id="@+id/lv_h_sendsay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="#cccccc"
+            android:dividerHeight="1dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_add_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加图片" />
+
+        <View
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发表" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        android:layout_weight="5" />
+</LinearLayout>
