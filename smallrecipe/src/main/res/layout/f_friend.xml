@@ -4,9 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <cn.com.xxutils.view.XXCustomListView
+        android:id="@+id/listview_friend"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="f_friend" />
+        android:layout_height="wrap_content" />
 </LinearLayout>

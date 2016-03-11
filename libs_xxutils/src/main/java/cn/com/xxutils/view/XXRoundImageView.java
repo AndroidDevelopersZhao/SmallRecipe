@@ -3,8 +3,10 @@ package cn.com.xxutils.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -118,8 +120,8 @@ public class XXRoundImageView extends
         if (drawable.getClass() == NinePatchDrawable.class)
 
             return;
-
-        Bitmap b = ((BitmapDrawable) drawable).getBitmap();
+        Bitmap b = null;
+        b = ((BitmapDrawable) drawable).getBitmap();
 
         Bitmap bitmap = b.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -179,6 +181,36 @@ public class XXRoundImageView extends
 
     }
 
+    /**
+     * drawabl->bitmap
+     *
+     * @param drawable
+     * @return
+     */
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+
+
+        Bitmap bitmap = Bitmap.createBitmap(
+
+                drawable.getIntrinsicWidth(),
+
+                drawable.getIntrinsicHeight(),
+
+                drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+
+                        : Bitmap.Config.RGB_565);
+
+        Canvas canvas = new Canvas(bitmap);
+
+        //canvas.setBitmap(bitmap);
+
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
+        drawable.draw(canvas);
+
+        return bitmap;
+
+    }
 
     /**
      * 获取裁剪后的圆形图片

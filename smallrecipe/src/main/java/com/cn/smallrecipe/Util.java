@@ -11,6 +11,7 @@ import com.cn.smallrecipe.datainfo.register.RespData;
 import com.cn.smallrecipe.datainfo.register.ResultToApp;
 import com.cn.smallrecipe.datainfo.search.AllInfo;
 import com.cn.smallrecipe.datainfo.search.Data;
+import com.cn.smallrecipe.datainfo.sendsayinfo.Resp_Say;
 import com.cn.smallrecipe.datainfo.wechat.WXUserInfo;
 import com.cn.smallrecipe.datainfo.wechat.WeChatRefreshTokenInfo;
 import com.cn.smallrecipe.datainfo.wechat.WeChatTokenInfo;
@@ -63,6 +64,10 @@ public class Util {
     public static final String URL_SENDUSERRESPMSG = url + "updateuserrespmsg";//发送用户反馈信息
     public static final String URL_GETMYSTAR = url + "getuserstarsrecipe";//获取用户收藏的菜谱
     public static final String URL_SENDSAY = url + "sayservice";//请求发表说说接口
+
+    public static final String URL_GETALLSAY = url + "getallsay";//获取所有说说
+
+
     public static final String APP_ID = "wx220e16bd4df59c89";
     public static final String SECRET = "b9fda74227172b69a55316e9c0367bfc";
 
@@ -102,7 +107,9 @@ public class Util {
             bundle.putSerializable("data", (ResultToApp) object);
         } else if (object instanceof Data_GetUserStarRecipe) {
             bundle.putSerializable("data", (Data_GetUserStarRecipe) object);
-        } else {
+        } else if (object instanceof Resp_Say){
+            bundle.putSerializable("data", (Resp_Say) object);
+        }else {
             bundle.putString(TAG, "参数类型未定义,请至工具类定义");
         }
         message.setData(bundle);
