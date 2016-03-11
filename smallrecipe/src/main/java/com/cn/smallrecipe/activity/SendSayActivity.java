@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.baidu.location.BDLocation;
 import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.view.HorizontalListView;
@@ -17,12 +18,14 @@ import com.cn.smallrecipe.view.HorizontalListView;
 import cn.com.xxutils.adapter.XXListViewAdapter;
 import cn.com.xxutils.alerterview.OnItemClickListener;
 import cn.com.xxutils.alerterview.XXAlertView;
+import cn.com.xxutils.util.Listener_location;
+import cn.com.xxutils.util.Location_Client;
 
 /**
  * TODO 加入百度定位
  * Created by Administrator on 2016/3/10.
  */
-public class SendSayActivity extends MyActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
+public class SendSayActivity extends MyActivity implements AdapterView.OnItemClickListener, View.OnClickListener, Listener_location {
     private HorizontalListView lv_h_sendsay;
     private LinearLayout layout_img;
     private XXListViewAdapter<Bitmap> adapter = new XXListViewAdapter<Bitmap>(this, R.layout.item_listview_h_sendsay) {
@@ -41,6 +44,8 @@ public class SendSayActivity extends MyActivity implements AdapterView.OnItemCli
         initView();
         Log.d(TAG, "intent.get ID:" + getIntent().getStringExtra("id"));
         Log.d(TAG, "intent.get com_name:" + getIntent().getStringExtra("com_name"));
+        Log.d(TAG, "开始定位");
+        new Location_Client(this, this).start();//初始化定位对象并开始定位，结果由回调带回
     }
 
     private void initView() {
@@ -87,5 +92,10 @@ public class SendSayActivity extends MyActivity implements AdapterView.OnItemCli
                         }).show();
                 break;
         }
+    }
+
+    @Override
+    public void Location(BDLocation location) {
+        Log.w(TAG, "定位成功：" + location.getCity());
     }
 }
