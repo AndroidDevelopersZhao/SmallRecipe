@@ -19,6 +19,7 @@ import cn.com.xxutils.alerterview.OnItemClickListener;
 import cn.com.xxutils.alerterview.XXAlertView;
 
 /**
+ * TODO 加入百度定位
  * Created by Administrator on 2016/3/10.
  */
 public class SendSayActivity extends MyActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
