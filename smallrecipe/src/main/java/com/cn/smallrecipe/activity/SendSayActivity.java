@@ -1,9 +1,7 @@
 package com.cn.smallrecipe.activity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import com.cn.smallrecipe.view.HorizontalListView;
 import cn.com.xxutils.adapter.XXListViewAdapter;
 import cn.com.xxutils.alerterview.OnItemClickListener;
 import cn.com.xxutils.alerterview.XXAlertView;
-import cn.com.xxutils.likebutton.XXUtils;
 
 /**
  * Created by Administrator on 2016/3/10.
