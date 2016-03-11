@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,7 @@ import cn.com.xxutils.util.XXListViewAnimationMode;
 import cn.com.xxutils.view.XXCustomListView;
 import cn.com.xxutils.view.XXListView;
 import cn.com.xxutils.view.XXRoundImageView;
+import cn.com.xxutils.volley.toolbox.Volley;
 
 /**
  * Created by Administrator on 2016/2/24.
@@ -40,13 +43,14 @@ public class F_Friend extends ParentFragment {
     private XXCustomListView listview_friend;
     private XXListViewAdapter<Data_Say_Result> adapter_home;
     private XXListViewAdapter<String> adapter_horit;
+    int isc = 0;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.f_friend, null);
         Log.d(TAG, "进入厨艺圈页面");
-//        initView();
+        initView();
         return view;
     }
 
@@ -63,18 +67,20 @@ public class F_Friend extends ParentFragment {
                         Resp_Say say = (Resp_Say) msg.getData().getSerializable("data");
                         Log.d(TAG, say.getResultMsg());
                         for (int i = 0; i < say.getData().size(); i++) {
-                            Log.d(TAG, "获取的每一条item的头像：" + say.getData().get(i).getUser_img());
                             adapter_home.addItem(say.getData().get(i));
-                            adapter_home.notifyDataSetChanged();
+                            Log.d(TAG, "给主Listview添加一条数据，用户名：" + say.getData().get(i).getUser_name());
                             String[] ss = say.getData().get(i).getSay_image_url().split("ф");
                             for (int j = 0; j < ss.length; j++) {
-                                if (!ss[j].equals("")){
+                                if (!ss[j].equals("") && ss[j] != null) {
+                                    Log.d(TAG, "给图片的listview添加一个图片：" + ss[j]);
                                     adapter_horit.addItem(ss[j]);
-                                    Log.d(TAG,"ss[j]"+ss[j]+"--------------");
-                                    adapter_horit.notifyDataSetChanged();
                                 }
+
                             }
                         }
+                        adapter_home.notifyDataSetChanged();
+                        adapter_horit.notifyDataSetChanged();
+//                        setListViewHeight(listview_friend);
                         break;
                 }
             }
@@ -84,17 +90,23 @@ public class F_Friend extends ParentFragment {
             @Override
             public void initGetView(int position, View convertView, ViewGroup parent) {
                 ImageView hor_1 = (ImageView) convertView.findViewById(R.id.hor_1);
-                new XXImagesLoader(null, true,
-                        R.drawable.delete_default_qq_avatar,
-                        R.drawable.delete_default_qq_avatar,
-                        R.drawable.delete_default_qq_avatar).disPlayImage(getItem(position),
-                        hor_1);
-                adapter_horit.notifyDataSetChanged();
+                if (getItem(position) != null) {
+                    new XXImagesLoader(null, true,
+                            R.drawable.delete_default_qq_avatar,
+                            R.drawable.delete_default_qq_avatar,
+                            R.drawable.delete_default_qq_avatar).disPlayImage(getItem(position),
+                            hor_1);
+                    Log.d(TAG, "填充图片的URL：" + getItem(position));
+                    adapter_horit.notifyDataSetChanged();
+                    adapter_home.notifyDataSetChanged();
+                }
+
             }
         };
         /**
          * 主adapter
          */
+
         adapter_home = new XXListViewAdapter<Data_Say_Result>(getActivity(), R.layout.item_listview_friend) {
             @Override
             public void initGetView(int position, View convertView, ViewGroup parent) {
@@ -103,23 +115,32 @@ public class F_Friend extends ParentFragment {
                 /*发表该说说的用户的昵称*/
                 TextView item_tv_say_user_name = (TextView) convertView.findViewById(R.id.item_tv_say_user_name);
                 item_tv_say_user_name.setText(getItem(position).getUser_name());
+
                 TextView item_tv_time = (TextView) convertView.findViewById(R.id.item_tv_time);
                 item_tv_time.setText(getItem(position).getSay_time());
+
                 /*该说说的文本域*/
                 TextView item_tv_say_text = (TextView) convertView.findViewById(R.id.item_tv_say_text);
                 item_tv_say_text.setText(getItem(position).getSay_text());
+
                 /*点赞按钮*/
                 ImageView item_iv_like = (ImageView) convertView.findViewById(R.id.item_iv_like);
                 /*评论按钮*/
                 ImageView item_iv_say = (ImageView) convertView.findViewById(R.id.item_iv_say);
                 /*横向的展示用户发表的图片的listview,默认隐藏*/ //TODO 横向listview命名--item_lv1_images
+
                 HorizontalListView item_lv1_images = (HorizontalListView) convertView.findViewById(R.id.item_lv1_images);
-                if (adapter_horit.getItem(position) != null && !adapter_horit.getItem(position).equals("")) {
-                    item_lv1_images.setVisibility(View.VISIBLE);
-                } else {
-                    item_lv1_images.setVisibility(View.GONE);
-                }
-                item_lv1_images.setAdapter(adapter_horit);
+                    item_lv1_images.setAdapter(adapter_horit);
+//                if (adapter_horit.getItem(position) != null && !adapter_horit.getItem(position).equals("")) {
+//                    item_lv1_images.setVisibility(View.VISIBLE);
+//                    Log.d(TAG, "设置显示图片的listview可见");
+////                    setListViewHeight(listview_friend);
+////                    adapter_home.notifyDataSetChanged();
+//                } else {
+//                    item_lv1_images.setVisibility(View.GONE);
+//                    Log.d(TAG, "设置显示图片的listview不可见");
+//                }
+
                 /*城市*/
                 TextView item_tv_location = (TextView) convertView.findViewById(R.id.item_tv_location);
                 item_tv_location.setText(getItem(position).getCity());
@@ -141,10 +162,45 @@ public class F_Friend extends ParentFragment {
                 adapter_home.notifyDataSetChanged();
             }
         };
-        adapter_home.removeAll();
+//        adapter_home.removeAll();
         listview_friend.setAdapter(adapter_home);
-        listview_friend.setListViewAnimation(adapter_home, XXListViewAnimationMode.ANIIMATION_ALPHA);
+//        listview_friend.setListViewAnimation(adapter_home, XXListViewAnimationMode.ANIIMATION_ALPHA);
         getAllSay(handler);
+    }
+
+    public void setListViewHeight(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+
+        int totalHeight = 0;
+
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+
+
+            View listItem = listAdapter.getView(i, null, listView);
+
+
+            listItem.measure(0, 0);
+
+
+            totalHeight += listItem.getMeasuredHeight();
+
+
+        }
+
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+
+
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+
+
+        listView.setLayoutParams(params);
+
     }
 
     private void setUserLogo(String user_img, final XXRoundImageView item_iv_say_user_logo) {

@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="0sp"
         android:layout_weight="3">
-
         <EditText
             android:id="@+id/et_input_say"
             android:layout_width="match_parent"
