@@ -25,6 +25,7 @@ import com.cn.smallrecipe.fragment.F_Friend;
 import com.cn.smallrecipe.fragment.F_Home;
 import com.cn.smallrecipe.fragment.F_My;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -68,6 +69,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         UmengUpdateAgent.update(this);
+
         initView();
 
     }
@@ -119,6 +121,7 @@ public class MainActivity extends MyActivity implements View.OnClickListener, Se
         sessionid_file = String.valueOf(sharedPreferences_sessionId.get(this, "sessionid", ""));
         usernumber_file = String.valueOf(sharedPreferences_sessionId.get(this, "usernumber", ""));
         Log.d(TAG, "读取到本地存储的usernumber=" + usernumber_file);
+        MobclickAgent.onProfileSignIn(usernumber_file);
         if (sessionid_file != null && !sessionid_file.equals("")) {
             MyActivity.LOGIN_STATE = true;
             //获取该用户对应的头像、昵称等个人信息

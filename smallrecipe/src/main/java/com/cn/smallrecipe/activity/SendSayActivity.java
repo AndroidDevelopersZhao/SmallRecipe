@@ -30,6 +30,8 @@ import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -167,6 +169,36 @@ public class SendSayActivity extends MyActivity implements AdapterView.OnItemCli
     }
 
     /**
+     * 将图片image压缩成大小为 size的图片（size表示图片大小，单位是KB）
+     *
+     * @param image 图片资源
+     * @param size  图片大小
+     * @return Bitmap
+     */
+    private Bitmap compressImage(Bitmap image, int size) {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        int options = 100;
+        // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
+        while (baos.toByteArray().length / 1024 > size) {
+            // 重置baos即清空baos
+            baos.reset();
+            // 每次都减少10
+            options -= 10;
+            // 这里压缩options%，把压缩后的数据存放到baos中
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);
+
+        }
+        // 把压缩后的数据baos存放到ByteArrayInputStream中
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+        // 把ByteArrayInputStream数据生成图片
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
+        return bitmap;
+    }
+
+    /**
      * app 端请求发表说说
      *
      * @param usernumber 用户账号
@@ -243,12 +275,13 @@ public class SendSayActivity extends MyActivity implements AdapterView.OnItemCli
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) return;
         if (requestCode == REQUSETCODE_CAM) {
             //来源为相机
             Bundle bundle = data.getExtras();
             //获取相机返回的数据，并转换为图片格式
             Bitmap bitmap = (Bitmap) bundle.get("data");
-            adapter.addItem(bitmap);
+            adapter.addItem( compressImage(bitmap,100));//压缩图片
         } else if (requestCode == REQUSETCODE_PIC) {
             //来源为图库
             Uri selectedImage = data.getData();
@@ -259,7 +292,7 @@ public class SendSayActivity extends MyActivity implements AdapterView.OnItemCli
             String picturePath = c.getString(columnIndex);
             c.close();
             Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
-            adapter.addItem(bitmap);
+            adapter.addItem(compressImage(bitmap,100));
         }
         if (adapter.getList().size() != 0) {
             layout_img.setVisibility(View.VISIBLE);

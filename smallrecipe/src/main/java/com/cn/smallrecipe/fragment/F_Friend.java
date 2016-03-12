@@ -63,7 +63,7 @@ public class F_Friend extends ParentFragment {
         super.onStart();
         Log.d(TAG, "F-Friend-------------onStart");
         if (adapter_home != null) {
-            if (isc==0){
+            if (isc == 0) {
 
                 adapter_home.removeAll();
                 adapter_home.notifyDataSetChanged();
@@ -76,7 +76,7 @@ public class F_Friend extends ParentFragment {
     public void onStop() {
         super.onStop();
         Log.d(TAG, "F-Friend-------------onStop");
-        isc=0;
+        isc = 0;
     }
 
     @Nullable
@@ -104,25 +104,11 @@ public class F_Friend extends ParentFragment {
                         Resp_Say say = (Resp_Say) msg.getData().getSerializable("data");
                         Log.d(TAG, say.getResultMsg());
                         for (int i = 0; i < say.getData().size(); i++) {
-                            Log.d(TAG,"ID:"+say.getData().get(i).getSay_id());
+                            Log.d(TAG, "ID:" + say.getData().get(i).getSay_id());
                             adapter_home.addItem(say.getData().get(i));
-
-//                            Log.d(TAG, "给主Listview添加一条数据，用户名：" + say.getData().get(i).getUser_name());
-//                            String[] ss = say.getData().get(i).getSay_image_url().split("ф");
-//                            for (int j = 0; j < ss.length; j++) {
-//                                if (!ss[j].equals("") && ss[j] != null) {
-//                                    Log.d(TAG, "给图片的listview添加一个图片：" + ss[j]);
-//
-//                                    adapter_horit.addItem(ss[j]);
-//                                }
-//
-//                            }
-
 
                         }
                         adapter_home.notifyDataSetChanged();
-//                        adapter_horit.notifyDataSetChanged();
-//                        setListViewHeight(listview_friend);
                         break;
                 }
             }
@@ -153,7 +139,7 @@ public class F_Friend extends ParentFragment {
                 /*点赞按钮*/
                 ImageView item_iv_like = (ImageView) convertView.findViewById(R.id.item_iv_like);
                 /*评论按钮*/
-                ImageView item_iv_say = (ImageView) convertView.findViewById(R.id.item_iv_say);
+//                ImageView item_iv_say = (ImageView) convertView.findViewById(R.id.item_iv_say);
                 /*横向的展示用户发表的图片的listview,默认隐藏*/ //TODO 横向listview命名--item_lv1_images
 
                 HorizontalListView item_lv1_images = (HorizontalListView) convertView.findViewById(R.id.item_lv1_images);
@@ -176,6 +162,11 @@ public class F_Friend extends ParentFragment {
                 };
                 item_lv1_images.setAdapter(adapter_horit);
                 String[] ss = getItem(position).getSay_image_url().split("ф");
+                if (ss.length > 1) {
+                    item_lv1_images.setVisibility(View.VISIBLE);
+                } else {
+                    item_lv1_images.setVisibility(View.GONE);
+                }
                 for (int j = 0; j < ss.length; j++) {
                     if (!ss[j].equals("") && ss[j] != null) {
                         Log.d(TAG, "给图片的listview添加一个图片：" + ss[j]);
@@ -187,7 +178,11 @@ public class F_Friend extends ParentFragment {
 
                 /*城市*/
                 TextView item_tv_location = (TextView) convertView.findViewById(R.id.item_tv_location);
-                item_tv_location.setText(getItem(position).getCity());
+                if (getItem(position).getCity().equals("")) {
+                    item_tv_location.setText("该用户不想告诉你们他在哪");
+                }else {
+                    item_tv_location.setText(getItem(position).getCity());
+                }
                 /*点赞的人数*/
                 TextView item_tv_star_number = (TextView) convertView.findViewById(R.id.item_tv_star_number);
                 /*评论输入框*/
@@ -293,12 +288,14 @@ public class F_Friend extends ParentFragment {
         XXHttpClient client = new XXHttpClient(Util.URL_GETALLSAY, true, new XXHttpClient.XXHttpResponseListener() {
             @Override
             public void onSuccess(int i, byte[] bytes) {
-                Log.d(TAG, new String(bytes));
-                Resp_Say say = new Gson().fromJson(new String(bytes), Resp_Say.class);
-                if (say.getResultCode() == 9000) {
-                    Util.sendMsgToHandler(handler, say, true);
-                } else {
-                    Util.sendMsgToHandler(handler, say.getResultMsg(), false);
+                if (bytes.length > 0) {
+                    Log.d(TAG, new String(bytes));
+                    Resp_Say say = new Gson().fromJson(new String(bytes), Resp_Say.class);
+                    if (say.getResultCode() == 9000) {
+                        Util.sendMsgToHandler(handler, say, true);
+                    } else {
+                        Util.sendMsgToHandler(handler, say.getResultMsg(), false);
+                    }
                 }
             }
 

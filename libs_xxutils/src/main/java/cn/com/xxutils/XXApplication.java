@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 
 import cn.smssdk.SMSSDK;
@@ -38,6 +40,10 @@ public class XXApplication extends Application {
         SMSSDK.initSDK(this, "1003e1393046d", "07a19ef8a4ea4f02c699bc4399d4bda4");
         Log.d(TAG, "SMSSDK 在Application初始化成功");
         initSharedInfo();
+        AnalyticsConfig.enableEncrypt(true);
+        Log.d(TAG, "日志加密已开启");
+        MobclickAgent.setDebugMode(true);
+        Log.d(TAG, "集成测试开启");
     }
 
     private void initSharedInfo() {
@@ -48,10 +54,10 @@ public class XXApplication extends Application {
     }
 
     private void enabledStrictMode() {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .penaltyDeath()
-                    .build());
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
     }
 }

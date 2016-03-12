@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.tencent.tauth.Tencent;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.MsgConstant;
 import com.umeng.message.PushAgent;
@@ -46,4 +47,15 @@ public class MyActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 }

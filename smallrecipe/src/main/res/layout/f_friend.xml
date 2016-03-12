@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <cn.com.xxutils.view.XXCustomListView
+        android:descendantFocusability="beforeDescendants"
         android:id="@+id/listview_friend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
