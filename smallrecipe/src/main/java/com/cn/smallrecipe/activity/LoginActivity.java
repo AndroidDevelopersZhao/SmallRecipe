@@ -146,10 +146,12 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
 
             case R.id.bt_login_with_qq:
                 //QQ登陆
+                Toast.makeText(LoginActivity.this, "正在启动QQ登陆，请稍后...", Toast.LENGTH_LONG).show();
                 loginWithQQ();
                 break;
 
             case R.id.bt_login_with_wechat:
+                Toast.makeText(LoginActivity.this, "正在启动微信登陆，请稍后...", Toast.LENGTH_LONG).show();
                 loginWithWeChat();
                 break;
         }
@@ -255,6 +257,21 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         }
 
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        XXSVProgressHUD.showWithStatus(LoginActivity.this, "正在授权...");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (XXSVProgressHUD.isShowing(LoginActivity.this)) {
+
+            XXSVProgressHUD.dismiss(LoginActivity.this);
+        }
     }
 
     private Handler handler_getuserlogoForQQ = null;
