@@ -44,21 +44,58 @@ public class F_Friend extends ParentFragment {
     private XXListViewAdapter<Data_Say_Result> adapter_home;
     private XXListViewAdapter<String> adapter_horit;
     int isc = 0;
+    private Handler handler;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "F-Friend-------------onPause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "F-Friend-------------onResume");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "F-Friend-------------onStart");
+        if (adapter_home != null) {
+            if (isc==0){
+
+                adapter_home.removeAll();
+                adapter_home.notifyDataSetChanged();
+                getAllSay(handler);
+            }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "F-Friend-------------onStop");
+        isc=0;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.f_friend, null);
+        Log.d(TAG, "F-Friend-------------onCreateView");
         Log.d(TAG, "进入厨艺圈页面");
         initView();
+        isc++;
         return view;
     }
 
     private void initView() {
         listview_friend = (XXCustomListView) view.findViewById(R.id.listview_friend);
-        Handler handler = new Handler() {
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
+                listview_friend.onRefreshComplete();
                 switch (msg.what) {
                     case -1:
                         Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
@@ -67,47 +104,37 @@ public class F_Friend extends ParentFragment {
                         Resp_Say say = (Resp_Say) msg.getData().getSerializable("data");
                         Log.d(TAG, say.getResultMsg());
                         for (int i = 0; i < say.getData().size(); i++) {
+                            Log.d(TAG,"ID:"+say.getData().get(i).getSay_id());
                             adapter_home.addItem(say.getData().get(i));
-                            Log.d(TAG, "给主Listview添加一条数据，用户名：" + say.getData().get(i).getUser_name());
-                            String[] ss = say.getData().get(i).getSay_image_url().split("ф");
-                            for (int j = 0; j < ss.length; j++) {
-                                if (!ss[j].equals("") && ss[j] != null) {
-                                    Log.d(TAG, "给图片的listview添加一个图片：" + ss[j]);
-                                    adapter_horit.addItem(ss[j]);
-                                }
 
-                            }
+//                            Log.d(TAG, "给主Listview添加一条数据，用户名：" + say.getData().get(i).getUser_name());
+//                            String[] ss = say.getData().get(i).getSay_image_url().split("ф");
+//                            for (int j = 0; j < ss.length; j++) {
+//                                if (!ss[j].equals("") && ss[j] != null) {
+//                                    Log.d(TAG, "给图片的listview添加一个图片：" + ss[j]);
+//
+//                                    adapter_horit.addItem(ss[j]);
+//                                }
+//
+//                            }
+
+
                         }
                         adapter_home.notifyDataSetChanged();
-                        adapter_horit.notifyDataSetChanged();
+//                        adapter_horit.notifyDataSetChanged();
 //                        setListViewHeight(listview_friend);
                         break;
                 }
             }
         };
 
-        adapter_horit = new XXListViewAdapter<String>(getActivity(), R.layout.item_hor) {
-            @Override
-            public void initGetView(int position, View convertView, ViewGroup parent) {
-                ImageView hor_1 = (ImageView) convertView.findViewById(R.id.hor_1);
-                if (getItem(position) != null) {
-                    new XXImagesLoader(null, true,
-                            R.drawable.delete_default_qq_avatar,
-                            R.drawable.delete_default_qq_avatar,
-                            R.drawable.delete_default_qq_avatar).disPlayImage(getItem(position),
-                            hor_1);
-                    Log.d(TAG, "填充图片的URL：" + getItem(position));
-                    adapter_horit.notifyDataSetChanged();
-                    adapter_home.notifyDataSetChanged();
-                }
 
-            }
-        };
         /**
          * 主adapter
          */
 
         adapter_home = new XXListViewAdapter<Data_Say_Result>(getActivity(), R.layout.item_listview_friend) {
+
             @Override
             public void initGetView(int position, View convertView, ViewGroup parent) {
                 /*发表该说说的用户头像*/
@@ -130,16 +157,33 @@ public class F_Friend extends ParentFragment {
                 /*横向的展示用户发表的图片的listview,默认隐藏*/ //TODO 横向listview命名--item_lv1_images
 
                 HorizontalListView item_lv1_images = (HorizontalListView) convertView.findViewById(R.id.item_lv1_images);
-                    item_lv1_images.setAdapter(adapter_horit);
-//                if (adapter_horit.getItem(position) != null && !adapter_horit.getItem(position).equals("")) {
-//                    item_lv1_images.setVisibility(View.VISIBLE);
-//                    Log.d(TAG, "设置显示图片的listview可见");
-////                    setListViewHeight(listview_friend);
-////                    adapter_home.notifyDataSetChanged();
-//                } else {
-//                    item_lv1_images.setVisibility(View.GONE);
-//                    Log.d(TAG, "设置显示图片的listview不可见");
-//                }
+                adapter_horit = new XXListViewAdapter<String>(getActivity(), R.layout.item_hor) {
+                    @Override
+                    public void initGetView(int position, View convertView, ViewGroup parent) {
+                        ImageView hor_1 = (ImageView) convertView.findViewById(R.id.hor_1);
+                        if (getItem(position) != null) {
+                            new XXImagesLoader(null, true,
+                                    R.drawable.delete_default_qq_avatar,
+                                    R.drawable.delete_default_qq_avatar,
+                                    R.drawable.delete_default_qq_avatar).disPlayImage(getItem(position),
+                                    hor_1);
+                            Log.d(TAG, "填充图片的URL：" + getItem(position));
+                            adapter_horit.notifyDataSetChanged();
+//                    adapter_home.notifyDataSetChanged();
+                        }
+
+                    }
+                };
+                item_lv1_images.setAdapter(adapter_horit);
+                String[] ss = getItem(position).getSay_image_url().split("ф");
+                for (int j = 0; j < ss.length; j++) {
+                    if (!ss[j].equals("") && ss[j] != null) {
+                        Log.d(TAG, "给图片的listview添加一个图片：" + ss[j]);
+
+                        adapter_horit.addItem(ss[j]);
+                    }
+
+                }
 
                 /*城市*/
                 TextView item_tv_location = (TextView) convertView.findViewById(R.id.item_tv_location);
@@ -159,9 +203,24 @@ public class F_Friend extends ParentFragment {
                         R.drawable.delete_default_qq_avatar,
                         R.drawable.delete_default_qq_avatar).disPlayImage(getItem(position).getUser_img(),
                         item_iv_say_user_logo);
+
+
+                item_lv1_images.setAdapter(adapter_horit);
+                listview_friend.setOnRefreshListner(new XXCustomListView.OnRefreshListner() {
+                    @Override
+                    public void onRefresh() {
+                        adapter_home.removeAll();
+                        adapter_home.notifyDataSetChanged();
+                        getAllSay(handler);
+                    }
+                });
                 adapter_home.notifyDataSetChanged();
             }
+
+
         };
+
+
 //        adapter_home.removeAll();
         listview_friend.setAdapter(adapter_home);
 //        listview_friend.setListViewAnimation(adapter_home, XXListViewAnimationMode.ANIIMATION_ALPHA);
