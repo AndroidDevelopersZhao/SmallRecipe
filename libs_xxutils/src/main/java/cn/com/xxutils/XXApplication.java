@@ -51,6 +51,7 @@ public class XXApplication extends Application {
         PlatformConfig.setWeixin("wx220e16bd4df59c89", "b9fda74227172b69a55316e9c0367bfc");
         //QQ
         PlatformConfig.setQQZone("1105221610", "IL55aeCXCBfJVPwJ");
+        Log.w(TAG, "微信、QQ授权友盟成功");
     }
 
     private void enabledStrictMode() {

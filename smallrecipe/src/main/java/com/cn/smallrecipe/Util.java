@@ -15,10 +15,10 @@ import com.cn.smallrecipe.datainfo.sendsayinfo.Resp_Say;
 import com.cn.smallrecipe.datainfo.wechat.WXUserInfo;
 import com.cn.smallrecipe.datainfo.wechat.WeChatRefreshTokenInfo;
 import com.cn.smallrecipe.datainfo.wechat.WeChatTokenInfo;
-import com.cn.smallrecipe.wxapi.AuthWXTokenListener;
-import com.cn.smallrecipe.wxapi.GetWXTokenListener;
-import com.cn.smallrecipe.wxapi.GetWXUserInfoListener;
-import com.cn.smallrecipe.wxapi.RefreshWXTokenListener;
+//import com.cn.smallrecipe.wxapi.AuthWXTokenListener;
+//import com.cn.smallrecipe.wxapi.GetWXTokenListener;
+//import com.cn.smallrecipe.wxapi.GetWXUserInfoListener;
+//import com.cn.smallrecipe.wxapi.RefreshWXTokenListener;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -120,189 +120,189 @@ public class Util {
         }
         handler.sendMessage(message);
     }
-
-    /**
-     * 通过code获取Token
-     *
-     * @param appid    APP_ID
-     * @param secret   安全码
-     * @param code     code
-     * @param listener 返回数据
-     */
-    public static void getWXToken(String appid, String secret, String code, final GetWXTokenListener listener) {
-        XXHttpClient client = new XXHttpClient(Util.URL_GETWCHATTOKEN, true, new XXHttpClient.XXHttpResponseListener() {
-            @Override
-            public void onSuccess(int i, byte[] bytes) {
-                try {
-                    WeChatTokenInfo tokenInfo = new Gson().fromJson(new String(bytes), WeChatTokenInfo.class);
-                    listener.onSucc(tokenInfo);
-                } catch (Throwable throwable) {
-                    try {
-                        JSONObject jo = new JSONObject(new String(bytes));
-                        listener.onError(jo.getString("errmsg"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        listener.onError("获取失败,请稍后再试");
-                    }
-
-
-                }
-            }
-
-            @Override
-            public void onError(int i, Throwable throwable) {
-//                Log.e(TAG, "请求Token网络异常");
-                listener.onError("网络异常");
-            }
-
-            @Override
-            public void onProgress(long bytesWritten, long totalSize) {
-
-            }
-        });
-        client.put("appid", appid);
-        client.put("secret", secret);
-        client.put("code", code);
-        client.put("grant_type", "authorization_code");
-        client.doGet(15000);
-
-    }
-
-    /**
-     * 刷新/续期Token
-     *
-     * @param appid                  APP_ID
-     * @param refresh_token          由获取token成功后返回的refresh_token
-     * @param refreshWXTokenListener 刷新结果回调
-     */
-    public static void refreshWXToken(String appid, String refresh_token,
-                                      final RefreshWXTokenListener refreshWXTokenListener) {
-        XXHttpClient client = new XXHttpClient(Util.URL_REFRESHWCHATTOKEN, true, new XXHttpClient.XXHttpResponseListener() {
-            @Override
-            public void onSuccess(int i, byte[] bytes) {
-                Log.w(TAG, "刷新Token返回：" + new String(bytes));
-                try {
-                    WeChatRefreshTokenInfo refreshTokenInfo = new Gson().fromJson(new String(bytes), WeChatRefreshTokenInfo.class);
-                    if (refreshWXTokenListener != null)
-                        refreshWXTokenListener.onSucc(refreshTokenInfo);
-                } catch (Throwable throwable) {
-                    try {
-                        JSONObject jo = new JSONObject(new String(bytes));
-                        refreshWXTokenListener.onError(jo.getString("errmsg"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        refreshWXTokenListener.onError("刷新失败，请稍后再试");
-                    }
-                }
-
-            }
-
-            @Override
-            public void onError(int i, Throwable throwable) {
-                Log.e(TAG, "刷新Token网络异常");
-                refreshWXTokenListener.onError("刷新Token失败，网络异常");
-            }
-
-            @Override
-            public void onProgress(long bytesWritten, long totalSize) {
-
-            }
-        });
-        client.put("appid", appid);
-        client.put("grant_type", "refresh_token");
-        client.put("refresh_token", refresh_token);
-        client.doGet(15000);
-    }
-
-    /**
-     * 验证token是否有效
-     *
-     * @param openid   openid
-     * @param token    验证的token
-     * @param listener 验证结果回调
-     */
-    public static void authWeChatTokenIsEff(String openid, String token, final AuthWXTokenListener listener) {
-        XXHttpClient client = new XXHttpClient(Util.URL_AUTHTOKEN, true, new XXHttpClient.XXHttpResponseListener() {
-            @Override
-            public void onSuccess(int i, byte[] bytes) {
-                try {
-                    JSONObject ji = new JSONObject(new String(bytes));
-                    if (ji.getInt("errcode") == 0) {
-                        if (listener != null)
-                            listener.onSucc();
-                    } else {
-                        if (listener != null)
-                            listener.onError(ji.getString("errmsg"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    listener.onError("验证失败，请稍后再试");
-                }
-            }
-
-            @Override
-            public void onError(int i, Throwable throwable) {
-                Log.e(TAG, "验证token失败，网络异常");
-                listener.onError("验证token失败，网络异常");
-            }
-
-            @Override
-            public void onProgress(long bytesWritten, long totalSize) {
-
-            }
-        });
-        client.put("openid", openid);
-        client.put("access_token", token);
-        client.doGet(15000);
-    }
-
-    /**
-     * 获取用户个人信息（UnionID机制）lang为国家地区语言版本表示，默认（zh-CN）请传null
-     *
-     * @param access_token 调用凭证
-     * @param openid       普通用户的标识，对当前开发者帐号唯一
-     * @param lang         国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语，默认为zh-CN
-     * @param listener     获取结果回调
-     */
-    public static void getWXUserInfo(String access_token, String openid, String lang, final GetWXUserInfoListener listener) {
-        XXHttpClient client = new XXHttpClient(URL_GETWXUSERINFO, true, new XXHttpClient.XXHttpResponseListener() {
-            @Override
-            public void onSuccess(int i, byte[] bytes) {
-                Log.w(TAG, "获取微信用户个人信息的返回：" + new String(bytes));
-                try {
-                    WXUserInfo wxUserInfo = new Gson().fromJson(new String(bytes), WXUserInfo.class);
-                    if (listener != null)
-                        listener.onSucc(wxUserInfo);
-                } catch (Throwable throwable) {
-                    try {
-                        JSONObject jo = new JSONObject(new String(bytes));
-                        if (listener != null)
-                            listener.onError(jo.getString("errmsg"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        if (listener != null)
-                            listener.onError("获取失败，请稍后再试");
-                    }
-                }
-
-            }
-
-            @Override
-            public void onError(int i, Throwable throwable) {
-                Log.w(TAG, "获取微信用户个人信息网络异常");
-                if (listener != null)
-                    listener.onError("获取失败，网络异常");
-            }
-
-            @Override
-            public void onProgress(long bytesWritten, long totalSize) {
-
-            }
-        });
-        client.put("access_token", access_token);
-        client.put("openid", openid);
-        if (lang != null)
-            client.put("lang", lang);
-        client.doGet(15000);
-    }
+//
+//    /**
+//     * 通过code获取Token
+//     *
+//     * @param appid    APP_ID
+//     * @param secret   安全码
+//     * @param code     code
+//     * @param listener 返回数据
+//     */
+//    public static void getWXToken(String appid, String secret, String code, final GetWXTokenListener listener) {
+//        XXHttpClient client = new XXHttpClient(Util.URL_GETWCHATTOKEN, true, new XXHttpClient.XXHttpResponseListener() {
+//            @Override
+//            public void onSuccess(int i, byte[] bytes) {
+//                try {
+//                    WeChatTokenInfo tokenInfo = new Gson().fromJson(new String(bytes), WeChatTokenInfo.class);
+//                    listener.onSucc(tokenInfo);
+//                } catch (Throwable throwable) {
+//                    try {
+//                        JSONObject jo = new JSONObject(new String(bytes));
+//                        listener.onError(jo.getString("errmsg"));
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        listener.onError("获取失败,请稍后再试");
+//                    }
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onError(int i, Throwable throwable) {
+////                Log.e(TAG, "请求Token网络异常");
+//                listener.onError("网络异常");
+//            }
+//
+//            @Override
+//            public void onProgress(long bytesWritten, long totalSize) {
+//
+//            }
+//        });
+//        client.put("appid", appid);
+//        client.put("secret", secret);
+//        client.put("code", code);
+//        client.put("grant_type", "authorization_code");
+//        client.doGet(15000);
+//
+//    }
+//
+//    /**
+//     * 刷新/续期Token
+//     *
+//     * @param appid                  APP_ID
+//     * @param refresh_token          由获取token成功后返回的refresh_token
+//     * @param refreshWXTokenListener 刷新结果回调
+//     */
+//    public static void refreshWXToken(String appid, String refresh_token,
+//                                      final RefreshWXTokenListener refreshWXTokenListener) {
+//        XXHttpClient client = new XXHttpClient(Util.URL_REFRESHWCHATTOKEN, true, new XXHttpClient.XXHttpResponseListener() {
+//            @Override
+//            public void onSuccess(int i, byte[] bytes) {
+//                Log.w(TAG, "刷新Token返回：" + new String(bytes));
+//                try {
+//                    WeChatRefreshTokenInfo refreshTokenInfo = new Gson().fromJson(new String(bytes), WeChatRefreshTokenInfo.class);
+//                    if (refreshWXTokenListener != null)
+//                        refreshWXTokenListener.onSucc(refreshTokenInfo);
+//                } catch (Throwable throwable) {
+//                    try {
+//                        JSONObject jo = new JSONObject(new String(bytes));
+//                        refreshWXTokenListener.onError(jo.getString("errmsg"));
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        refreshWXTokenListener.onError("刷新失败，请稍后再试");
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onError(int i, Throwable throwable) {
+//                Log.e(TAG, "刷新Token网络异常");
+//                refreshWXTokenListener.onError("刷新Token失败，网络异常");
+//            }
+//
+//            @Override
+//            public void onProgress(long bytesWritten, long totalSize) {
+//
+//            }
+//        });
+//        client.put("appid", appid);
+//        client.put("grant_type", "refresh_token");
+//        client.put("refresh_token", refresh_token);
+//        client.doGet(15000);
+//    }
+//
+//    /**
+//     * 验证token是否有效
+//     *
+//     * @param openid   openid
+//     * @param token    验证的token
+//     * @param listener 验证结果回调
+//     */
+//    public static void authWeChatTokenIsEff(String openid, String token, final AuthWXTokenListener listener) {
+//        XXHttpClient client = new XXHttpClient(Util.URL_AUTHTOKEN, true, new XXHttpClient.XXHttpResponseListener() {
+//            @Override
+//            public void onSuccess(int i, byte[] bytes) {
+//                try {
+//                    JSONObject ji = new JSONObject(new String(bytes));
+//                    if (ji.getInt("errcode") == 0) {
+//                        if (listener != null)
+//                            listener.onSucc();
+//                    } else {
+//                        if (listener != null)
+//                            listener.onError(ji.getString("errmsg"));
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                    listener.onError("验证失败，请稍后再试");
+//                }
+//            }
+//
+//            @Override
+//            public void onError(int i, Throwable throwable) {
+//                Log.e(TAG, "验证token失败，网络异常");
+//                listener.onError("验证token失败，网络异常");
+//            }
+//
+//            @Override
+//            public void onProgress(long bytesWritten, long totalSize) {
+//
+//            }
+//        });
+//        client.put("openid", openid);
+//        client.put("access_token", token);
+//        client.doGet(15000);
+//    }
+//
+//    /**
+//     * 获取用户个人信息（UnionID机制）lang为国家地区语言版本表示，默认（zh-CN）请传null
+//     *
+//     * @param access_token 调用凭证
+//     * @param openid       普通用户的标识，对当前开发者帐号唯一
+//     * @param lang         国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语，默认为zh-CN
+//     * @param listener     获取结果回调
+//     */
+//    public static void getWXUserInfo(String access_token, String openid, String lang, final GetWXUserInfoListener listener) {
+//        XXHttpClient client = new XXHttpClient(URL_GETWXUSERINFO, true, new XXHttpClient.XXHttpResponseListener() {
+//            @Override
+//            public void onSuccess(int i, byte[] bytes) {
+//                Log.w(TAG, "获取微信用户个人信息的返回：" + new String(bytes));
+//                try {
+//                    WXUserInfo wxUserInfo = new Gson().fromJson(new String(bytes), WXUserInfo.class);
+//                    if (listener != null)
+//                        listener.onSucc(wxUserInfo);
+//                } catch (Throwable throwable) {
+//                    try {
+//                        JSONObject jo = new JSONObject(new String(bytes));
+//                        if (listener != null)
+//                            listener.onError(jo.getString("errmsg"));
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        if (listener != null)
+//                            listener.onError("获取失败，请稍后再试");
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onError(int i, Throwable throwable) {
+//                Log.w(TAG, "获取微信用户个人信息网络异常");
+//                if (listener != null)
+//                    listener.onError("获取失败，网络异常");
+//            }
+//
+//            @Override
+//            public void onProgress(long bytesWritten, long totalSize) {
+//
+//            }
+//        });
+//        client.put("access_token", access_token);
+//        client.put("openid", openid);
+//        if (lang != null)
+//            client.put("lang", lang);
+//        client.doGet(15000);
+//    }
 }

@@ -273,7 +273,7 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
                 usernumber = file.get(this, "usernumber", "").toString();
                 String sessionid = file.get(this, "sessionid", "").toString();
                 exitAppAndReLogin(usernumber, sessionid);
-
+                Toast.makeText(PersonalActivity.this, "正在注销，请稍后...", Toast.LENGTH_LONG).show();
                 break;
 
 
@@ -296,7 +296,7 @@ public class PersonalActivity extends MyActivity implements View.OnClickListener
 
                         break;
                 }
-                if (MyActivity.TENCENT!=null){
+                if (MyActivity.TENCENT != null) {
                     MyActivity.TENCENT.logout(PersonalActivity.this);
                 }
                 MainActivity.LOGIN_STATE = false;

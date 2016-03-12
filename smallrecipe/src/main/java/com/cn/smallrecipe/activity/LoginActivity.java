@@ -25,6 +25,7 @@ import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
 import com.cn.smallrecipe.datainfo.register.ResultToApp;
+import com.cn.smallrecipe.datainfo.wechat.WXUserInfo;
 import com.cn.smallrecipe.qqinfo.BaseUiListener;
 import com.google.gson.Gson;
 import com.tencent.connect.UserInfo;
@@ -35,9 +36,14 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Map;
 
 import cn.com.xxutils.adapter.XXListViewAdapter;
 import cn.com.xxutils.alerterview.OnItemClickListener;
@@ -64,7 +70,8 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
     private Tencent mTencent;
     private CheckBox cb_checkbox;
     private IWXAPI api;
-
+    private UMShareAPI mShareAPI;
+    private int SS=0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,9 +87,9 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
         } catch (Throwable throwable) {
             Log.d(TAG, "本地未保存用户登陆信息");
         }
-        api = WXAPIFactory.createWXAPI(this, Util.APP_ID, true);
-        api.registerApp(Util.APP_ID);
-        Log.w(TAG, "微信api注册成功");
+//        api = WXAPIFactory.createWXAPI(this, Util.APP_ID, true);
+//        api.registerApp(Util.APP_ID);
+//        Log.w(TAG, "微信api注册成功");
     }
 
     private void setOclick() {
@@ -152,10 +159,348 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
 
             case R.id.bt_login_with_wechat:
                 Toast.makeText(LoginActivity.this, "正在启动微信登陆，请稍后...", Toast.LENGTH_LONG).show();
-                loginWithWeChat();
+//                loginWithWeChat();
+                mShareAPI = UMShareAPI.get(this);
+                SHARE_MEDIA platform = SHARE_MEDIA.WEIXIN;
+                mShareAPI.doOauthVerify(this, platform, new UMAuthListener() {
+                    @Override
+                    public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+//                        Toast.makeText(getApplicationContext(), "Authorize succeed", Toast.LENGTH_SHORT).show();
+                        Log.w(TAG, "用户授权成功，返回数据：share_media------" + share_media.toString()
+                                + "\ni--------" + i + "\nmap-------" + map.toString());
+                        Log.w(TAG, "正在获取用户信息");
+                        mShareAPI.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN, new UMAuthListener() {
+                            @Override
+                            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                                Log.w(TAG, "个人信息获取成功：" + map.toString());
+                                WXUserInfo userInfo = new WXUserInfo();
+                                userInfo.setOpenid(map.get("openid"));
+                                userInfo.setNickname(map.get("nickname"));
+                                userInfo.setSex(map.get("sex") == "1" ? "男" : "女");
+                                userInfo.setProvince(map.get("province"));
+                                userInfo.setCity(map.get("city"));
+                                userInfo.setCountry(map.get("country"));
+                                userInfo.setHeadimgurl(map.get("headimgurl"));
+                                userInfo.setUnionid(map.get("unionid"));
+                                userInfo.setLanguage(map.get("language"));
+                                getWXUserLogo(userInfo);
+                            }
+
+                            @Override
+                            public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                                Log.w(TAG, "个人信息获取失败---" + throwable);
+                            }
+
+                            @Override
+                            public void onCancel(SHARE_MEDIA share_media, int i) {
+                                Log.w(TAG, "用户取消");
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                        Toast.makeText(getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
+                        Log.w(TAG, "Authorize fail");
+                    }
+
+                    @Override
+                    public void onCancel(SHARE_MEDIA share_media, int i) {
+                        Log.w(TAG, "Authorize cancel");
+                        Toast.makeText(getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 break;
         }
     }
+
+
+    /**
+     * 获取微信用户头像
+     *
+     * @param wxUserInfo
+     */
+    private Handler handler_getWXUserLogo = null;
+
+    private void getWXUserLogo(final WXUserInfo wxUserInfo) {
+        handler_getWXUserLogo = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case -1:
+                        Toast.makeText(LoginActivity.this, msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+                        if (XXSVProgressHUD.isShowing(LoginActivity.this)) {
+                            XXSVProgressHUD.dismiss(LoginActivity.this);
+                        }
+                        break;
+
+                    case 1:
+                        Bitmap bitmap = (Bitmap) msg.getData().getParcelable("data");
+                        Log.w(TAG, bitmap != null ? "头像获取成功" : "头像获取失败");
+                        Log.w(TAG, "Base64编码后：" + XXUtils.bitmapToBase64(bitmap));
+                        Log.e(TAG, "*******************************开始上送注册信息到后台*******************************");
+                        registerWithWeChat(wxUserInfo, bitmap);
+
+                        break;
+                }
+            }
+        };
+
+        XXHttpClient client = new XXHttpClient(wxUserInfo.getHeadimgurl(), true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+                if (bytes.length != 0) {
+                    Util.sendMsgToHandler(handler_getWXUserLogo, BitmapFactory.decodeByteArray(bytes, 0, bytes.length), true);
+                } else {
+                    Util.sendMsgToHandler(handler_getWXUserLogo, "获取异常，请稍后再试", false);
+                }
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Util.sendMsgToHandler(handler_getWXUserLogo, "网络异常，请稍后再试", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.doGet(15000);
+    }
+
+
+    /**
+     * 通过微信注册
+     *
+     * @param wxUserInfo
+     * @param bitmap
+     */
+    private Handler handler_checkWXUserIsExist = null;
+
+    /**
+     * 检测当前登陆的微信用户是否已经注册
+     *
+     * @param wxUserInfo
+     * @param bitmap
+     */
+    private void registerWithWeChat(final WXUserInfo wxUserInfo, final Bitmap bitmap) {
+        /**
+         *验证当前用户是否注册----所需参数：openid------结果：（返回用户不存在/登陆成功的用户信息）
+         * 用户不存在时调用注册接口-----所需参数：openid、username、userlogo、usernumber --
+         * --结果：注册成功，登陆成功的用户信息/注册失败的失败信息
+         */
+        Log.w(TAG, "查询该账户是否已经存在,即将上送数据(openid:)：" + wxUserInfo.getOpenid());
+
+        handler_checkWXUserIsExist = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                if (XXSVProgressHUD.isShowing(LoginActivity.this)) {
+                    XXSVProgressHUD.dismiss(LoginActivity.this);
+                }
+                switch (msg.what) {
+                    case -1:
+                        //查询异常，无结果时进入的回调
+                        Toast.makeText(LoginActivity.this, msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        //查询有结果时进入该回调
+                        final ResultToApp app = (ResultToApp) msg.getData().getSerializable("data");
+                        if (app.getErrorCode() == -22) {
+                            //该账号未注册
+                            showAlertView(wxUserInfo, bitmap);
+                        } else if (app.getErrorCode() == 9000) {
+                            //登陆成功
+                            sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+                            sharedPreferences.put(LoginActivity.this, "sessionid", app.getRespData().getSessionId());
+                            sharedPreferences.put(LoginActivity.this, "usernumber", app.getRespData().getUsernumber());
+
+                            sharedPreferences.put(LoginActivity.this, "username", app.getRespData().getUsername());
+                            sharedPreferences.put(LoginActivity.this, "userid", app.getRespData().getUserid());
+                            sharedPreferences.put(LoginActivity.this, "userlogo", app.getRespData().getUserlogo());
+                            uid = sharedPreferences.get(LoginActivity.this, "userid", app.getRespData().getUserid()).toString();
+                            Log.d(TAG, "用户数据存入缓存成功");
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        } else if (app.getErrorCode() == -3) {
+                            final String reLoginId = app.getRespData().getReLoginId();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (XXSVProgressHUD.isShowing(LoginActivity.this)) {
+                                        XXSVProgressHUD.dismiss(LoginActivity.this);
+                                    }
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            SystemClock.sleep(500);
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    new XXAlertView("提示", "该账户已经登陆，是否重新登陆", "强制登陆", null, new String[]{"取消"}, LoginActivity.this, XXAlertView.Style.Alert, new OnItemClickListener() {
+                                                        @Override
+                                                        public void onItemClick(Object o, int position) {
+                                                            Log.d(TAG, "position:" + position);
+                                                            if (position == -1) {
+                                                                //重新登陆
+                                                                Log.d(TAG, "开始重新登陆。当前传入的usernumber=" + app.getRespData().getUsernumber());
+                                                                Log.d(TAG, "开始重新登陆。当前传入的ReloginID=" + reLoginId);
+                                                                reLogin(app.getRespData().getUsernumber(), reLoginId);
+                                                            } else {
+                                                                Util.sendMsgToHandler(handler_registerwx, "当账号被使用时您可以强制登陆迫使对方下线", false);
+                                                            }
+                                                        }
+                                                    }).show();
+                                                }
+                                            });
+
+                                        }
+                                    }).start();
+
+                                }
+                            });
+                        }
+                        break;
+                }
+            }
+        };
+
+        XXHttpClient client = new XXHttpClient(Util.URL_CHECK_USER_WX, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+                Log.w(TAG, "检测微信账号是否注册的返回信息：" + new String(bytes));
+                ResultToApp app = new Gson().fromJson(new String(bytes), ResultToApp.class);
+                Util.sendMsgToHandler(handler_checkWXUserIsExist, app, true);
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Log.e(TAG, "检测微信账号是否注册的返回异常，网络故障");
+                Util.sendMsgToHandler(handler_checkWXUserIsExist, "网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.put("openid", wxUserInfo.getOpenid());
+        client.doPost(15000);
+    }
+    private void showAlertView(final WXUserInfo wxUserInfo, final Bitmap bitmap) {
+        final EditText et = new EditText(LoginActivity.this);
+
+        AlertDialog.Builder alerter = new AlertDialog.Builder(LoginActivity.this).setTitle("请绑定手机号")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setView(et)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String input = et.getText().toString();
+                        if (!input.equals("")) {
+                            //绑定手机号并登陆
+                            if (XXUtils.checkMobileNumberValid(input)) {
+                                XXSVProgressHUD.showWithStatus(LoginActivity.this, "正在绑定账号并登陆");
+                                boindPhoneNumber(input, wxUserInfo.getOpenid(), wxUserInfo.getNickname(), bitmap);
+                            } else {
+                                Toast.makeText(LoginActivity.this, "手机号码格式不正确", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(LoginActivity.this, "手机号码不能为空，请重新绑定", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.e(TAG, "取消操作");
+                    }
+                });
+        alerter.setCancelable(false);
+        alerter.show();
+    }
+
+    /**
+     * 通过微信openid绑定账号
+     *
+     * @param usernumber
+     * @param openid
+     * @param username
+     * @param userlogo
+     */
+    private Handler handler_registerwx = null;
+
+    private void boindPhoneNumber(final String usernumber, String openid, String username, Bitmap userlogo) {
+
+        handler_registerwx = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+
+                if (XXSVProgressHUD.isShowing(LoginActivity.this)) {
+                    XXSVProgressHUD.dismiss(LoginActivity.this);
+                }
+                switch (msg.what) {
+                    case -1:
+                        Toast.makeText(LoginActivity.this, msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(LoginActivity.this, LoginActivity.class));
+                        finish();
+                        break;
+
+                    case 1:
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                        break;
+                }
+            }
+        };
+        //绑定手机号并登陆
+        XXHttpClient client = new XXHttpClient(Util.URL_SERVICE_BONIDUSERFORWX, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+
+                Log.d(TAG, "绑定的回调：" + new String(bytes));
+                ResultToApp resultToApp = new Gson().fromJson(new String(bytes), ResultToApp.class);
+
+                Log.d(TAG, "登陆返回状态码：" + resultToApp.getErrorCode());
+                Log.d(TAG, "登陆返回状态信息：" + resultToApp.getResultMsg());
+                if (resultToApp.getErrorCode() == -10) {
+                    Util.sendMsgToHandler(handler_registerwx, resultToApp.getResultMsg(), false);
+                } else if (resultToApp.getErrorCode() == 9000) {
+
+                    sharedPreferences = new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME);
+                    sharedPreferences.put(LoginActivity.this, "sessionid", resultToApp.getRespData().getSessionId());
+                    sharedPreferences.put(LoginActivity.this, "usernumber", usernumber);
+
+                    sharedPreferences.put(LoginActivity.this, "username", resultToApp.getRespData().getUsername());
+                    sharedPreferences.put(LoginActivity.this, "userid", resultToApp.getRespData().getUserid());
+                    sharedPreferences.put(LoginActivity.this, "userlogo", resultToApp.getRespData().getUserlogo());
+                    uid = sharedPreferences.get(LoginActivity.this, "userid", resultToApp.getRespData().getUserid()).toString();
+                    Log.d(TAG, "用户数据存入缓存成功");
+                    Util.sendMsgToHandler(handler_registerwx, resultToApp.getResultMsg(), true);
+                } else {
+                    Util.sendMsgToHandler(handler_registerwx, resultToApp.getResultMsg(), false);
+                }
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Util.sendMsgToHandler(handler_registerwx, "网络异常", false);
+                Log.e(TAG, "网络异常");
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.put("openid", openid);
+        client.put("username", username);
+        client.put("userlogo", XXUtils.bitmapToBase64(userlogo));
+        client.put("usernumber", usernumber);
+        Log.d(TAG, "绑定微信用户号上送数据：" + client.getAllParams());
+        client.doPost(15000);
+    }
+
 
     /**
      * login with wechat
@@ -262,6 +607,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
     @Override
     protected void onRestart() {
         super.onRestart();
+        if (SS==0)
         XXSVProgressHUD.showWithStatus(LoginActivity.this, "正在授权...");
     }
 
@@ -745,6 +1091,7 @@ public class LoginActivity extends MyActivity implements View.OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Tencent.onActivityResultData(requestCode, resultCode, data, new BaseUiListener());
         if (requestCode == REQUEST_CODE) {
+            SS=1;
             //从注册页面返回
             Log.d(TAG, "onActivityResult-LoginActivity,requestCode:" + requestCode + ",resultCode:" + resultCode + ",data:" + data);
             if (data != null) {
