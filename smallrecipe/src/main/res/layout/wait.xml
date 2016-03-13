@@ -4,10 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <cn.com.xxutils.view.XXCustomListView
-        android:descendantFocusability="beforeDescendants"
-        android:id="@+id/listview_friend"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/wait" />
 </LinearLayout>

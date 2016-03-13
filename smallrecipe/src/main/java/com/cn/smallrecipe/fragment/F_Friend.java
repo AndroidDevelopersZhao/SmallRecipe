@@ -61,6 +61,9 @@ public class F_Friend extends ParentFragment {
     private XXListViewAdapter<String> adapter_comment;
     int isc = 0;
     private Handler handler;
+    private View footer;
+    private int page = 2;
+
 
     @Override
     public void onPause() {
@@ -83,7 +86,7 @@ public class F_Friend extends ParentFragment {
 
                 adapter_home.removeAll();
                 adapter_home.notifyDataSetChanged();
-                getAllSay(handler);
+                getAllSay(handler, 1);
             }
         }
     }
@@ -93,6 +96,7 @@ public class F_Friend extends ParentFragment {
         super.onStop();
         Log.d(TAG, "F-Friend-------------onStop");
         isc = 0;
+        page = 2;
     }
 
     @Nullable
@@ -117,6 +121,10 @@ public class F_Friend extends ParentFragment {
             @Override
             public void handleMessage(Message msg) {
                 listview_friend.onRefreshComplete();
+                listview_friend.removeFooterView(footer);
+                listview_friend.onFootLoadingComplete();
+                Log.d(TAG, "隐藏下拉view");
+//                footer.setVisibility(View.INVISIBLE);
                 switch (msg.what) {
                     case -1:
                         Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
@@ -124,10 +132,13 @@ public class F_Friend extends ParentFragment {
                     case 1:
                         Resp_Say say = (Resp_Say) msg.getData().getSerializable("data");
                         Log.d(TAG, say.getResultMsg());
-                        for (int i = 0; i < say.getData().size(); i++) {
-                            Log.d(TAG, "ID:" + say.getData().get(i).getSay_id());
-                            adapter_home.addItem(say.getData().get(i));
-
+                        if (say.getData().size() != 0) {
+                            for (int i = 0; i < say.getData().size(); i++) {
+                                Log.d(TAG, "ID:" + say.getData().get(i).getSay_id());
+                                adapter_home.addItem(say.getData().get(i));
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "没有更多数据", Toast.LENGTH_LONG).show();
                         }
                         adapter_home.notifyDataSetChanged();
                         break;
@@ -244,7 +255,7 @@ public class F_Friend extends ParentFragment {
                                         item_et_say_down.setText("");
                                         adapter_home.removeAll();
                                         adapter_comment.removeAll();
-                                        getAllSay(handler);
+                                        getAllSay(handler, 1);
                                         break;
                                 }
                                 Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_LONG).show();
@@ -283,12 +294,12 @@ public class F_Friend extends ParentFragment {
 //                adapter_comment.addItem("фBфBфC");
 //                adapter_comment.addItem("фCфBфC");
                 if (getItem(position).getSay_comment() != null) {
-                    Log.w(TAG,"all----"+getItem(position).getSay_comment());
-                    String allData =getItem(position).getSay_comment();
-                    String[]qq=allData.split("\\$");
+                    Log.w(TAG, "all----" + getItem(position).getSay_comment());
+                    String allData = getItem(position).getSay_comment();
+                    String[] qq = allData.split("\\$");
                     for (int q = 0; q < qq.length; q++) {
                         Log.w(TAG, "QQQQQ" + qq[q]);
-                        if (!qq[q].equals("")){
+                        if (!qq[q].equals("")) {
                             adapter_comment.addItem(qq[q]);
 
 //                            for (int i = 0; i < qq[q].split("^").length; i++) {
@@ -324,15 +335,31 @@ public class F_Friend extends ParentFragment {
 
 
 //                item_lv1_images.setAdapter(adapter_horit);
-
-
             }
 
 
         };
+
         listview_friend.setAdapter(adapter_home);
+        footer = View.inflate(getActivity(), R.layout.footer, null);
+        listview_friend.setOnAddFootListener(new XXCustomListView.OnAddFootListener() {
+            @Override
+            public void addFoot() {
+                listview_friend.addFooterView(footer);
+                footer.setVisibility(View.INVISIBLE);
+            }
+        });
+        listview_friend.setOnFootLoadingListener(new XXCustomListView.OnFootLoadingListener() {
+            @Override
+            public void onFootLoading() {
+//                footer.setVisibility(View.VISIBLE);
+                footer.setVisibility(View.VISIBLE);
+                getAllSay(handler, page++);
+//                footer.setVisibility(View.GONE);
+            }
+        });
         adapter_home.notifyDataSetChanged();
-        getAllSay(handler);
+        getAllSay(handler, 1);
         listview_friend.setOnRefreshListner(new XXCustomListView.OnRefreshListner() {
             @Override
             public void onRefresh() {
@@ -346,7 +373,8 @@ public class F_Friend extends ParentFragment {
                 }
                 adapter_home.removeAll();
                 adapter_home.notifyDataSetChanged();
-                getAllSay(handler);
+                page = 2;
+                getAllSay(handler, 1);
             }
         });
 
@@ -450,7 +478,7 @@ public class F_Friend extends ParentFragment {
         client.doGet(15000);
     }
 
-    private void getAllSay(final Handler handler) {
+    private void getAllSay(final Handler handler, int page) {
         Log.d(TAG, "开始请求所有动态");
         XXHttpClient client = new XXHttpClient(Util.URL_GETALLSAY, true, new XXHttpClient.XXHttpResponseListener() {
             @Override
@@ -476,6 +504,8 @@ public class F_Friend extends ParentFragment {
 
             }
         });
+        client.put("page", page);
         client.doGet(15000);
+
     }
 }

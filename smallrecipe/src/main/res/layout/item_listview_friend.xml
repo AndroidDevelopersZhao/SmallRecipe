@@ -130,7 +130,7 @@
             android:id="@+id/item_lv2_comment"
             android:layout_width="match_parent"
             android:divider="@null"
-            android:layout_height="200sp"/>
+            android:layout_height="match_parent"/>
         <LinearLayout
             android:id="@+id/layout_say"
             android:layout_width="match_parent"
