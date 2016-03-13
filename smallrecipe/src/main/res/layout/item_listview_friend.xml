@@ -27,22 +27,23 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/item_tv_say_user_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_marginLeft="5sp"
-                    android:gravity="center"
-                    android:text="飞翔的企鹅" />
+                    android:text="飞翔的企鹅"
+                    android:textColor="#d18d1a" />
 
                 <TextView
                     android:id="@+id/item_tv_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5sp" />
+                    android:layout_marginLeft="5sp"
+                    android:textColor="#ce782d" />
             </LinearLayout>
         </LinearLayout>
 
@@ -51,7 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5sp"
-            android:text="及偶发煎熬IF奖奥帆赛额哇哦IF奖阿芳女士 阿尔法金额爱减肥啦就额爱疯；骄傲；发；就" />
+            android:text=""
+            android:textColor="#de1446" />
 
         <com.cn.smallrecipe.view.HorizontalListView
             android:id="@+id/item_lv1_images"
@@ -83,14 +85,15 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="15sp"
-                android:layout_height="15sp"
-                android:src="@drawable/delete_default_qq_avatar" />
+                android:layout_width="17sp"
+                android:layout_height="17sp"
+                android:src="@drawable/locationicon" />
 
             <TextView
                 android:id="@+id/item_tv_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="12sp"
                 android:text="上海市" />
         </LinearLayout>
 
@@ -102,26 +105,33 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="15sp"
-                android:layout_height="15sp"
-                android:src="@drawable/delete_default_qq_avatar" />
+                android:layout_width="17sp"
+                android:layout_height="17sp"
+                android:src="@drawable/likeicon" />
 
             <TextView
                 android:id="@+id/item_tv_star_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="12sp"
                 android:text="800人觉得很赞" />
 
             <ImageView
                 android:id="@+id/item_iv_like"
-                android:layout_width="15sp"
-                android:layout_height="15sp"
-                android:layout_marginLeft="20sp"
+                android:layout_width="20sp"
+                android:layout_height="20sp"
+                android:layout_marginLeft="150sp"
+                android:scaleType="fitXY"
                 android:layout_marginRight="30sp"
-                android:src="@drawable/star_on" />
+                android:src="@drawable/sayicon"
+                android:visibility="gone"/>
         </LinearLayout>
-
+        <cn.com.xxutils.view.XXListView
+            android:id="@+id/item_lv2_comment"
+            android:layout_width="match_parent"
+            android:layout_height="100sp"/>
         <LinearLayout
+            android:id="@+id/layout_say"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -133,19 +143,21 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:background="@null"
-                android:hint="我有话说"/>
+                android:hint="我有话说"
+                android:imeOptions="actionDone" />
 
-            <ImageView
+            <Button
                 android:id="@+id/item_phone_images"
-                android:layout_width="25sp"
-                android:layout_height="25sp"
-                android:src="@drawable/umeng_socialize_facebook" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/face_parent"
+                android:text="评论" />
         </LinearLayout>
+        <!-- 聊天输入框 -->
+        <!--<include-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--layout="@layout/custom_facerelativelayout" />-->
 
-        <cn.com.xxutils.view.XXListView
-            android:id="@+id/item_lv2_say_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

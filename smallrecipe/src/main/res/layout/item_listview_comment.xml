@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginLeft="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:textColor="#4151bc"
+            android:id="@+id/item_tv_comm_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="aa：" />
+
+        <TextView
+            android:textColor="#f57d04"
+            android:layout_marginLeft="10sp"
+            android:id="@+id/item_tv_comm_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我日你大爷" />
+        <TextView
+            android:id="@+id/item_tv_comm_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_marginLeft="150sp"
+            android:visibility="gone"/>
+    </LinearLayout>
+</LinearLayout>

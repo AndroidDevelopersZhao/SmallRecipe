@@ -7,11 +7,15 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,15 +25,26 @@ import com.cn.smallrecipe.Mode;
 import com.cn.smallrecipe.ParentFragment;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
+import com.cn.smallrecipe.activity.MainActivity;
 import com.cn.smallrecipe.datainfo.sendsayinfo.Data_Say_Result;
 import com.cn.smallrecipe.datainfo.sendsayinfo.Resp_Say;
+import com.cn.smallrecipe.view.FaceRelativeLayout;
 import com.cn.smallrecipe.view.HorizontalListView;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cn.com.xxutils.adapter.XXListViewAdapter;
+import cn.com.xxutils.progress.XXSVProgressHUD;
 import cn.com.xxutils.util.XXHttpClient;
 import cn.com.xxutils.util.XXImagesLoader;
 import cn.com.xxutils.util.XXListViewAnimationMode;
+import cn.com.xxutils.util.XXSharedPreferences;
 import cn.com.xxutils.view.XXCustomListView;
 import cn.com.xxutils.view.XXListView;
 import cn.com.xxutils.view.XXRoundImageView;
@@ -43,6 +58,7 @@ public class F_Friend extends ParentFragment {
     private XXCustomListView listview_friend;
     private XXListViewAdapter<Data_Say_Result> adapter_home;
     private XXListViewAdapter<String> adapter_horit;
+    private XXListViewAdapter<Data_Say_Result> adapter_comment;
     int isc = 0;
     private Handler handler;
 
@@ -90,8 +106,13 @@ public class F_Friend extends ParentFragment {
         return view;
     }
 
+    XXImagesLoader xxImagesLoader;
+    XXImagesLoader xxImagesLoader_image;
+
+
     private void initView() {
         listview_friend = (XXCustomListView) view.findViewById(R.id.listview_friend);
+
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -122,7 +143,10 @@ public class F_Friend extends ParentFragment {
         adapter_home = new XXListViewAdapter<Data_Say_Result>(getActivity(), R.layout.item_listview_friend) {
 
             @Override
-            public void initGetView(int position, View convertView, ViewGroup parent) {
+            public void initGetView(final int position, View convertView, ViewGroup parent) {
+                //评论输入的view默认隐藏
+                LinearLayout layout_say = (LinearLayout) convertView.findViewById(R.id.layout_say);
+
                 /*发表该说说的用户头像*/
                 ImageView item_iv_say_user_logo = (ImageView) convertView.findViewById(R.id.item_iv_say_user_logo);
                 /*发表该说说的用户的昵称*/
@@ -134,24 +158,24 @@ public class F_Friend extends ParentFragment {
 
                 /*该说说的文本域*/
                 TextView item_tv_say_text = (TextView) convertView.findViewById(R.id.item_tv_say_text);
-                item_tv_say_text.setText(getItem(position).getSay_text());
+                item_tv_say_text.setText("          " + getItem(position).getSay_text());
 
                 /*点赞按钮*/
                 ImageView item_iv_like = (ImageView) convertView.findViewById(R.id.item_iv_like);
                 /*评论按钮*/
 //                ImageView item_iv_say = (ImageView) convertView.findViewById(R.id.item_iv_say);
                 /*横向的展示用户发表的图片的listview,默认隐藏*/ //TODO 横向listview命名--item_lv1_images
-
                 HorizontalListView item_lv1_images = (HorizontalListView) convertView.findViewById(R.id.item_lv1_images);
                 adapter_horit = new XXListViewAdapter<String>(getActivity(), R.layout.item_hor) {
                     @Override
                     public void initGetView(int position, View convertView, ViewGroup parent) {
                         ImageView hor_1 = (ImageView) convertView.findViewById(R.id.hor_1);
                         if (getItem(position) != null) {
-                            new XXImagesLoader(null, true,
-                                    R.drawable.delete_default_qq_avatar,
-                                    R.drawable.delete_default_qq_avatar,
-                                    R.drawable.delete_default_qq_avatar).disPlayImage(getItem(position),
+                            xxImagesLoader_image = new XXImagesLoader(null, true,
+                                    R.drawable.downlode,
+                                    R.drawable.downlode,
+                                    R.drawable.downlodeerror);
+                            xxImagesLoader_image.disPlayImage(getItem(position),
                                     hor_1);
                             Log.d(TAG, "填充图片的URL：" + getItem(position));
                             adapter_horit.notifyDataSetChanged();
@@ -180,46 +204,156 @@ public class F_Friend extends ParentFragment {
                 TextView item_tv_location = (TextView) convertView.findViewById(R.id.item_tv_location);
                 if (getItem(position).getCity().equals("")) {
                     item_tv_location.setText("该用户不想告诉你们他在哪");
-                }else {
+                } else {
                     item_tv_location.setText(getItem(position).getCity());
                 }
                 /*点赞的人数*/
                 TextView item_tv_star_number = (TextView) convertView.findViewById(R.id.item_tv_star_number);
                 /*评论输入框*/
-                EditText item_et_say_down = (EditText) convertView.findViewById(R.id.item_et_say_down);
+                final EditText item_et_say_down = (EditText) convertView.findViewById(R.id.item_et_say_down);
+
+//                item_et_say_down.setImeOptions(EditorInfo.IME_ACTION_SEND);
+//                item_et_say_down.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//                    @Override
+//                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                        if (actionId == EditorInfo.IME_ACTION_SEND) {
+//                            item_et_say_down.setText("");
+//                            // 在这里编写自己想要实现的功能
+//                        }
+//                        return false;
+//                    }
+//                });
                 /*表情选择按钮（图片）*/
-                ImageView item_phone_images = (ImageView) convertView.findViewById(R.id.item_phone_images);
+//                ImageView item_phone_images = (ImageView) convertView.findViewById(R.id.item_phone_images);
+                Button item_phone_images = (Button) convertView.findViewById(R.id.item_phone_images);
+                item_phone_images.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        item_et_say_down.setText("");
+                        final Handler handler1 = new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (XXSVProgressHUD.isShowing(getActivity())) {
+                                    XXSVProgressHUD.dismiss(getActivity());
+                                }
+                                switch (msg.what) {
+                                    case -1:
+
+                                        break;
+                                    case 1:
+                                item_et_say_down.setText("");
+                                getAllSay(handler);
+                                        break;
+                                }
+                                Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_LONG).show();
+                            }
+                        };
+                        XXSVProgressHUD.showWithStatus(getActivity(), "正在发表评论...");
+                        say_comment(getItem(position).getSay_id(), item_et_say_down.getText().toString().trim(), handler1);
+                    }
+                });
                 /*对该条动态评论过的用户和评论内容显示的listview，该view默认隐藏*///TODO 显示评论块listview命名--item_lv2_say_user
-                XXListView item_lv2_say_user = (XXListView) convertView.findViewById(R.id.item_lv2_say_user);
-//                setUserLogo(getItem(position).getUser_img(), item_iv_say_user_logo);
-//                item_iv_say_user_logo.setImageResource(R.drawable.delete_default_qq_avatar);
-                new XXImagesLoader(null, true,
-                        R.drawable.delete_default_qq_avatar,
-                        R.drawable.delete_default_qq_avatar,
-                        R.drawable.delete_default_qq_avatar).disPlayImage(getItem(position).getUser_img(),
+                XXListView item_lv2_comment = (XXListView) convertView.findViewById(R.id.item_lv2_comment);
+                adapter_comment = new XXListViewAdapter<Data_Say_Result>(getActivity(), R.layout.item_listview_comment) {
+                    @Override
+                    public void initGetView(int position, View convertView, ViewGroup parent) {
+                        TextView item_tv_comm_username = (TextView) convertView.findViewById(R.id.item_tv_comm_username);
+                        TextView item_tv_comm_text = (TextView) convertView.findViewById(R.id.item_tv_comm_text);
+                        TextView item_tv_comm_time = (TextView) convertView.findViewById(R.id.item_tv_comm_time);
+                        String[] ss = getItem(position).getSay_comment().split(",");
+                        for (int i = 0; i < ss.length; i++) {
+                            if (ss[i] != null && !ss[i].equals("")) {
+                                String[] aa = ss[i].split("ф");
+                                for (int j = 0; j < aa.length; j++) {
+                                    item_tv_comm_username.setText(aa[1] + ":");
+                                    item_tv_comm_text.setText(aa[2]);
+                                    item_tv_comm_time.setText("评论时间：" + aa[3]);
+                                }
+                            }
+                        }
+
+                    }
+                };
+                item_lv2_comment.setAdapter(adapter_comment);
+                if (getItem(position).getSay_comment() != null && !getItem(position).getSay_comment().equals("")) {
+                    item_lv2_comment.setVisibility(View.VISIBLE);
+                } else {
+                    item_lv2_comment.setVisibility(View.GONE);
+                }
+                adapter_comment.addItem(getItem(position));
+                adapter_comment.notifyDataSetChanged();
+                xxImagesLoader = new XXImagesLoader(null, true,
+                        R.drawable.downlode,
+                        R.drawable.downlode,
+                        R.drawable.downlodeerror);
+                xxImagesLoader.disPlayImage(getItem(position).getUser_img(),
                         item_iv_say_user_logo);
 
 
-                item_lv1_images.setAdapter(adapter_horit);
-                listview_friend.setOnRefreshListner(new XXCustomListView.OnRefreshListner() {
-                    @Override
-                    public void onRefresh() {
-                        adapter_home.removeAll();
-                        adapter_home.notifyDataSetChanged();
-                        getAllSay(handler);
-                    }
-                });
-                adapter_home.notifyDataSetChanged();
+//                item_lv1_images.setAdapter(adapter_horit);
+
+
             }
 
 
         };
-
-
-//        adapter_home.removeAll();
         listview_friend.setAdapter(adapter_home);
-//        listview_friend.setListViewAnimation(adapter_home, XXListViewAnimationMode.ANIIMATION_ALPHA);
+        adapter_home.notifyDataSetChanged();
         getAllSay(handler);
+        listview_friend.setOnRefreshListner(new XXCustomListView.OnRefreshListner() {
+            @Override
+            public void onRefresh() {
+                if (xxImagesLoader != null) {
+                    xxImagesLoader.clearCache();
+                    Log.d(TAG, "刷新，清除缓存");
+                }
+                if (xxImagesLoader_image != null) {
+                    xxImagesLoader_image.clearCache();
+                    Log.d(TAG, "刷新，清除缓存");
+                }
+                adapter_home.removeAll();
+                adapter_home.notifyDataSetChanged();
+                getAllSay(handler);
+            }
+        });
+
+    }
+
+    private void say_comment(String say_id, String text, final Handler handler1) {
+        XXHttpClient client = new XXHttpClient(Util.URL_COMMENT, true, new XXHttpClient.XXHttpResponseListener() {
+            @Override
+            public void onSuccess(int i, byte[] bytes) {
+                Log.w(TAG, "发表评论返回：" + new String(bytes));
+                try {
+                    JSONObject jo = new JSONObject(new String(bytes));
+                    if (jo
+                            .getInt("resultCode") == 9000) {
+                        Util.sendMsgToHandler(handler1, "评论成功", true);
+                    } else {
+                        Util.sendMsgToHandler(handler1, "评论失败，" + jo.getString("resultMsg"), false);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(int i, Throwable throwable) {
+                Log.w(TAG, "发表评论网络异常");
+                Util.sendMsgToHandler(handler, "评论失败，网络异常", false);
+            }
+
+            @Override
+            public void onProgress(long bytesWritten, long totalSize) {
+
+            }
+        });
+        client.put("say_id", say_id);
+        client.put("usernumber", new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME).get(getActivity(), "usernumber", "").toString());
+        client.put("text", text);
+        client.put("time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        Log.w(TAG, "发表评论上送：" + client.getAllParams());
+        client.doGet(15000);
     }
 
     public void setListViewHeight(ListView listView) {

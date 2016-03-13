@@ -45,7 +45,6 @@ public class Util {
 //    private static String url = "http://192.168.13.106:8080/SmallRecipeService/";//公司
 //    private static String url = "http://192.168.12.106:8080/SmallRecipeService/";//家
 
-
     public static final String URL_SERVICE_REGISTER = url + "register";//注册URL
     public static final String URL_SERVICE_LOGIN = url + "login";//登陆URL
     public static final String URL_SERVICE_RELOGIN = url + "relogin";//重新登陆URL
@@ -66,6 +65,7 @@ public class Util {
     public static final String URL_SENDSAY = url + "sayservice";//请求发表说说接口
 
     public static final String URL_GETALLSAY = url + "getallsay";//获取所有说说
+    public static final String URL_COMMENT = url + "comment";//评论说说
 
 
     public static final String APP_ID = "wx220e16bd4df59c89";

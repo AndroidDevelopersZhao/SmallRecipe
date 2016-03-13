@@ -46,6 +46,9 @@ public class XXImagesLoader {
         imageLoader = ImageLoader.getInstance();
     }
 
+
+
+
     /**
      * 初始化载入的参数
      *
