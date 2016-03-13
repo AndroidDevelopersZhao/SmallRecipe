@@ -58,7 +58,7 @@ public class F_Friend extends ParentFragment {
     private XXCustomListView listview_friend;
     private XXListViewAdapter<Data_Say_Result> adapter_home;
     private XXListViewAdapter<String> adapter_horit;
-    private XXListViewAdapter<Data_Say_Result> adapter_comment;
+    private XXListViewAdapter<String> adapter_comment;
     int isc = 0;
     private Handler handler;
 
@@ -241,8 +241,10 @@ public class F_Friend extends ParentFragment {
 
                                         break;
                                     case 1:
-                                item_et_say_down.setText("");
-                                getAllSay(handler);
+                                        item_et_say_down.setText("");
+                                        adapter_home.removeAll();
+                                        adapter_comment.removeAll();
+                                        getAllSay(handler);
                                         break;
                                 }
                                 Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_LONG).show();
@@ -254,21 +256,18 @@ public class F_Friend extends ParentFragment {
                 });
                 /*对该条动态评论过的用户和评论内容显示的listview，该view默认隐藏*///TODO 显示评论块listview命名--item_lv2_say_user
                 XXListView item_lv2_comment = (XXListView) convertView.findViewById(R.id.item_lv2_comment);
-                adapter_comment = new XXListViewAdapter<Data_Say_Result>(getActivity(), R.layout.item_listview_comment) {
+                adapter_comment = new XXListViewAdapter<String>(getActivity(), R.layout.item_listview_comment) {
                     @Override
                     public void initGetView(int position, View convertView, ViewGroup parent) {
                         TextView item_tv_comm_username = (TextView) convertView.findViewById(R.id.item_tv_comm_username);
                         TextView item_tv_comm_text = (TextView) convertView.findViewById(R.id.item_tv_comm_text);
                         TextView item_tv_comm_time = (TextView) convertView.findViewById(R.id.item_tv_comm_time);
-                        String[] ss = getItem(position).getSay_comment().split(",");
+                        String[] ss = getItem(position).split("ф");
                         for (int i = 0; i < ss.length; i++) {
                             if (ss[i] != null && !ss[i].equals("")) {
-                                String[] aa = ss[i].split("ф");
-                                for (int j = 0; j < aa.length; j++) {
-                                    item_tv_comm_username.setText(aa[1] + ":");
-                                    item_tv_comm_text.setText(aa[2]);
-                                    item_tv_comm_time.setText("评论时间：" + aa[3]);
-                                }
+                                item_tv_comm_username.setText(ss[1] + ":");
+                                item_tv_comm_text.setText(ss[2]);
+                                item_tv_comm_time.setText("评论时间：" + ss[3]);
                             }
                         }
 
@@ -280,8 +279,42 @@ public class F_Friend extends ParentFragment {
                 } else {
                     item_lv2_comment.setVisibility(View.GONE);
                 }
-                adapter_comment.addItem(getItem(position));
-                adapter_comment.notifyDataSetChanged();
+//                adapter_comment.addItem("фAфBфC");
+//                adapter_comment.addItem("фBфBфC");
+//                adapter_comment.addItem("фCфBфC");
+                if (getItem(position).getSay_comment() != null) {
+                    Log.w(TAG,"all----"+getItem(position).getSay_comment());
+                    String allData =getItem(position).getSay_comment();
+                    String[]qq=allData.split("\\$");
+                    for (int q = 0; q < qq.length; q++) {
+                        Log.w(TAG, "QQQQQ" + qq[q]);
+                        if (!qq[q].equals("")){
+                            adapter_comment.addItem(qq[q]);
+
+//                            for (int i = 0; i < qq[q].split("^").length; i++) {
+//                                adapter_comment.addItem( qq[q].split("^")[i]);
+//                                Log.w(TAG, "QQQQQ" + qq[q].split("^")[i]);
+//                            }
+
+
+                        }
+
+                    }
+                }
+//                if (getItem(position).getSay_comment() != null) {
+//                    String[] oo = getItem(position).getSay_comment().split("^");
+//
+////                adapter_comment.addItem(getItem(position));
+//                    for (int i = 0; i < oo.length; i++) {
+////                        if (oo[i] != null && !oo[i].equals("")) {
+//                            adapter_comment.addItem(oo[i]);
+////                            Log.d(TAG, "评论的listview添加一次数据");
+////                        }
+//                    }
+////                    adapter_home.notifyDataSetChanged();
+////                    adapter_comment.notifyDataSetChanged();
+//                }
+
                 xxImagesLoader = new XXImagesLoader(null, true,
                         R.drawable.downlode,
                         R.drawable.downlode,

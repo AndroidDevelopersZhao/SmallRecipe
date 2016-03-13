@@ -129,7 +129,8 @@
         <cn.com.xxutils.view.XXListView
             android:id="@+id/item_lv2_comment"
             android:layout_width="match_parent"
-            android:layout_height="100sp"/>
+            android:divider="@null"
+            android:layout_height="200sp"/>
         <LinearLayout
             android:id="@+id/layout_say"
             android:layout_width="match_parent"
