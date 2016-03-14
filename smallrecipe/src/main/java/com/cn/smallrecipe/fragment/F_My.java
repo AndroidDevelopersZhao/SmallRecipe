@@ -24,6 +24,7 @@ import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
 import com.cn.smallrecipe.activity.LoginActivity;
 import com.cn.smallrecipe.activity.MainActivity;
+import com.cn.smallrecipe.activity.MySayActivity;
 import com.cn.smallrecipe.activity.MyStarActivity;
 import com.cn.smallrecipe.activity.PersonalActivity;
 import com.cn.smallrecipe.activity.RespMsgActivity;
@@ -129,7 +130,10 @@ public class F_My extends ParentFragment {
                 case 0:
                     //TODO 我的动态
                     if (MyActivity.LOGIN_STATE) {
-                        Toast.makeText(getActivity(), "我的动态", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "我的动态", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), MySayActivity.class);
+                        intent.putExtra("usernumber", new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME).get(getActivity(), "usernumber", "").toString());
+                        startActivity(intent);
                     } else {
                         Toast.makeText(getActivity(), "请先登陆", Toast.LENGTH_SHORT).show();
                     }

@@ -1,168 +1,70 @@
-package com.cn.smallrecipe.fragment;
+package com.cn.smallrecipe.activity;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cn.smallrecipe.Mode;
-import com.cn.smallrecipe.ParentFragment;
+import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
-import com.cn.smallrecipe.activity.MainActivity;
 import com.cn.smallrecipe.datainfo.sendsayinfo.Data_Say_Result;
 import com.cn.smallrecipe.datainfo.sendsayinfo.Resp_Say;
-import com.cn.smallrecipe.view.FaceRelativeLayout;
 import com.cn.smallrecipe.view.HorizontalListView;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import cn.com.xxutils.adapter.XXListViewAdapter;
 import cn.com.xxutils.progress.XXSVProgressHUD;
 import cn.com.xxutils.util.XXHttpClient;
 import cn.com.xxutils.util.XXImagesLoader;
-import cn.com.xxutils.util.XXListViewAnimationMode;
-import cn.com.xxutils.util.XXSharedPreferences;
 import cn.com.xxutils.view.XXCustomListView;
 import cn.com.xxutils.view.XXListView;
-import cn.com.xxutils.view.XXRoundImageView;
-import cn.com.xxutils.volley.toolbox.Volley;
 
 /**
- * Created by Administrator on 2016/2/24.
+ * Created by Administrator on 2016/3/14.
  */
-public class F_Friend extends ParentFragment {
-    private View view;
-    private XXCustomListView listview_friend;
+public class MySayActivity extends MyActivity {
+    private XXCustomListView listview_say;
     private XXListViewAdapter<Data_Say_Result> adapter_home;
     private XXListViewAdapter<String> adapter_horit;
+    private XXImagesLoader xxImagesLoader_image;
     private XXListViewAdapter<String> adapter_comment;
-    int isc = 0;
-    private Handler handler;
-    private View footer;
+    private XXImagesLoader xxImagesLoader;
     private int page = 2;
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "F-Friend-------------onPause");
-    }
+    private View footer;
+    private Handler handler;
+    private String usernumber = null;
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "F-Friend-------------onResume");
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "F-Friend-------------onStart");
-        if (adapter_home != null) {
-            if (isc == 0) {
-                adapter_home.removeAll();
-                adapter_home.notifyDataSetChanged();
-                getAllSay(handler, 1);
-            }
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "F-Friend-------------onStop");
-        isc = 0;
-        page = 2;
-    }
-
-    @Override
-    protected void onVisible() {
-        super.onVisible();
-        Log.d(TAG, "F-Friend-------------onVisible");
-        initView();
-        Log.d(TAG, "初始化厨艺圈view");
-        isc++;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "F-Friend-------------onCreate");
+        setContentView(R.layout.activity_mysay);
+        usernumber = getIntent().getStringExtra("usernumber");
+        Log.d(TAG, "得到的 usernumber：" + usernumber);
+        initView();
     }
-
-    @Override
-    protected void onInvisible() {
-        super.onInvisible();
-        Log.d(TAG, "F-Friend-------------onInvisible");
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "F-Friend-------------onActivityCreated");
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "F-Friend-------------onViewCreated");
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.f_friend, null);
-        Log.d(TAG, "F-Friend-------------onCreateView");
-        Log.d(TAG, "进入厨艺圈页面");
-//        if (F_Friend.this.isVisible()) {
-//            initView();
-//            Log.d(TAG, "初始化厨艺圈view");
-//            isc++;
-//        }
-        return view;
-    }
-
-    XXImagesLoader xxImagesLoader;
-    XXImagesLoader xxImagesLoader_image;
-
 
     private void initView() {
-        listview_friend = (XXCustomListView) view.findViewById(R.id.listview_friend);
-
+        listview_say = (XXCustomListView) findViewById(R.id.listview_mysay);
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                listview_friend.onRefreshComplete();
-                listview_friend.removeFooterView(footer);
-                listview_friend.onFootLoadingComplete();
+                listview_say.onRefreshComplete();
+                listview_say.removeFooterView(footer);
+                listview_say.onFootLoadingComplete();
                 Log.d(TAG, "隐藏下拉view");
 //                footer.setVisibility(View.INVISIBLE);
                 switch (msg.what) {
                     case -1:
-                        Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MySayActivity.this, msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
                         Resp_Say say = (Resp_Say) msg.getData().getSerializable("data");
@@ -173,25 +75,24 @@ public class F_Friend extends ParentFragment {
                                 adapter_home.addItem(say.getData().get(i));
                             }
                         } else {
-                            Toast.makeText(getActivity(), "没有更多数据", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MySayActivity.this, "没有更多数据", Toast.LENGTH_LONG).show();
                         }
                         adapter_home.notifyDataSetChanged();
                         break;
                 }
             }
         };
-
-
         /**
          * 主adapter
          */
 
-        adapter_home = new XXListViewAdapter<Data_Say_Result>(getActivity(), R.layout.item_listview_friend) {
+
+        adapter_home = new XXListViewAdapter<Data_Say_Result>(this, R.layout.item_listview_friend) {
             @Override
             public void initGetView(final int position, View convertView, ViewGroup parent) {
                 //评论输入的view默认隐藏
                 LinearLayout layout_say = (LinearLayout) convertView.findViewById(R.id.layout_say);
-
+                layout_say.setVisibility(View.GONE);
                 /*发表该说说的用户头像*/
                 ImageView item_iv_say_user_logo = (ImageView) convertView.findViewById(R.id.item_iv_say_user_logo);
                 /*发表该说说的用户的昵称*/
@@ -211,7 +112,7 @@ public class F_Friend extends ParentFragment {
 //                ImageView item_iv_say = (ImageView) convertView.findViewById(R.id.item_iv_say);
                 /*横向的展示用户发表的图片的listview,默认隐藏*/ //TODO 横向listview命名--item_lv1_images
                 HorizontalListView item_lv1_images = (HorizontalListView) convertView.findViewById(R.id.item_lv1_images);
-                adapter_horit = new XXListViewAdapter<String>(getActivity(), R.layout.item_hor) {
+                adapter_horit = new XXListViewAdapter<String>(MySayActivity.this, R.layout.item_hor) {
                     @Override
                     public void initGetView(int position, View convertView, ViewGroup parent) {
                         ImageView hor_1 = (ImageView) convertView.findViewById(R.id.hor_1);
@@ -268,40 +169,38 @@ public class F_Friend extends ParentFragment {
 //                        return false;
 //                    }
 //                });
-                /*表情选择按钮（图片）*/
-//                ImageView item_phone_images = (ImageView) convertView.findViewById(R.id.item_phone_images);
-                Button item_phone_images = (Button) convertView.findViewById(R.id.item_phone_images);
-                item_phone_images.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        item_et_say_down.setText("");
-                        final Handler handler1 = new Handler() {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                if (XXSVProgressHUD.isShowing(getActivity())) {
-                                    XXSVProgressHUD.dismiss(getActivity());
-                                }
-                                switch (msg.what) {
-                                    case -1:
-
-                                        break;
-                                    case 1:
-                                        item_et_say_down.setText("");
-                                        adapter_home.removeAll();
-                                        adapter_comment.removeAll();
-                                        getAllSay(handler, 1);
-                                        break;
-                                }
-                                Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_LONG).show();
-                            }
-                        };
-                        XXSVProgressHUD.showWithStatus(getActivity(), "正在发表评论...");
-                        say_comment(getItem(position).getSay_id(), item_et_say_down.getText().toString().trim(), handler1);
-                    }
-                });
+//                Button item_phone_images = (Button) convertView.findViewById(R.id.item_phone_images);
+//                item_phone_images.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+////                        item_et_say_down.setText("");
+//                        final Handler handler1 = new Handler() {
+//                            @Override
+//                            public void handleMessage(Message msg) {
+//                                if (XXSVProgressHUD.isShowing(getActivity())) {
+//                                    XXSVProgressHUD.dismiss(getActivity());
+//                                }
+//                                switch (msg.what) {
+//                                    case -1:
+//
+//                                        break;
+//                                    case 1:
+//                                        item_et_say_down.setText("");
+//                                        adapter_home.removeAll();
+//                                        adapter_comment.removeAll();
+//                                        getAllSay(handler, 1);
+//                                        break;
+//                                }
+//                                Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_LONG).show();
+//                            }
+//                        };
+//                        XXSVProgressHUD.showWithStatus(getActivity(), "正在发表评论...");
+//                        say_comment(getItem(position).getSay_id(), item_et_say_down.getText().toString().trim(), handler1);
+//                    }
+//                });
                 /*对该条动态评论过的用户和评论内容显示的listview，该view默认隐藏*///TODO 显示评论块listview命名--item_lv2_say_user
                 XXListView item_lv2_comment = (XXListView) convertView.findViewById(R.id.item_lv2_comment);
-                adapter_comment = new XXListViewAdapter<String>(getActivity(), R.layout.item_listview_comment) {
+                adapter_comment = new XXListViewAdapter<String>(MySayActivity.this, R.layout.item_listview_comment) {
                     @Override
                     public void initGetView(int position, View convertView, ViewGroup parent) {
                         TextView item_tv_comm_username = (TextView) convertView.findViewById(R.id.item_tv_comm_username);
@@ -373,28 +272,29 @@ public class F_Friend extends ParentFragment {
 
 
         };
+        //
 
-        listview_friend.setAdapter(adapter_home);
-        footer = View.inflate(getActivity(), R.layout.footer, null);
-        listview_friend.setOnAddFootListener(new XXCustomListView.OnAddFootListener() {
+        listview_say.setAdapter(adapter_home);
+        footer = View.inflate(MySayActivity.this, R.layout.footer, null);
+        listview_say.setOnAddFootListener(new XXCustomListView.OnAddFootListener() {
             @Override
             public void addFoot() {
-                listview_friend.addFooterView(footer);
+                listview_say.addFooterView(footer);
                 footer.setVisibility(View.INVISIBLE);
             }
         });
-        listview_friend.setOnFootLoadingListener(new XXCustomListView.OnFootLoadingListener() {
+        listview_say.setOnFootLoadingListener(new XXCustomListView.OnFootLoadingListener() {
             @Override
             public void onFootLoading() {
 //                footer.setVisibility(View.VISIBLE);
                 footer.setVisibility(View.VISIBLE);
-                getAllSay(handler, page++);
+                getMySay(handler, page++);
 //                footer.setVisibility(View.GONE);
             }
         });
         adapter_home.notifyDataSetChanged();
-        getAllSay(handler, 1);
-        listview_friend.setOnRefreshListner(new XXCustomListView.OnRefreshListner() {
+        getMySay(handler, 1);
+        listview_say.setOnRefreshListner(new XXCustomListView.OnRefreshListner() {
             @Override
             public void onRefresh() {
                 if (xxImagesLoader != null) {
@@ -408,115 +308,17 @@ public class F_Friend extends ParentFragment {
                 adapter_home.removeAll();
                 adapter_home.notifyDataSetChanged();
                 page = 2;
-                getAllSay(handler, 1);
+                getMySay(handler, 1);
             }
         });
-
     }
 
-    private void say_comment(String say_id, String text, final Handler handler1) {
-        XXHttpClient client = new XXHttpClient(Util.URL_COMMENT, true, new XXHttpClient.XXHttpResponseListener() {
+    private void getMySay(final Handler handler, int page) {
+        Log.d(TAG, "开始请求我的动态");
+        XXHttpClient client = new XXHttpClient(Util.URL_GETMYSAY, true, new XXHttpClient.XXHttpResponseListener() {
             @Override
             public void onSuccess(int i, byte[] bytes) {
-                Log.w(TAG, "发表评论返回：" + new String(bytes));
-                try {
-                    JSONObject jo = new JSONObject(new String(bytes));
-                    if (jo
-                            .getInt("resultCode") == 9000) {
-                        Util.sendMsgToHandler(handler1, "评论成功", true);
-                    } else {
-                        Util.sendMsgToHandler(handler1, "评论失败，" + jo.getString("resultMsg"), false);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(int i, Throwable throwable) {
-                Log.w(TAG, "发表评论网络异常");
-                Util.sendMsgToHandler(handler, "评论失败，网络异常", false);
-            }
-
-            @Override
-            public void onProgress(long bytesWritten, long totalSize) {
-
-            }
-        });
-        client.put("say_id", say_id);
-        client.put("usernumber", new XXSharedPreferences(MainActivity.SHAREDSESSIONIDSAVEEDNAME).get(getActivity(), "usernumber", "").toString());
-        client.put("text", text);
-        client.put("time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        Log.w(TAG, "发表评论上送：" + client.getAllParams());
-        client.doPost(15000);
-    }
-
-    public void setListViewHeight(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-
-
-        int totalHeight = 0;
-
-
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-
-
-            View listItem = listAdapter.getView(i, null, listView);
-
-
-            listItem.measure(0, 0);
-
-
-            totalHeight += listItem.getMeasuredHeight();
-
-
-        }
-
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-
-
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-
-
-        listView.setLayoutParams(params);
-
-    }
-
-    private void setUserLogo(String user_img, final XXRoundImageView item_iv_say_user_logo) {
-        XXHttpClient client = new XXHttpClient(user_img, true, new XXHttpClient.XXHttpResponseListener() {
-            @Override
-            public void onSuccess(int i, final byte[] bytes) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        item_iv_say_user_logo.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-                        adapter_home.notifyDataSetChanged();
-                    }
-                });
-            }
-
-            @Override
-            public void onError(int i, Throwable throwable) {
-
-            }
-
-            @Override
-            public void onProgress(long bytesWritten, long totalSize) {
-
-            }
-        });
-        client.doGet(15000);
-    }
-
-    private void getAllSay(final Handler handler, int page) {
-        Log.d(TAG, "开始请求所有动态");
-        XXHttpClient client = new XXHttpClient(Util.URL_GETALLSAY, true, new XXHttpClient.XXHttpResponseListener() {
-            @Override
-            public void onSuccess(int i, byte[] bytes) {
+                Log.e(TAG,"请求个人说说返回："+new String(bytes));
                 if (bytes.length > 0) {
                     Log.d(TAG, new String(bytes));
                     Resp_Say say = new Gson().fromJson(new String(bytes), Resp_Say.class);
@@ -538,7 +340,9 @@ public class F_Friend extends ParentFragment {
 
             }
         });
+        client.put("usernumber", usernumber);
         client.put("page", page);
+        Log.d(TAG, "上送获取个人说说的字段：" + client.getAllParams());
         client.doGet(15000);
 
     }

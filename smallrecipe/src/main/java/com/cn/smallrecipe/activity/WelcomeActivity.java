@@ -59,7 +59,7 @@ public class WelcomeActivity extends MyActivity implements ViewPager.OnPageChang
                 @Override
                 public void run() {
                     while (isLoop) {
-                        SystemClock.sleep(1500);
+                        SystemClock.sleep(2000);
                         if (times < imageViewList.size()) {
                             times++;
                             handler.sendEmptyMessage(0);
@@ -129,20 +129,20 @@ public class WelcomeActivity extends MyActivity implements ViewPager.OnPageChang
 
     private int[] getImageResIDs() {
         return new int[]{
-                R.drawable.bg1,
-                R.drawable.bg2,
-                R.drawable.bg3,
-                R.drawable.pic_01,
-                R.drawable.pic_02
+                R.drawable.weclome_1,
+                R.drawable.welcome_2,
+                R.drawable.welcome_3,
+                R.drawable.welcome_4,
+                R.drawable.welcome_5
         };
     }
 
     private String[] getImageDescription() {
         return new String[]{
-                "app在不断更新中",
-                "期待您的每一份建议",
-                "搜索您喜欢的口味",
-                "查看烹饪步骤",
+                "只需输入一个字，让您更方便搜索",
+                "每份菜谱都有最详细的作业步骤哦",
+                "新增朋友圈玩法，等你来试",
+                "一目了然的收藏夹",
                 "晒出自己的手艺，让别人为您点赞"
         };
     }

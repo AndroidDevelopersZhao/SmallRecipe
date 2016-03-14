@@ -68,6 +68,7 @@ public class Util {
     public static final String URL_COMMENT = url + "comment";//评论说说
    public static final String URL_UPDATEUSERINFO= url+"updatamyinfo";//更新用户资料
     public static final String URL_GETUSERINFO= url+"getuserinfo";//更新用户资料
+    public static final String URL_GETMYSAY = url + "getmysay";//获取我的说说
     public static final String APP_ID = "wx220e16bd4df59c89";
     public static final String SECRET = "b9fda74227172b69a55316e9c0367bfc";
 
