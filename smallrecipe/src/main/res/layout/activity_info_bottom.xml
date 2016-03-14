@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="50001"
+                    android:text="------"
                     android:textSize="16sp" />
 
                 <TextView
@@ -107,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="15221340931"
+                    android:text="获取中"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -162,7 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="飞翔的企鹅"
+                    android:text="获取中"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -226,10 +226,11 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/tv_email_per"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="3648415@qq.com(假)"
+                    android:text="获取中"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -280,10 +281,11 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/tv_name_per"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="叶良辰(假)"
+                    android:text="获取中"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -335,10 +337,11 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/tv_sex_per"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="男(假)"
+                    android:text="获取中"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -403,10 +406,11 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/tv_sign_per"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="这里时签名部分"
+                    android:text="获取中"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -585,11 +589,13 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/bt_savedData"
         android:layout_width="match_parent"
         android:layout_height="45sp"
         android:layout_marginLeft="5sp"
         android:layout_marginRight="5sp"
         android:layout_marginTop="10sp"
+        android:enabled="false"
         android:text="保存更改" />
 
     <Button
@@ -599,7 +605,8 @@
         android:layout_marginLeft="5sp"
         android:layout_marginRight="5sp"
         android:layout_marginTop="10sp"
-        android:text="退出重新登陆" />
+        android:text="退出重新登陆"
+        android:textColor="@color/red_error" />
 
     <View
         android:layout_width="match_parent"
