@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.cn.smallrecipe"
-        minSdkVersion 17
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 4
         versionName "4.0.0"
