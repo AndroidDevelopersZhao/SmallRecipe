@@ -25,5 +25,6 @@
     <color name="text_color_zhonghongse_461b04">#461b04</color>
     <color name="text_color_huangse_ff8800">#ff8800</color>
     <color name="text_color_shurukuang_aeb6bd">#aeb6bd</color>
-
+    <color name="defalutselector">#fffefe</color>
+    <color name="toch">#ddc1bfbf</color>
 </resources>

@@ -18,8 +18,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50sp"
-            android:background="@drawable/select_bg"
-            android:clickable="true"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -87,7 +85,7 @@
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="1.2"
                 android:gravity="center">
 
                 <TextView
@@ -132,14 +130,17 @@
 
 
         <LinearLayout
+            android:id="@+id/lt_upDateUserName"
             android:layout_width="match_parent"
             android:layout_height="50sp"
+            android:background="@drawable/layoutselector"
+            android:clickable="true"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="1.2"
                 android:gravity="center">
 
                 <TextView
@@ -197,14 +198,17 @@
 
 
         <LinearLayout
+            android:id="@+id/lt_upDateUserEmail"
             android:layout_width="match_parent"
             android:layout_height="50sp"
+            android:background="@drawable/layoutselector"
+            android:clickable="true"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="1.2"
                 android:gravity="center">
 
                 <TextView
@@ -248,14 +252,17 @@
             android:background="#dfd8d8" />
 
         <LinearLayout
+            android:id="@+id/lt_upDateName"
             android:layout_width="match_parent"
             android:layout_height="50sp"
+            android:background="@drawable/layoutselector"
+            android:clickable="true"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="1.2"
                 android:gravity="center">
 
                 <TextView
@@ -300,14 +307,17 @@
 
 
         <LinearLayout
+            android:id="@+id/lt_upDateUserSex"
             android:layout_width="match_parent"
             android:layout_height="50sp"
+            android:background="@drawable/layoutselector"
+            android:clickable="true"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="1.2"
                 android:gravity="center">
 
                 <TextView
@@ -365,21 +375,24 @@
 
 
         <LinearLayout
+            android:id="@+id/lt_upDateUserSign"
             android:layout_width="match_parent"
             android:layout_height="50sp"
+            android:background="@drawable/layoutselector"
+            android:clickable="true"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="1.2"
                 android:gravity="center">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center|right"
-                    android:text="预留属性："
+                    android:text="我的个性签名："
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -393,7 +406,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="预留属性"
+                    android:text="这里时签名部分"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -423,59 +436,7 @@
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center|right"
-                    android:text="预留属性："
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0sp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.5"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="预留属性"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0sp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="15sp"
-                    android:layout_height="35sp"
-                    android:src="@drawable/icon_my_title" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#dfd8d8" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50sp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0sp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="1.2"
                 android:gravity="center">
 
                 <TextView
@@ -527,7 +488,59 @@
             <LinearLayout
                 android:layout_width="0sp"
                 android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|right"
+                    android:text="预留属性："
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
                 android:layout_weight="1.5"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="预留属性"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="15sp"
+                    android:layout_height="35sp"
+                    android:src="@drawable/icon_my_title" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#dfd8d8" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0sp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
                 android:gravity="center">
 
                 <TextView
@@ -572,15 +585,23 @@
     </LinearLayout>
 
     <Button
+        android:layout_width="match_parent"
+        android:layout_height="45sp"
+        android:layout_marginLeft="5sp"
+        android:layout_marginRight="5sp"
+        android:layout_marginTop="10sp"
+        android:text="保存更改" />
+
+    <Button
         android:id="@+id/bt_reLogin"
         android:layout_width="match_parent"
         android:layout_height="45sp"
         android:layout_marginLeft="5sp"
         android:layout_marginRight="5sp"
         android:layout_marginTop="10sp"
-        android:background="#e14f4f"
         android:text="退出重新登陆" />
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="60sp"/>
+        android:layout_height="60sp" />
 </LinearLayout>

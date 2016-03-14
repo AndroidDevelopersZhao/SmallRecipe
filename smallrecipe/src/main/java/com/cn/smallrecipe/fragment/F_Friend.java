@@ -83,7 +83,6 @@ public class F_Friend extends ParentFragment {
         Log.d(TAG, "F-Friend-------------onStart");
         if (adapter_home != null) {
             if (isc == 0) {
-
                 adapter_home.removeAll();
                 adapter_home.notifyDataSetChanged();
                 getAllSay(handler, 1);
@@ -99,14 +98,50 @@ public class F_Friend extends ParentFragment {
         page = 2;
     }
 
+    @Override
+    protected void onVisible() {
+        super.onVisible();
+        Log.d(TAG, "F-Friend-------------onVisible");
+        initView();
+        Log.d(TAG, "初始化厨艺圈view");
+        isc++;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "F-Friend-------------onCreate");
+    }
+
+    @Override
+    protected void onInvisible() {
+        super.onInvisible();
+        Log.d(TAG, "F-Friend-------------onInvisible");
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "F-Friend-------------onActivityCreated");
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "F-Friend-------------onViewCreated");
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.f_friend, null);
         Log.d(TAG, "F-Friend-------------onCreateView");
         Log.d(TAG, "进入厨艺圈页面");
-        initView();
-        isc++;
+//        if (F_Friend.this.isVisible()) {
+//            initView();
+//            Log.d(TAG, "初始化厨艺圈view");
+//            isc++;
+//        }
         return view;
     }
 
@@ -414,7 +449,7 @@ public class F_Friend extends ParentFragment {
         client.put("text", text);
         client.put("time", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         Log.w(TAG, "发表评论上送：" + client.getAllParams());
-        client.doGet(15000);
+        client.doPost(15000);
     }
 
     public void setListViewHeight(ListView listView) {
