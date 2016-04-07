@@ -4,9 +4,49 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/wait" />
+        android:layout_height="150sp"
+        android:layout_marginTop="20sp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="80sp"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#e7e2e2"
+                android:orientation="vertical">
+                <TextView
+                    android:text="CHINA"
+                    android:gravity="center"
+                    android:textColor="#FFffff"
+                    android:layout_width="160sp"
+                    android:layout_height="26sp"
+                    android:background="#e71e2f"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="15sp"
+                    android:layout_marginLeft="25sp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="目前目前没没有新消消息您目前没没有新消消息您目前没没有新消消息您目前没没有新消消息您目前没没有新消消息您目前没有新消息，新消息您目前没有新消息您目前没有新消息您目前没有新消息您目前没有新消息，" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <cn.com.xxutils.view.XXRoundImageView
+            android:layout_width="150sp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/testimage" />
+
+    </FrameLayout>
 </LinearLayout>

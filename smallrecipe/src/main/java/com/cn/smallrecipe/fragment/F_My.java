@@ -4,6 +4,7 @@ package com.cn.smallrecipe.fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,11 +23,13 @@ import com.cn.smallrecipe.MyActivity;
 import com.cn.smallrecipe.ParentFragment;
 import com.cn.smallrecipe.R;
 import com.cn.smallrecipe.Util;
+import com.cn.smallrecipe.activity.CaptureActivity;
 import com.cn.smallrecipe.activity.LoginActivity;
 import com.cn.smallrecipe.activity.MainActivity;
 import com.cn.smallrecipe.activity.MySayActivity;
 import com.cn.smallrecipe.activity.MyStarActivity;
 import com.cn.smallrecipe.activity.PersonalActivity;
+import com.cn.smallrecipe.activity.QRCodeActivity;
 import com.cn.smallrecipe.activity.RespMsgActivity;
 import com.cn.smallrecipe.activity.SendSayActivity;
 import com.cn.smallrecipe.datainfo.myinfo.MyInfos;
@@ -34,6 +37,13 @@ import com.cn.smallrecipe.datainfo.myinfo.MyInfosTitle;
 import com.cn.smallrecipe.datainfo.mystarinfo.Data_GetUserStarRecipe;
 import com.cn.smallrecipe.datainfo.register.ResultToApp;
 import com.google.gson.Gson;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
+import java.util.Hashtable;
 
 import cn.com.xxutils.adapter.XXListViewAdapter;
 import cn.com.xxutils.alerterview.OnItemClickListener;
@@ -151,7 +161,21 @@ public class F_My extends ParentFragment {
                 case 2:
                     //TODO 扫一扫
                     if (MyActivity.LOGIN_STATE) {
-                        Toast.makeText(getActivity(), "扫一扫", Toast.LENGTH_SHORT).show();
+                        new XXAlertView("提示", "请选择操作类型", "取消", new String[]{"扫一扫", "我的二维码"},
+                                null, getActivity(), XXAlertView.Style.ActionSheet, new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Object o, int position) {
+                                Log.d(TAG, "*********" + position);
+                                if (position == 0) {
+                                    //扫一扫
+                                    Intent intent =new Intent(getActivity(), CaptureActivity.class);
+                                    startActivity(intent);
+                                } else if (position == 1) {
+                                    //我的二维码
+                                    createQRImage("http://www.baidu.com");
+                                }
+                            }
+                        }).show();
                     } else {
                         Toast.makeText(getActivity(), "请先登陆", Toast.LENGTH_SHORT).show();
                     }
@@ -170,6 +194,59 @@ public class F_My extends ParentFragment {
         }
     };
 
+    private int QR_WIDTH =256;
+    private int QR_HEIGHT =256;
+
+    public void createQRImage(String url)
+    {
+        try
+        {
+            //判断URL合法性
+            if (url == null || "".equals(url) || url.length() < 1)
+            {
+                return;
+            }
+            Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
+            hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+            //图像数据转换，使用了矩阵转换
+            BitMatrix bitMatrix = new QRCodeWriter().encode(url, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
+            int[] pixels = new int[QR_WIDTH * QR_HEIGHT];
+            //下面这里按照二维码的算法，逐个生成二维码的图片，
+            //两个for循环是图片横列扫描的结果
+            for (int y = 0; y < QR_HEIGHT; y++)
+            {
+                for (int x = 0; x < QR_WIDTH; x++)
+                {
+                    if (bitMatrix.get(x, y))
+                    {
+                        pixels[y * QR_WIDTH + x] = 0xff000000;
+                    }
+                    else
+                    {
+                        pixels[y * QR_WIDTH + x] = 0xffffffff;
+                    }
+                }
+            }
+            //生成二维码图片的格式，使用ARGB_8888
+            Bitmap bitmap = Bitmap.createBitmap(QR_WIDTH, QR_HEIGHT, Bitmap.Config.ARGB_8888);
+            bitmap.setPixels(pixels, 0, QR_WIDTH, 0, 0, QR_WIDTH, QR_HEIGHT);
+            //显示到一个ImageView上面
+            if (bitmap!=null){
+                Log.d(TAG, "二维码生成成功");
+                Intent intent =new Intent(getActivity(), QRCodeActivity.class);
+                intent.putExtra("qr",bitmap);
+                startActivity(intent);
+            }else {
+                XXSVProgressHUD.showErrorWithStatus(getActivity(),"二维码生成失败，请稍后再试");
+            }
+
+//            sweepIV.setImageBitmap(bitmap);
+        }
+        catch (WriterException e)
+        {
+            e.printStackTrace();
+        }
+    }
     public void dissmiss() {
         if (XXSVProgressHUD.isShowing(getActivity())) {
             XXSVProgressHUD.dismiss(getActivity());
